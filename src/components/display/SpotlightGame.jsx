@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatMountainDateTime, formatMountainTime } from '../../utils/timeUtils';
 
 const SpotlightGame = ({ game }) => {
     if (!game) return null;
@@ -10,13 +11,13 @@ const SpotlightGame = ({ game }) => {
     return (
         <div className="w-full h-full flex flex-col bg-black border border-white/5 shadow-3xl overflow-hidden">
             {/* ESPN Style Banner */}
-            <div className="flex-none bg-red-700 px-10 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-6">
+            <div className="flex-none bg-red-700 px-12 py-4 flex items-center justify-between">
+                <div className="flex items-center gap-6 pl-2">
                     <span className="text-2xl font-black italic tracking-tighter text-white">LIVE SCOREBOARD</span>
                     <div className="h-6 w-px bg-white/20" />
                     <span className="text-sm font-black text-white/80 uppercase tracking-widest">{game.status.type.detail}</span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 pr-2">
                     <span className="text-xs font-black text-white/50 uppercase tracking-[0.2em]">{competition.venue?.fullName}</span>
                 </div>
             </div>
@@ -54,7 +55,20 @@ const SpotlightGame = ({ game }) => {
                     <div className="h-24 w-0.5 bg-white/10" />
                     <div className="bg-[#1a1b1c] border border-red-600/50 px-4 py-1">
                         <span className="text-sm font-black text-red-500 uppercase tracking-[0.3em] whitespace-nowrap">
-                            {game.status.type.shortDetail}
+                            {(() => {
+                                // Format date and time in Mountain Time
+                                if (!game.date) return game.status.type.shortDetail;
+                                const gameDate = new Date(game.date);
+                                if (isNaN(gameDate.getTime())) return game.status.type.shortDetail;
+                                
+                                const dateStr = gameDate.toLocaleDateString('en-US', {
+                                    timeZone: 'America/Denver',
+                                    month: 'numeric',
+                                    day: 'numeric'
+                                });
+                                const timeStr = formatMountainTime(game.date);
+                                return `${dateStr} - ${timeStr}`;
+                            })()}
                         </span>
                     </div>
                 </div>

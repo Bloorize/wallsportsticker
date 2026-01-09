@@ -1,6 +1,10 @@
 import React from 'react';
+import { formatMountainDateTime, formatMountainTime } from '../../utils/timeUtils';
 
-const FieldVisualization = ({ game }) => {
+const FieldVisualization = ({ game, gameState }) => {
+    // Only show field visualization for live games
+    if (gameState !== 'in') return null;
+    
     const category = game._category;
     const situation = game.competitions?.[0]?.situation;
     if (!situation && category !== 'SOCCER') return null;
@@ -92,143 +96,231 @@ const IntelligenceHub = ({ game }) => {
     const competition = game.competitions[0];
     const odds = competition.odds?.[0];
     const situation = competition.situation;
+    const gameState = game.status?.type?.state; // 'pre', 'in', 'post'
+    
+    // Get stats based on game state
+    const getStats = () => {
+        if (gameState === 'in') {
+            // Live game: Use box score stats from competitors
+            const stats = [];
+            competition.competitors?.forEach(competitor => {
+                const teamStats = competitor.statistics || [];
+                teamStats.forEach(stat => {
+                    // Find or create stat category
+                    let category = stats.find(s => s.name === stat.name);
+                    if (!category) {
+                        category = { name: stat.name, displayName: stat.displayName || stat.name, leaders: [] };
+                        stats.push(category);
+                    }
+                    // Add this competitor's stat value
+                    category.leaders.push({
+                        athlete: competitor.athlete || { displayName: competitor.team?.displayName },
+                        team: competitor.team,
+                        displayValue: stat.displayValue || stat.value,
+                        value: stat.value
+                    });
+                });
+            });
+            // Sort by value and take top performers
+            return stats.map(cat => ({
+                ...cat,
+                leaders: cat.leaders.sort((a, b) => parseFloat(b.value || 0) - parseFloat(a.value || 0)).slice(0, 1)
+            })).slice(0, 3);
+        } else {
+            // Pregame or post-game: Use season leaders
+            return competition.leaders?.slice(0, 3) || [];
+        }
+    };
+    
+    const displayStats = getStats();
+
+    // Get game status badge
+    const getStatusBadge = () => {
+        if (gameState === 'in') return { text: 'LIVE', color: 'bg-red-600' };
+        if (gameState === 'pre') return { text: 'UPCOMING', color: 'bg-white/20' };
+        return { text: 'FINAL', color: 'bg-white/10' };
+    };
+    
+    const statusBadge = getStatusBadge();
+    const awayTeam = competition.competitors.find(c => c.homeAway === 'away');
+    const homeTeam = competition.competitors.find(c => c.homeAway === 'home');
 
     return (
         <div className="flex-grow flex flex-col overflow-y-auto no-scrollbar bg-[#1a1b1c]">
-            {/* Header with High-End Broadcast Look */}
-            <div className="flex-none p-10 bg-black border-b-4 border-red-600 shadow-2xl">
+            {/* Compact Header */}
+            <div className="flex-none p-8 bg-black border-b-4 border-red-600">
                 <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm font-black text-white uppercase tracking-[0.5em]">Game Intelligence</span>
-                    <div className="px-4 py-2 bg-white text-black text-[11px] font-black uppercase tracking-tighter italic">
+                    <div className="flex items-center gap-4 pl-2">
+                        <div className={`${statusBadge.color} px-4 py-1.5 text-[10px] font-black text-white uppercase tracking-widest`}>
+                            {statusBadge.text}
+                        </div>
+                        <span className="text-xs font-black text-white/60 uppercase tracking-[0.3em]">Game Intelligence</span>
+                    </div>
+                    <div className="px-4 py-1.5 bg-white text-black text-[10px] font-black uppercase tracking-tighter italic mr-2">
                         ESPN ANALYTICS
                     </div>
                 </div>
-                <div className="text-[12px] font-black text-red-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                    <span className="text-white opacity-60">Status:</span>
-                    <span className="text-white">{game.status.type.detail}</span>
-                    <span className="mx-2 text-white/20">|</span>
+                <div className="text-[11px] font-black text-white/60 uppercase tracking-[0.2em] flex items-center gap-3 pl-2 pr-2">
+                    <span>{formatMountainDateTime(game.date)}</span>
+                    <span className="text-white/20">|</span>
                     <span className="text-white/40">{competition.venue?.fullName}</span>
                 </div>
             </div>
 
-            <div className="flex-grow p-10 space-y-16">
-                {/* 1. BETTING & ANALYTICS MODULE */}
-                <section className="space-y-8">
-                    <div className="flex items-center gap-4 border-l-8 border-red-600 pl-4">
-                        <h3 className="text-sm font-black text-white uppercase tracking-[0.3em]">Market Dynamics</h3>
+            <div className="flex-grow p-8 space-y-8">
+                {/* 1. BETTING ODDS CARDS */}
+                <section className="space-y-5">
+                    <div className="flex items-center gap-3 border-l-4 border-red-600 pl-5 mb-2">
+                        <h3 className="text-sm font-black text-white/60 uppercase tracking-[0.3em]">Market Dynamics</h3>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-px bg-white/10 border border-white/10">
-                        <div className="bg-black/40 p-10 group transition-none">
-                            <span className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-6 block">Spread Line</span>
-                            <div className="text-5xl font-mono font-black text-white tabular-nums tracking-tighter">
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Spread Card */}
+                        <div className="bg-white/5 border border-white/8 rounded-xl p-6">
+                            <div className="text-[9px] font-black text-red-500 uppercase tracking-widest mb-3">Spread</div>
+                            <div className="text-3xl font-mono font-black text-white tabular-nums tracking-tighter mb-3">
                                 {odds?.details || 'EVEN'}
                             </div>
+                            {odds?.details && (
+                                <div className="flex items-center gap-2">
+                                    <div className="bg-red-600 px-3 py-1 text-[9px] font-black text-white uppercase">
+                                        {odds.details.includes(awayTeam.team.abbreviation) ? awayTeam.team.abbreviation : homeTeam.team.abbreviation}
+                                    </div>
+                                    <span className="text-[9px] text-white/40 uppercase">Favorite</span>
+                                </div>
+                            )}
                         </div>
-                        <div className="bg-black/40 p-10 group transition-none border-l border-white/10">
-                            <span className="text-[11px] font-black text-red-500 uppercase tracking-widest mb-6 block">Over / Under</span>
-                            <div className="text-5xl font-mono font-black text-white tabular-nums tracking-tighter">
+                        
+                        {/* Total Card */}
+                        <div className="bg-white/5 border border-white/8 rounded-xl p-6">
+                            <div className="text-[9px] font-black text-red-500 uppercase tracking-widest mb-3">Total</div>
+                            <div className="text-3xl font-mono font-black text-white tabular-nums tracking-tighter">
                                 {odds?.overUnder || '--'}
                             </div>
                         </div>
                     </div>
 
+                    {/* Win Probability Bar */}
                     {situation?.lastPlay?.probability && (
-                        <div className="bg-black p-10 border border-white/5 relative overflow-hidden">
-                            <div className="flex justify-between items-end mb-8 relative z-10">
-                                <div className="flex flex-col gap-2">
-                                    <span className="text-[11px] font-black text-white/40 uppercase tracking-widest">{competition.competitors.find(c => c.homeAway === 'away').team.abbreviation}</span>
-                                    <span className="text-4xl font-mono font-black text-white">{(situation.lastPlay.probability.awayWinPercentage * 100).toFixed(0)}%</span>
-                                </div>
-                                <div className="text-[10px] font-black text-red-600 uppercase tracking-[0.4em] mb-2 px-4 py-1 bg-white/5">Win Probability</div>
-                                <div className="flex flex-col items-end gap-2">
-                                    <span className="text-[11px] font-black text-white/40 uppercase tracking-widest">{competition.competitors.find(c => c.homeAway === 'home').team.abbreviation}</span>
-                                    <span className="text-4xl font-mono font-black text-red-600">{(situation.lastPlay.probability.homeWinPercentage * 100).toFixed(0)}%</span>
-                                </div>
+                        <div className="bg-white/5 border border-white/8 rounded-xl p-6">
+                            <div className="flex justify-between items-center mb-3">
+                                <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">{awayTeam.team.abbreviation}</span>
+                                <span className="text-[9px] font-black text-red-500 uppercase tracking-widest">Win Probability</span>
+                                <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">{homeTeam.team.abbreviation}</span>
                             </div>
-                            <div className="h-2 bg-white/5 flex">
+                            <div className="h-6 bg-white/5 rounded-full overflow-hidden flex relative">
                                 <div
-                                    className="h-full bg-white transition-all duration-1000"
+                                    className="h-full bg-white transition-all duration-1000 flex items-center justify-start pl-3"
                                     style={{ width: `${situation.lastPlay.probability.awayWinPercentage * 100}%` }}
-                                />
+                                >
+                                    <span className="text-[10px] font-black text-black">{Math.round(situation.lastPlay.probability.awayWinPercentage * 100)}%</span>
+                                </div>
                                 <div
-                                    className="h-full bg-red-600 transition-all duration-1000"
+                                    className="h-full bg-red-600 transition-all duration-1000 flex items-center justify-end pr-3"
                                     style={{ width: `${situation.lastPlay.probability.homeWinPercentage * 100}%` }}
-                                />
+                                >
+                                    <span className="text-[10px] font-black text-white">{Math.round(situation.lastPlay.probability.homeWinPercentage * 100)}%</span>
+                                </div>
                             </div>
                         </div>
                     )}
                 </section>
 
-                {/* 2. FIELD / COURT VISUALIZATION */}
-                <section className="space-y-8">
-                    <FieldVisualization game={game} />
-                </section>
-
-                {/* 3. PERFORMANCE LEADERS MODULE */}
-                <section className="space-y-8">
-                    <div className="flex items-center gap-4 border-l-8 border-white pl-4">
-                        <h3 className="text-sm font-black text-white uppercase tracking-[0.3em]">Game Leaders</h3>
+                {/* 2. STATS SECTION */}
+                <section className="space-y-5">
+                    <div className="flex items-center gap-3 border-l-4 border-white/40 pl-5 mb-2">
+                        <h3 className="text-sm font-black text-white/60 uppercase tracking-[0.3em]">
+                            {gameState === 'in' ? 'Live Game Stats' : gameState === 'pre' ? 'Season Leaders' : 'Final Stats'}
+                        </h3>
                     </div>
 
-                    <div className="space-y-4">
-                        {competition.leaders?.slice(0, 3).map((cat, i) => (
-                            <div key={i} className="bg-black/40 border border-white/10 group overflow-hidden">
-                                <div className="flex items-center p-6 gap-8">
-                                    <div className="relative">
-                                        <div className="w-24 h-24 bg-black overflow-hidden border-2 border-white/10 group-transition-none">
-                                            <img src={cat.leaders?.[0]?.athlete?.headshot} className="w-full h-full object-cover" alt="" />
+                    {displayStats.length > 0 ? (
+                        <div className="space-y-4">
+                            {displayStats.slice(0, 3).map((cat, i) => (
+                                <div key={i} className="bg-white/5 border border-white/8 rounded-xl p-6">
+                                    <div className="flex items-center gap-5">
+                                        <div className="relative flex-shrink-0">
+                                            <div className="w-16 h-16 bg-black/40 overflow-hidden rounded-lg border border-white/10">
+                                                {cat.leaders?.[0]?.athlete?.headshot ? (
+                                                    <img src={cat.leaders[0].athlete.headshot} className="w-full h-full object-cover" alt="" />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center bg-white/5">
+                                                        <span className="text-white/20 text-[10px] font-black">{cat.leaders?.[0]?.team?.abbreviation || '---'}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="absolute -top-1 -right-1 bg-red-600 text-white px-2 py-0.5 text-[8px] font-black uppercase rounded">
+                                                {cat.leaders?.[0]?.team?.abbreviation || '---'}
+                                            </div>
                                         </div>
-                                        <div className="absolute top-0 right-0 bg-red-600 text-white px-3 py-1 text-[10px] font-black uppercase shadow-2xl">
-                                            {cat.leaders?.[0]?.team?.abbreviation || '---'}
+                                        <div className="flex-grow min-w-0">
+                                            <div className="text-[9px] font-black text-red-500 uppercase tracking-widest mb-2">
+                                                {cat.displayName}
+                                            </div>
+                                            <div className="text-base font-black text-white uppercase tracking-tighter truncate">
+                                                {cat.leaders?.[0]?.athlete?.displayName || 'N/A'}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex-grow flex flex-col justify-center gap-1">
-                                        <div className="text-[11px] font-black text-red-500 uppercase tracking-widest">
-                                            {cat.displayName}
+                                        <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                                            <div className="text-2xl font-mono font-black text-white tabular-nums">
+                                                {cat.leaders?.[0]?.displayValue || '0'}
+                                            </div>
+                                            <div className="text-[8px] font-bold text-white/20 uppercase tracking-widest">
+                                                {gameState === 'in' ? 'Game' : 'Season'}
+                                            </div>
                                         </div>
-                                        <div className="text-xl font-black text-white uppercase tracking-tighter whitespace-nowrap overflow-hidden text-ellipsis">
-                                            {cat.leaders?.[0]?.athlete?.displayName}
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col items-end gap-1 border-l border-white/5 pl-8">
-                                        <div className="text-4xl font-mono font-black text-white tabular-nums">
-                                            {cat.leaders?.[0]?.displayValue}
-                                        </div>
-                                        <div className="text-[10px] font-bold text-white/20 uppercase tracking-widest whitespace-nowrap">Stat Value</div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="bg-white/5 border border-white/8 rounded-xl p-8 text-center">
+                            <span className="text-white/40 text-xs font-black uppercase tracking-widest">
+                                {gameState === 'pre' ? 'Stats available at game time' : 'No stats available'}
+                            </span>
+                        </div>
+                    )}
                 </section>
 
-                {/* 4. LIVE FIELD REPORT */}
-                <section className="space-y-8">
-                    <div className="flex items-center border-l-8 border-red-600 pl-4">
-                        <h3 className="text-sm font-black text-white uppercase tracking-[0.3em]">Live Feed</h3>
-                    </div>
+                {/* 3. FIELD / COURT VISUALIZATION - Only show for live games (Below fold) */}
+                {gameState === 'in' && (
+                    <section className="space-y-5">
+                        <div className="flex items-center gap-3 border-l-4 border-red-600 pl-5 mb-2">
+                            <h3 className="text-sm font-black text-white/60 uppercase tracking-[0.3em]">Live Field View</h3>
+                        </div>
+                        <FieldVisualization game={game} gameState={gameState} />
+                    </section>
+                )}
 
-                    <div className="bg-black p-10 border border-white/10 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-red-600" />
-                        <p className="text-lg font-black text-white leading-relaxed italic tracking-tight opacity-90">
-                            "{situation?.lastPlay?.text || "Synchronizing live stadium data feed..."}"
-                        </p>
-                    </div>
-                </section>
+                {/* 4. LIVE FEED - Show for live and post games (Below fold) */}
+                {(gameState === 'in' || gameState === 'post') && (
+                    <section className="space-y-5">
+                        <div className="flex items-center gap-3 border-l-4 border-red-600 pl-5 mb-2">
+                            <h3 className="text-sm font-black text-white/60 uppercase tracking-[0.3em]">
+                                {gameState === 'in' ? 'Live Feed' : 'Last Play'}
+                            </h3>
+                        </div>
+
+                        <div className="bg-white/5 border border-white/8 rounded-xl p-6 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-red-600" />
+                            <p className="text-sm font-black text-white leading-relaxed italic tracking-tight opacity-90 pl-4">
+                                "{situation?.lastPlay?.text || (gameState === 'in' ? "Synchronizing live stadium data feed..." : "Game completed")}"
+                            </p>
+                        </div>
+                    </section>
+                )}
             </div>
 
-            {/* Premium Intelligence Footer */}
-            <div className="flex-none p-8 bg-black border-t border-white/5">
+            {/* Compact Footer */}
+            <div className="flex-none p-6 bg-black border-t border-white/5">
                 <div className="flex justify-between items-center opacity-40">
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-red-600 animate-pulse" />
-                            <span className="text-[10px] font-black text-white uppercase tracking-widest">Signal Active</span>
+                            <div className="w-1.5 h-1.5 bg-red-600 animate-pulse rounded-full" />
+                            <span className="text-[9px] font-black text-white uppercase tracking-widest">Signal Active</span>
                         </div>
-                        <span className="text-[10px] font-mono text-white uppercase">FPS: 60.0</span>
                     </div>
-                    <div className="text-[11px] font-black text-white uppercase tracking-[0.4em] italic">ESPN COMPANION v3.0</div>
+                    <div className="text-[10px] font-black text-white uppercase tracking-[0.3em] italic">ESPN COMPANION v3.0</div>
                 </div>
             </div>
         </div>

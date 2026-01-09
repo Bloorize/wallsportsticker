@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { getLeagueLogo } from '../../utils/timeUtils';
 
 const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [], injuries: [] } }) => {
     const [modeIndex, setModeIndex] = useState(0);
@@ -25,7 +26,9 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
                             id: a.id,
                             title: a.headline,
                             detail: a.description || '',
-                            indicator: a._category
+                            indicator: a._category,
+                            logo: getLeagueLogo(a._category), // Fallback to league logo for news
+                            teamLogo: null
                         }));
                     break;
                 case 'TRANS':
@@ -35,7 +38,8 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
                             id: `trans-${idx}`,
                             title: t.description,
                             detail: t.team?.displayName || 'LEAGUE',
-                            indicator: t._category
+                            indicator: t._category,
+                            logo: getLeagueLogo(t._category) // Always use league logo
                         }));
                     break;
                 case 'INJURY':
@@ -48,7 +52,8 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
                                     id: inj.id,
                                     title: `${inj.athlete?.displayName || 'PLAYER'}: ${inj.status || 'OUT'}`,
                                     detail: `${team.displayName} - ${inj.shortComment || ''}`,
-                                    indicator: team._category
+                                    indicator: team._category,
+                                    logo: getLeagueLogo(team._category) // Always use league logo
                                 });
                             });
                         });
@@ -63,11 +68,13 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
                             leaders.forEach(leaderCat => {
                                 const top = leaderCat.leaders?.[0];
                                 if (top) {
+                                    const team = g.competitions[0].competitors.find(c => c.team.id === top.athlete?.team?.id)?.team;
                                     statsList.push({
                                         id: `stat-${g.id}-${top.athlete?.id}`,
                                         title: `${top.athlete?.displayName}: ${top.displayValue}`,
-                                        detail: `${g.competitions[0].competitors.find(c => c.team.id === top.athlete?.team?.id)?.team.abbreviation || ''} | ${leaderCat.displayName}`,
-                                        indicator: g._category
+                                        detail: `${team?.abbreviation || ''} | ${leaderCat.displayName}`,
+                                        indicator: g._category,
+                                        logo: getLeagueLogo(g._category) // Always use league logo
                                     });
                                 }
                             });
@@ -124,7 +131,15 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
                     <div key={`${item.id}-${idx}`} className="flex-shrink-0 flex items-center h-full">
                         <div className="flex flex-col justify-center px-8 border-l border-white/5">
                             <div className="flex items-center gap-6 mb-1">
-                                <span className="bg-red-700 px-2 py-0.5 text-[10px] font-black text-white uppercase tracking-widest">{item.indicator}</span>
+                                {item.logo ? (
+                                    <img 
+                                        src={item.logo} 
+                                        alt={item.indicator}
+                                        className="w-6 h-6 object-contain rounded-full bg-white/10 p-0.5"
+                                    />
+                                ) : (
+                                    <span className="bg-red-700 px-2 py-0.5 text-[10px] font-black text-white uppercase tracking-widest">{item.indicator}</span>
+                                )}
                                 <span className="font-black text-white text-3xl leading-none uppercase tracking-tight">{item.title}</span>
                             </div>
                             <span className="text-white/30 text-xl font-bold tracking-tight pl-0">{item.detail}</span>

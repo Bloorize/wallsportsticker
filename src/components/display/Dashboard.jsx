@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SpotlightGame from './SpotlightGame';
 import IntelligenceHub from './IntelligenceHub';
 import { FAVORITES } from '../../config/favorites';
+import { formatMountainTime } from '../../utils/timeUtils';
 
 const isFavoriteGame = (game) => {
     if (!game.competitions || !game.competitions[0]) return false;
@@ -51,18 +52,18 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading }) => {
 
                 {/* ESPN Style Category Header */}
                 <div className="flex-none flex items-center bg-[#1a1b1c] border-b-2 border-white/5 shadow-2xl">
-                    <div className="bg-red-700 px-6 py-4 flex items-center justify-center min-w-[120px]">
+                    <div className="bg-red-700 px-8 py-4 flex items-center justify-center min-w-[120px]">
                         <span className="text-xl font-black italic tracking-tighter text-white">
                             {filter === 'All' ? 'SCORE' : filter}
                         </span>
                     </div>
-                    <div className="flex gap-8 px-8 overflow-x-auto no-scrollbar py-4">
+                    <div className="flex gap-8 px-10 overflow-x-auto no-scrollbar py-4">
                         {CATEGORIES.map(cat => (
                             <button
                                 key={cat.id}
                                 onClick={() => onFilterChange(cat.id)}
                                 className={`
-                                    text-xs font-black uppercase tracking-[0.2em] transition-all min-w-max border-b-4
+                                    text-xs font-black uppercase tracking-[0.2em] transition-all min-w-max border-b-4 px-2
                                     ${filter === cat.id
                                         ? 'border-red-600 text-white'
                                         : 'border-transparent text-white/40'}
@@ -122,7 +123,22 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading }) => {
                                                                 <span className="text-white/10">-</span>
                                                                 <span className={parseInt(home.score) > parseInt(away.score) ? 'text-white' : 'text-white/30'}>{home.score}</span>
                                                             </div>
-                                                            <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">{game.status.type.shortDetail}</span>
+                                                            <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">
+                                                                {(() => {
+                                                                    // Format date and time in Mountain Time
+                                                                    if (!game.date) return game.status.type.shortDetail;
+                                                                    const gameDate = new Date(game.date);
+                                                                    if (isNaN(gameDate.getTime())) return game.status.type.shortDetail;
+                                                                    
+                                                                    const dateStr = gameDate.toLocaleDateString('en-US', {
+                                                                        timeZone: 'America/Denver',
+                                                                        month: 'numeric',
+                                                                        day: 'numeric'
+                                                                    });
+                                                                    const timeStr = formatMountainTime(game.date);
+                                                                    return `${dateStr} - ${timeStr}`;
+                                                                })()}
+                                                            </span>
                                                         </div>
                                                         <div className="flex flex-col items-center gap-2 w-1/3">
                                                             <img src={home.team.logo} className="w-12 h-12 object-contain" alt="" />
