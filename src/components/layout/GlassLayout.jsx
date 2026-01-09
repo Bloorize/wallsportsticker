@@ -20,7 +20,7 @@ const GlassLayout = ({ children, filter, games, tickerData }) => {
                     {/* Top Bar */}
                     <header className="h-[120px] flex items-center justify-between px-16 bg-gradient-to-b from-black/60 to-transparent z-50 flex-none">
                         <div className="flex items-center gap-3">
-                            <img src="/src/logo.png" alt="Logo" className="h-24 object-contain drop-shadow-2xl" />
+                            <img src="/logo.png" alt="Logo" className="h-24 object-contain drop-shadow-2xl" />
                         </div>
                     </header>
 
