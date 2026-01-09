@@ -108,10 +108,10 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
     const activeMode = MODES[modeIndex];
 
     return (
-        <div className="h-[100px] bg-black border-t-4 border-red-700 z-50 flex items-center overflow-hidden w-full relative">
+        <div className="h-16 md:h-20 lg:h-[100px] bg-black border-t-4 border-red-700 z-50 flex items-center overflow-hidden w-full relative">
             {/* Mode Label - SOLID Background for ESPN Style */}
-            <div className={`${activeMode.color} h-full px-12 flex flex-col justify-center items-center z-20 shadow-[20px_0_40px_rgba(0,0,0,0.9)] relative min-w-[380px]`}>
-                <span className="text-[10px] text-white/60 font-black uppercase tracking-[0.4em] mb-1">
+            <div className={`${activeMode.color} h-full px-4 md:px-8 lg:px-12 flex flex-col justify-center items-center z-20 shadow-[20px_0_40px_rgba(0,0,0,0.9)] relative min-w-[200px] md:min-w-[300px] lg:min-w-[380px]`}>
+                <span className="text-[8px] md:text-[9px] lg:text-[10px] text-white/60 font-black uppercase tracking-[0.4em] mb-0.5 md:mb-1">
                     {(() => {
                         const currentIndicator = displayItems[0]?.indicator;
                         const labelValue = (filter !== 'All' ? filter : (displayItems.every(item => item.indicator === currentIndicator) ? currentIndicator : 'PRO WIRE')) || 'PRO WIRE';
@@ -120,7 +120,7 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
                         return labelValue;
                     })()}
                 </span>
-                <span className="text-3xl font-black text-white uppercase tracking-tighter leading-none whitespace-nowrap italic">{activeMode.label}</span>
+                <span className="text-lg md:text-2xl lg:text-3xl font-black text-white uppercase tracking-tighter leading-none whitespace-nowrap italic">{activeMode.label}</span>
                 {/* Visual Accent */}
                 <div className="absolute top-0 right-0 w-1 h-full bg-white/20" />
             </div>
@@ -129,24 +129,24 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
             <div key={`${filter}-${activeMode.id}`} className="flex animate-scroll whitespace-nowrap items-center h-full min-w-max bg-[#121212]">
                 {displayItems.map((item, idx) => (
                     <div key={`${item.id}-${idx}`} className="flex-shrink-0 flex items-center h-full">
-                        <div className="flex flex-col justify-center px-8 border-l border-white/5">
-                            <div className="flex items-center gap-6 mb-1">
+                        <div className="flex flex-col justify-center px-4 md:px-6 lg:px-8 border-l border-white/5">
+                            <div className="flex items-center gap-3 md:gap-4 lg:gap-6 mb-0.5 md:mb-1">
                                 {item.logo ? (
                                     <img 
                                         src={item.logo} 
                                         alt={item.indicator}
-                                        className="w-6 h-6 object-contain rounded-full bg-white/10 p-0.5"
+                                        className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 object-contain rounded-full bg-white/10 p-0.5"
                                     />
                                 ) : (
-                                    <span className="bg-red-700 px-2 py-0.5 text-[10px] font-black text-white uppercase tracking-widest">{item.indicator}</span>
+                                    <span className="bg-red-700 px-1.5 md:px-2 py-0.5 text-[8px] md:text-[9px] lg:text-[10px] font-black text-white uppercase tracking-widest">{item.indicator}</span>
                                 )}
-                                <span className="font-black text-white text-3xl leading-none uppercase tracking-tight">{item.title}</span>
+                                <span className="font-black text-white text-base md:text-2xl lg:text-3xl leading-none uppercase tracking-tight">{item.title}</span>
                             </div>
-                            <span className="text-white/30 text-xl font-bold tracking-tight pl-0">{item.detail}</span>
+                            <span className="text-white/30 text-xs md:text-base lg:text-xl font-bold tracking-tight pl-0">{item.detail}</span>
                         </div>
                         {/* High Contrast Separator */}
-                        <div className="w-[100px] flex-shrink-0 flex items-center justify-center">
-                            <div className="w-1 h-8 bg-white/10" />
+                        <div className="w-[60px] md:w-[80px] lg:w-[100px] flex-shrink-0 flex items-center justify-center">
+                            <div className="w-1 h-4 md:h-6 lg:h-8 bg-white/10" />
                         </div>
                     </div>
                 ))}
