@@ -34,11 +34,31 @@ function App() {
         { sport: 'soccer', league: 'esp.1', id: 'SOCCER' },
       ];
 
-      const scorePromises = leagues.map(l =>
-        getScores(l.sport, l.league, { limit: 50 }).then(data =>
-          (data?.events || []).map(evt => ({ ...evt, _category: l.id }))
-        )
-      );
+      // Calculate date range for API and filtering
+      const now = new Date();
+      const pastLimit = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+      const futureLimit = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+      const formatDate = (date) => date.toISOString().split('T')[0].replace(/-/g, '');
+      const apiDateRange = `${formatDate(pastLimit)}-${formatDate(futureLimit)}`;
+
+      const scorePromises = leagues.map(l => {
+        const params = { limit: 50, dates: apiDateRange };
+        if (l.league === 'mens-college-basketball') {
+          params.groups = 50;
+        }
+        return getScores(l.sport, l.league, params).then(data => {
+          const events = data?.events || [];
+          console.log(`[Fetch] ${l.id}: Found ${events.length} games.`);
+          if (l.id === 'NHL') {
+            events.forEach(evt => console.log(`[Fetch] NHL Game: ${evt.name} on ${evt.date}`));
+          }
+          if (events.length > 0 && l.id !== 'NHL') {
+            console.log(`[Fetch] ${l.id} first game date: ${events[0].date}`);
+          }
+          return events.map(evt => ({ ...evt, _category: l.id }));
+        });
+      });
 
       const newsPromises = leagues.map(l => getNews(l.sport, l.league).then(data =>
         (data?.articles || []).map(a => ({ ...a, _category: l.id }))
@@ -62,25 +82,42 @@ function App() {
 
         // Dedup scores
         let combinedScores = Array.from(new Map(scores.map(item => [item.id, item])).values());
-
-        // Relevance Filter: Last 24 Hours to Next 7 Days
-        const now = new Date();
-        const pastLimit = new Date(now.getTime() - (24 * 60 * 60 * 1000));
-        const futureLimit = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
-
         const initialCount = combinedScores.length;
+
+        console.log(`[Filter] API Range: ${apiDateRange}`);
+        console.log(`[Filter] Window: ${pastLimit.toISOString()} to ${futureLimit.toISOString()}`);
+
+        // Filtering
         combinedScores = combinedScores.filter(game => {
           const gameDate = new Date(game.date);
-          return gameDate >= pastLimit && gameDate <= futureLimit;
+          const isWithin = gameDate >= pastLimit && gameDate <= futureLimit;
+          if (!isWithin && game._category === 'NHL') {
+            console.log(`[Filter] NHL Game excluded: ${game.name} on ${game.date}`);
+          }
+          return isWithin;
         });
 
-        console.log(`[Filter] Window: ${pastLimit.toISOString()} to ${futureLimit.toISOString()}`);
         console.log(`[Filter] Removed ${initialCount - combinedScores.length} games outside window.`);
+        console.log(`[Filter] NHL games remaining: ${combinedScores.filter(g => g._category === 'NHL').length}`);
 
+        // Improved Sorting
         combinedScores.sort((a, b) => {
-          const aFav = isFavoriteGame(a); const bFav = isFavoriteGame(b);
-          if (aFav && !bFav) return -1; if (!aFav && bFav) return 1;
-          return 0;
+          const getPriority = (g) => {
+            const state = g.status?.type?.state;
+            if (state === 'in') return 1;
+            if (state === 'pre') return 2;
+            return 3;
+          };
+
+          const pA = getPriority(a);
+          const pB = getPriority(b);
+          if (pA !== pB) return pA - pB;
+
+          const aFav = isFavoriteGame(a);
+          const bFav = isFavoriteGame(b);
+          if (aFav !== bFav) return aFav ? -1 : 1;
+
+          return new Date(a.date) - new Date(b.date);
         });
 
         setAllGames(combinedScores);
