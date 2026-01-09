@@ -136,9 +136,16 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
                                         src={item.logo} 
                                         alt={item.indicator}
                                         className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 object-contain rounded-full bg-white/10 p-0.5"
+                                        onError={(e) => {
+                                            // Hide image and show text badge if logo fails to load
+                                            e.target.style.display = 'none';
+                                        }}
                                     />
-                                ) : (
-                                    <span className="bg-red-700 px-1.5 md:px-2 py-0.5 text-[8px] md:text-[9px] lg:text-[10px] font-black text-white uppercase tracking-widest">{item.indicator}</span>
+                                ) : null}
+                                {!item.logo && (
+                                    <span className="bg-red-700 px-1.5 md:px-2 py-0.5 text-[8px] md:text-[9px] lg:text-[10px] font-black text-white uppercase tracking-widest">
+                                        {item.indicator === 'NCAAM' ? 'NCAA BB' : item.indicator === 'NCAAF' ? 'NCAA FB' : item.indicator}
+                                    </span>
                                 )}
                                 <span className="font-black text-white text-base md:text-2xl lg:text-3xl leading-none uppercase tracking-tight">{item.title}</span>
                             </div>

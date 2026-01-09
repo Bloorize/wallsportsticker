@@ -58,10 +58,11 @@ export const getLeagueLogo = (category) => {
         'NFL': 'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png',
         'NHL': 'https://a.espncdn.com/i/teamlogos/leagues/500/nhl.png',
         'MLB': 'https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png',
-        'NCAAM': 'https://a.espncdn.com/i/teamlogos/leagues/500/ncaa.png',
-        'NCAAF': 'https://a.espncdn.com/i/teamlogos/leagues/500/ncaa.png',
+        // NCAA logos - ESPN may not have separate league logos, so return null to use text badges
+        'NCAAM': null,
+        'NCAAF': null,
         'SOCCER': 'https://a.espncdn.com/i/teamlogos/leagues/500/soccer.png',
     };
     
-    return leagueMap[category] || leagueMap['NBA'];
+    return leagueMap[category] !== undefined ? leagueMap[category] : null;
 };
