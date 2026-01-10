@@ -89,10 +89,10 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading, isHolyWar = fals
                             <button
                                 key={cat.id}
                                 onClick={() => onFilterChange(cat.id)}
-                                className={`
+                                    className={`
                                     text-xs font-black uppercase tracking-[0.2em] transition-all min-w-max border-b-4 px-2 py-2 md:py-1
                                     ${filter === cat.id
-                                        ? 'border-red-600 text-white'
+                                        ? (isHolyWar ? 'border-[#0047BA] text-white' : 'border-red-600 text-white')
                                         : 'border-transparent text-white/40'}
                                 `}
                             >
@@ -108,8 +108,8 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading, isHolyWar = fals
                             className="flex items-center gap-2 group outline-none"
                             title={isPaused ? "Resume Rotation" : "Pause Rotation"}
                         >
-                            <div className={`w-2 h-2 rounded-full ${isPaused ? 'bg-red-600 shadow-[0_0_10px_rgba(220,38,38,1)]' : 'bg-green-500 animate-pulse'} transition-all`} />
-                            <span className={`text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-colors ${isPaused ? 'text-red-500' : 'text-white/40 group-hover:text-white'}`}>
+                            <div className={`w-2 h-2 rounded-full ${isPaused ? (isHolyWar ? 'bg-[#0047BA] shadow-[0_0_10px_rgba(0,71,186,1)]' : 'bg-red-600 shadow-[0_0_10px_rgba(220,38,38,1)]') : 'bg-green-500 animate-pulse'} transition-all`} />
+                            <span className={`text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-colors ${isPaused ? (isHolyWar ? 'text-[#0047BA]' : 'text-red-500') : 'text-white/40 group-hover:text-white'}`}>
                                 {isPaused ? 'Paused' : 'Live'}
                             </span>
                         </button>
@@ -157,11 +157,11 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading, isHolyWar = fals
                                                     key={`${game.id}-${idx}`}
                                                     className={`
                                                         flex-none w-[280px] md:w-[300px] lg:w-80 h-full p-4 md:p-5 lg:p-6 border-r border-white/5 transition-colors relative
-                                                        ${isActualSelected ? 'bg-red-950/20' : 'bg-transparent'}
+                                                        ${isActualSelected ? (isHolyWar ? 'bg-[#0047BA]/20' : 'bg-red-950/20') : 'bg-transparent'}
                                                     `}
                                                 >
                                                     {isActualSelected && (
-                                                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-red-600" />
+                                                        <div className={`absolute bottom-0 left-0 right-0 h-1 ${isHolyWar ? 'bg-[#0047BA]' : 'bg-red-600'}`} />
                                                     )}
                                                     <div className="flex justify-between items-center h-full">
                                                         <div className="flex flex-col items-center gap-1 md:gap-2 w-1/3">
@@ -174,7 +174,7 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading, isHolyWar = fals
                                                                 <span className="text-white/10">-</span>
                                                                 <span className={parseInt(home.score) > parseInt(away.score) ? 'text-white' : 'text-white/30'}>{home.score}</span>
                                                             </div>
-                                                            <span className="text-[9px] md:text-[10px] font-black text-red-500 uppercase tracking-widest">
+                                                            <span className={`text-[9px] md:text-[10px] font-black ${isHolyWar ? 'text-[#0047BA]' : 'text-red-500'} uppercase tracking-widest`}>
                                                                 {(() => {
                                                                     // Format date and time in Mountain Time
                                                                     if (!game.date) return game.status.type.shortDetail;

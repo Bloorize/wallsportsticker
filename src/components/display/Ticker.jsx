@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { getLeagueLogo } from '../../utils/timeUtils';
 
-const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [], injuries: [] } }) => {
+const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [], injuries: [] }, isHolyWar = false }) => {
     const [modeIndex, setModeIndex] = useState(0);
     const [displayItems, setDisplayItems] = useState([]);
 
     const MODES = [
-        { id: 'NEWS', label: 'NEWS WIRE', color: 'bg-slate-800' },
-        { id: 'TRANS', label: 'TRANSACTIONS', color: 'bg-red-700' },
-        { id: 'INJURY', label: 'INJURY REPORT', color: 'bg-red-800' },
-        { id: 'STATS', label: 'TOP PERFORMERS', color: 'bg-slate-900' },
+        { id: 'NEWS', label: 'NEWS WIRE', color: isHolyWar ? 'bg-[#001a3d]' : 'bg-slate-800' },
+        { id: 'TRANS', label: 'TRANSACTIONS', color: isHolyWar ? 'bg-[#003a9e]' : 'bg-red-700' },
+        { id: 'INJURY', label: 'INJURY REPORT', color: isHolyWar ? 'bg-[#002E5D]' : 'bg-red-800' },
+        { id: 'STATS', label: 'TOP PERFORMERS', color: isHolyWar ? 'bg-[#001a3d]' : 'bg-slate-900' },
     ];
 
     useEffect(() => {

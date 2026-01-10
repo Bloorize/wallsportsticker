@@ -1,7 +1,7 @@
 import React from 'react';
 import { formatMountainDateTime, formatMountainTime } from '../../utils/timeUtils';
 
-const SpotlightGame = ({ game }) => {
+const SpotlightGame = ({ game, isHolyWar = false }) => {
     if (!game) return null;
 
     const competition = game.competitions[0];
@@ -11,7 +11,7 @@ const SpotlightGame = ({ game }) => {
     return (
         <div className="w-full h-full flex flex-col bg-black border border-white/5 shadow-3xl overflow-hidden">
             {/* ESPN Style Banner */}
-            <div className="flex-none bg-red-700 px-4 md:px-8 lg:px-12 py-3 md:py-3.5 lg:py-4 flex items-center justify-between">
+            <div className={`flex-none ${isHolyWar ? 'bg-[#003a9e]' : 'bg-red-700'} px-4 md:px-8 lg:px-12 py-3 md:py-3.5 lg:py-4 flex items-center justify-between`}>
                 <div className="flex items-center gap-3 md:gap-4 lg:gap-6 pl-2">
                     <span className="text-base md:text-xl lg:text-2xl font-black italic tracking-tighter text-white">LIVE SCOREBOARD</span>
                     <div className="h-4 md:h-5 lg:h-6 w-px bg-white/20" />
