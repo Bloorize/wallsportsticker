@@ -348,7 +348,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                         </h3>
                         </div>
                     </div>
-                    <div className="flex-grow py-4 md:py-6 px-2 md:px-3">
+                    <div className="flex-grow py-4 md:py-6 px-8 md:px-10 lg:px-12">
                         {isLive && liveStats ? (
                             <div className="space-y-2">
                                 <StatRow label="FG %" awayValue={`${liveStats.away.fgPct}%`} homeValue={`${liveStats.home.fgPct}%`} />
@@ -436,7 +436,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-grow py-4 md:py-6 px-2 md:px-3">
+                    <div className="flex-grow py-4 md:py-6 px-8 md:px-10 lg:px-12">
                         {currentSeasonStats.length > 0 ? (
                             <div className="space-y-2">
                                 {currentSeasonStats.map((row, i) => (
