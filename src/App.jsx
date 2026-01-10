@@ -215,6 +215,21 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Handle GitHub Pages 404 redirect
+  useEffect(() => {
+    const path = window.location.pathname;
+    const search = window.location.search;
+    
+    // Check if this is a GitHub Pages redirect (format: /?/path)
+    if (search.includes('?/')) {
+      const pathMatch = search.match(/\?\/?(.+?)(?:&|$)/);
+      if (pathMatch) {
+        const newPath = '/' + pathMatch[1].replace(/~and~/g, '&');
+        window.history.replaceState({}, '', newPath);
+      }
+    }
+  }, []);
+
   return (
     <Router basename="/wallsportsticker">
       <Routes>
