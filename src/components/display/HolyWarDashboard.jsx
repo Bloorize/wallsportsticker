@@ -40,7 +40,7 @@ const LiveStatsSection = ({ stats, awayTeam, homeTeam }) => {
     if (!stats) return null;
     
     return (
-        <div className="bg-[#002E5D] p-4 md:p-5 lg:p-6">
+        <div className="bg-[#001428] p-4 md:p-5 lg:p-6">
             {/* HEADING */}
             <div className="border-b border-white/20 pb-3 mb-4 px-4">
                 <h3 className="text-white text-base md:text-lg font-bold uppercase tracking-wide mb-2">
@@ -135,7 +135,7 @@ const SeasonStatsPanel = ({ stats, cycleIndex, awayTeam, homeTeam }) => {
     const [homeLogoError, setHomeLogoError] = useState(false);
     
     return (
-        <div className="bg-[#002E5D] h-full flex flex-col shadow-2xl border border-white/10 overflow-hidden">
+        <div className="bg-[#001428] h-full flex flex-col shadow-2xl border border-white/10 overflow-hidden">
             {/* Header with HEADING */}
             <div className="px-4 md:px-5 lg:px-6 py-4 bg-white/5 border-b border-white/10">
                 <div className="flex items-center justify-between mb-3">
@@ -347,7 +347,7 @@ const HolyWarDashboard = ({ game, loading }) => {
     return (
         <div className="w-full h-full flex flex-col bg-[#002E5D] p-4 md:p-5 lg:p-6 gap-4 md:gap-5 lg:gap-6">
             {/* Top Score Section */}
-            <div className="flex-none bg-[#002E5D] p-6 md:p-8 lg:p-10 rounded-lg border border-white/10">
+            <div className="flex-none bg-[#001428] p-6 md:p-8 lg:p-10 rounded-lg border-x border-b border-white/10">
                 {/* THE HOLY WAR text centered above score */}
                 <div className="text-center mb-4 px-4">
                     <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-white uppercase tracking-tight leading-none mb-1">
@@ -425,7 +425,7 @@ const HolyWarDashboard = ({ game, loading }) => {
             <div className="flex-1 flex gap-4 md:gap-5 lg:gap-6 min-h-0">
                 {/* Video Section - 16:9 Landscape Container */}
                 <div className="flex-[7] flex flex-col min-w-0">
-                    <div className="flex-1 bg-[#002E5D] rounded-lg overflow-hidden shadow-2xl relative">
+                    <div className="flex-1 bg-[#001428] rounded-lg overflow-hidden shadow-2xl relative">
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
                                 {/* 16:9 aspect ratio container */}
@@ -450,7 +450,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 </div>
                             </>
                         ) : (
-                            <div className="aspect-video w-full flex items-center justify-center bg-[#002E5D]">
+                            <div className="aspect-video w-full flex items-center justify-center bg-[#001428]">
                                 <div className="flex flex-col items-center gap-3 p-4">
                                     <div className="w-12 h-12 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                                     <span className="text-white/50 text-sm">Loading highlights...</span>
