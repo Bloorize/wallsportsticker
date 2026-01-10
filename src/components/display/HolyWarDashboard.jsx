@@ -71,61 +71,61 @@ const LiveStatsSection = ({ stats, awayTeam, homeTeam }) => {
             </div>
             
             {/* Stats Rows */}
-            <div className="space-y-2 px-4">
-                <div className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
+            <div className="space-y-2">
+                <div className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
                         FG%
                     </span>
-                    <div className="flex items-center gap-4 md:gap-6">
+                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
                         <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                             {stats.away.fgPct}%
                         </span>
-                        <div className="w-px h-5 bg-white/20" />
+                        <div className="w-px h-4 bg-white/20" />
                         <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                             {stats.home.fgPct}%
                         </span>
                     </div>
                 </div>
                 
-                <div className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
+                <div className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
                         3PT
                     </span>
-                    <div className="flex items-center gap-4 md:gap-6">
+                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
                         <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                             {stats.away.fg3}
                         </span>
-                        <div className="w-px h-5 bg-white/20" />
+                        <div className="w-px h-4 bg-white/20" />
                         <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                             {stats.home.fg3}
                         </span>
                     </div>
                 </div>
                 
-                <div className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
+                <div className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
                         REB
                     </span>
-                    <div className="flex items-center gap-4 md:gap-6">
+                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
                         <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                             {stats.away.reb}
                         </span>
-                        <div className="w-px h-5 bg-white/20" />
+                        <div className="w-px h-4 bg-white/20" />
                         <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                             {stats.home.reb}
                         </span>
                     </div>
                 </div>
                 
-                <div className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
+                <div className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
                         AST
                     </span>
-                    <div className="flex items-center gap-4 md:gap-6">
+                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
                         <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                             {stats.away.ast}
                         </span>
-                        <div className="w-px h-5 bg-white/20" />
+                        <div className="w-px h-4 bg-white/20" />
                         <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                             {stats.home.ast}
                         </span>
@@ -187,15 +187,15 @@ const SeasonStatsPanel = ({ stats, cycleIndex, awayTeam, homeTeam }) => {
                 {currentStats.length > 0 ? (
                     <div className="space-y-2">
                         {currentStats.map((row, i) => (
-                            <div key={i} className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                                <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
+                            <div key={i} className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                                <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
                                     {row[0]}
                                 </span>
-                                <div className="flex items-center gap-4 md:gap-6">
+                                <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
                                     <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                                         {row[1]}
                                     </span>
-                                    <div className="w-px h-5 bg-white/20" />
+                                    <div className="w-px h-4 bg-white/20" />
                                     <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                                         {row[2]}
                                     </span>
