@@ -550,20 +550,29 @@ const HolyWarDashboard = ({ game, loading }) => {
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
                                 {/* 16:9 aspect ratio container - YouTube IFrame API Player or Fallback */}
-                                <div className="aspect-video w-full">
-                                    {typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady ? (
-                                        <div id="holy-war-video-player" className="w-full h-full"></div>
-                                    ) : (
-                                        // Fallback iframe for browsers without YouTube API support (like some smart TVs)
-                                        <iframe
-                                            key={highlights[mediaIndex].videoId}
-                                            className="w-full h-full"
-                                            src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0`}
-                                            title={highlights[mediaIndex].title}
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowFullScreen
-                                        />
-                                    )}
+                                <div className="aspect-video w-full relative">
+                                    {/* Always render container for YouTube API player (hidden until ready) */}
+                                    <div 
+                                        id="holy-war-video-player" 
+                                        className="w-full h-full absolute inset-0"
+                                        style={{ 
+                                            display: (typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady) ? 'block' : 'none',
+                                            zIndex: 10
+                                        }}
+                                    ></div>
+                                    {/* Fallback iframe - show when API not available or not ready */}
+                                    <iframe
+                                        key={`fallback-${highlights[mediaIndex].videoId}`}
+                                        className="w-full h-full absolute inset-0"
+                                        style={{
+                                            display: (typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady) ? 'none' : 'block',
+                                            zIndex: 5
+                                        }}
+                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0`}
+                                        title={highlights[mediaIndex].title}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    />
                                 </div>
                                 {/* Video indicator dots - Clickable for manual selection */}
                                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
