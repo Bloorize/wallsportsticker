@@ -5,84 +5,137 @@ import { getGameSummary } from '../../services/espn';
 import { RIVALRY_DATA } from '../../config/rivalryData';
 
 /**
- * Broadcast-Style Holy War Dashboard
- * No grids, overlapping elements, broadcast graphics aesthetic
- * Zero dead space - every pixel earns its place
+ * Holy War Dashboard - Proper layout with floating elements
+ * NO GRADIENTS - Solid colors only
+ * PADDING EVERYWHERE - Text never touches edges
  */
 
-// Live Stats Bar Component - Broadcast-style horizontal ticker
-const LiveStatsBar = ({ stats }) => {
+// Live Stats Section Component - With clear HEADING
+const LiveStatsSection = ({ stats }) => {
     if (!stats) return null;
     
     return (
-        <div className="w-full bg-black/40 backdrop-blur-sm border-y border-white/20 py-3 px-6">
-            <div className="flex items-center justify-center gap-8 md:gap-12">
-                <div className="flex items-center gap-2">
-                    <span className="text-white/60 text-xs font-bold uppercase tracking-wider">FG%</span>
-                    <span className="text-white text-lg font-black tabular-nums">
-                        {stats.away.fgPct} - {stats.home.fgPct}
-                    </span>
+        <div className="bg-[#001428] p-4 md:p-5 lg:p-6">
+            {/* HEADING */}
+            <div className="border-b border-white/20 pb-3 mb-4">
+                <h3 className="text-white text-base md:text-lg font-bold uppercase tracking-wide mb-2">
+                    LIVE STATS
+                </h3>
+                <div className="flex text-xs md:text-sm text-white/60 px-2">
+                    <span className="w-24 md:w-32">STAT</span>
+                    <span className="w-16 md:w-20 text-right">BYU</span>
+                    <span className="w-16 md:w-20 text-right">UTAH</span>
                 </div>
-                <div className="w-px h-6 bg-white/20" />
-                <div className="flex items-center gap-2">
-                    <span className="text-white/60 text-xs font-bold uppercase tracking-wider">3PT</span>
-                    <span className="text-white text-lg font-black tabular-nums">
-                        {stats.away.fg3} - {stats.home.fg3}
+            </div>
+            
+            {/* Stats Rows */}
+            <div className="space-y-2">
+                <div className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
+                        FG%
                     </span>
+                    <div className="flex items-center gap-4 md:gap-6">
+                        <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
+                            {stats.away.fgPct}%
+                        </span>
+                        <div className="w-px h-5 bg-white/20" />
+                        <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
+                            {stats.home.fgPct}%
+                        </span>
+                    </div>
                 </div>
-                <div className="w-px h-6 bg-white/20" />
-                <div className="flex items-center gap-2">
-                    <span className="text-white/60 text-xs font-bold uppercase tracking-wider">REB</span>
-                    <span className="text-white text-lg font-black tabular-nums">
-                        {stats.away.reb} - {stats.home.reb}
+                
+                <div className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
+                        3PT
                     </span>
+                    <div className="flex items-center gap-4 md:gap-6">
+                        <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
+                            {stats.away.fg3}
+                        </span>
+                        <div className="w-px h-5 bg-white/20" />
+                        <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
+                            {stats.home.fg3}
+                        </span>
+                    </div>
                 </div>
-                <div className="w-px h-6 bg-white/20" />
-                <div className="flex items-center gap-2">
-                    <span className="text-white/60 text-xs font-bold uppercase tracking-wider">AST</span>
-                    <span className="text-white text-lg font-black tabular-nums">
-                        {stats.away.ast} - {stats.home.ast}
+                
+                <div className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
+                        REB
                     </span>
+                    <div className="flex items-center gap-4 md:gap-6">
+                        <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
+                            {stats.away.reb}
+                        </span>
+                        <div className="w-px h-5 bg-white/20" />
+                        <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
+                            {stats.home.reb}
+                        </span>
+                    </div>
+                </div>
+                
+                <div className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
+                        AST
+                    </span>
+                    <div className="flex items-center gap-4 md:gap-6">
+                        <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
+                            {stats.away.ast}
+                        </span>
+                        <div className="w-px h-5 bg-white/20" />
+                        <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
+                            {stats.home.ast}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-// Season Stats Panel - Floating, minimal
+// Season Stats Panel - With clear HEADING
 const SeasonStatsPanel = ({ stats, cycleIndex }) => {
     const statsSet1 = stats.slice(0, 4);
     const statsSet2 = stats.slice(4, 8);
     const currentStats = cycleIndex === 0 ? statsSet1 : statsSet2;
     
     return (
-        <div className="bg-[#001428]/90 backdrop-blur-sm shadow-2xl rounded-lg border border-white/10 overflow-hidden">
-            {/* Header */}
-            <div className="px-4 py-3 bg-white/5 border-b border-white/10">
-                <div className="flex items-center justify-between">
-                    <h3 className="text-white text-sm font-bold uppercase tracking-wide">Season Stats</h3>
+        <div className="bg-[#001428] h-full flex flex-col shadow-2xl border border-white/10 overflow-hidden">
+            {/* Header with HEADING */}
+            <div className="px-4 md:px-5 lg:px-6 py-4 bg-white/5 border-b border-white/10">
+                <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-white text-base md:text-lg font-bold uppercase tracking-wide">
+                        SEASON STATS
+                    </h3>
                     <div className="flex gap-1.5">
                         <div className={`w-1.5 h-1.5 rounded-full transition-all ${cycleIndex === 0 ? 'bg-white w-2 h-2' : 'bg-white/30'}`} />
                         <div className={`w-1.5 h-1.5 rounded-full transition-all ${cycleIndex === 1 ? 'bg-white w-2 h-2' : 'bg-white/30'}`} />
                     </div>
                 </div>
+                {/* Column Headers */}
+                <div className="flex text-xs md:text-sm text-white/60 px-2">
+                    <span className="w-24 md:w-32">STAT</span>
+                    <span className="w-16 md:w-20 text-right">BYU</span>
+                    <span className="w-16 md:w-20 text-right">UTAH</span>
+                </div>
             </div>
             
             {/* Stats */}
-            <div className="p-3">
+            <div className="flex-1 overflow-y-auto p-4 md:p-5 lg:p-6">
                 {currentStats.length > 0 ? (
                     <div className="space-y-2">
                         {currentStats.map((row, i) => (
                             <div key={i} className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
-                                <span className="text-white/70 text-xs font-medium uppercase tracking-wide flex-1">
+                                <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
                                     {row[0]}
                                 </span>
-                                <div className="flex items-center gap-6">
-                                    <span className="text-white text-base font-bold tabular-nums w-20 text-right">
+                                <div className="flex items-center gap-4 md:gap-6">
+                                    <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                                         {row[1]}
                                     </span>
-                                    <div className="w-px h-4 bg-white/20" />
-                                    <span className="text-white/60 text-base font-bold tabular-nums w-20 text-left">
+                                    <div className="w-px h-5 bg-white/20" />
+                                    <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
                                         {row[2]}
                                     </span>
                                 </div>
@@ -91,7 +144,7 @@ const SeasonStatsPanel = ({ stats, cycleIndex }) => {
                     </div>
                 ) : (
                     <div className="py-8 text-center">
-                        <span className="text-white/50 text-xs">Loading stats...</span>
+                        <span className="text-white/50 text-xs md:text-sm">Loading stats...</span>
                     </div>
                 )}
             </div>
@@ -225,8 +278,8 @@ const HolyWarDashboard = ({ game, loading }) => {
 
     if (loading || !game) {
         return (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#002E5D] via-[#001a3d] to-[#001428]">
-                <div className="flex flex-col items-center gap-4">
+            <div className="w-full h-full flex items-center justify-center bg-[#002E5D] p-4">
+                <div className="flex flex-col items-center gap-4 p-4">
                     <div className="w-12 h-12 border-3 border-white/20 border-t-white rounded-full animate-spin" />
                     <div className="text-white/60 text-sm font-medium uppercase">Loading...</div>
                 </div>
@@ -245,39 +298,33 @@ const HolyWarDashboard = ({ game, loading }) => {
     const seasonStats = basketballData?.season2025_2026?.teamComparison?.rows || [];
 
     return (
-        <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-[#002E5D] via-[#001a3d] to-[#001428]">
-            {/* Subtle background texture */}
-            <div className="absolute inset-0 opacity-5" style={{
-                backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                                  radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)`
-            }} />
-            
-            {/* Top Score Section - Broadcast Style */}
-            <div className="relative z-10 px-8 md:px-12 lg:px-16 pt-6 md:pt-8 pb-4">
+        <div className="w-full h-full flex flex-col bg-[#002E5D] p-4 md:p-5 lg:p-6 gap-4 md:gap-5 lg:gap-6">
+            {/* Top Score Section */}
+            <div className="flex-none bg-[#001428] p-6 md:p-8 lg:p-10 rounded-lg border border-white/10">
                 <div className="flex items-center justify-between">
                     {/* Away Team Logo - LARGE */}
-                    <div className="flex flex-col items-center gap-3 flex-shrink-0">
+                    <div className="flex flex-col items-center gap-3 md:gap-4 flex-shrink-0 px-4">
                         <img 
                             src={awayTeam.team.logo} 
                             alt={awayTeam.team.displayName}
-                            className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 object-contain drop-shadow-2xl"
+                            className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain drop-shadow-2xl"
                         />
-                        <span className="text-white text-xl md:text-2xl font-black uppercase tracking-wide">
+                        <span className="text-white text-lg md:text-xl lg:text-2xl font-black uppercase tracking-wide">
                             {awayTeam.team.abbreviation}
                         </span>
                     </div>
 
                     {/* Score Display - HUGE */}
-                    <div className="flex-1 flex flex-col items-center justify-center mx-8 md:mx-12">
-                        <div className="flex items-center gap-6 md:gap-10">
-                            <div className={`text-7xl md:text-8xl lg:text-9xl font-black tabular-nums leading-none
+                    <div className="flex-1 flex flex-col items-center justify-center mx-6 md:mx-8 lg:mx-12 px-4">
+                        <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
+                            <div className={`text-6xl md:text-7xl lg:text-8xl font-black tabular-nums leading-none
                                 ${parseInt(awayTeam.score || 0) > parseInt(homeTeam.score || 0) 
                                     ? 'text-white' 
                                     : 'text-white/50'}`}>
                                 {awayTeam.score || '0'}
                             </div>
                             
-                            <div className="flex flex-col items-center gap-2">
+                            <div className="flex flex-col items-center gap-2 px-4">
                                 {isLive && (
                                     <div className="w-2 h-2 bg-white rounded-full animate-pulse shadow-lg shadow-white/50" />
                                 )}
@@ -286,7 +333,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 </span>
                             </div>
                             
-                            <div className={`text-7xl md:text-8xl lg:text-9xl font-black tabular-nums leading-none
+                            <div className={`text-6xl md:text-7xl lg:text-8xl font-black tabular-nums leading-none
                                 ${parseInt(homeTeam.score || 0) > parseInt(awayTeam.score || 0) 
                                     ? 'text-white' 
                                     : 'text-white/50'}`}>
@@ -295,7 +342,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                         </div>
                         
                         {/* Game Status Badge */}
-                        <div className="mt-4 px-6 py-2 bg-black/40 backdrop-blur-sm rounded-full border border-white/20">
+                        <div className="mt-4 px-6 py-2 bg-black/40 rounded-full border border-white/20">
                             <span className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">
                                 {isLive ? game.status.type.detail : (game.status.type.shortDetail || formatMountainTime(game.date))}
                             </span>
@@ -303,79 +350,68 @@ const HolyWarDashboard = ({ game, loading }) => {
                     </div>
 
                     {/* Home Team Logo - LARGE, Grayscale */}
-                    <div className="flex flex-col items-center gap-3 flex-shrink-0">
+                    <div className="flex flex-col items-center gap-3 md:gap-4 flex-shrink-0 px-4">
                         <img 
                             src={homeTeam.team.logo} 
                             alt={homeTeam.team.displayName}
-                            className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 object-contain drop-shadow-2xl"
+                            className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain drop-shadow-2xl"
                             style={{ filter: 'grayscale(100%) brightness(1.5)' }}
                         />
-                        <span className="text-white text-xl md:text-2xl font-black uppercase tracking-wide">
+                        <span className="text-white text-lg md:text-xl lg:text-2xl font-black uppercase tracking-wide">
                             {homeTeam.team.abbreviation}
                         </span>
                     </div>
                 </div>
             </div>
 
-            {/* Live Stats Bar - Broadcast Style Horizontal Ticker */}
-            {isLive && liveStats && (
-                <div className="relative z-10 animate-fadeIn">
-                    <LiveStatsBar stats={liveStats} />
-                </div>
-            )}
-
-            {/* Content Area: Video + Season Stats */}
-            <div className="relative z-10 flex-1 flex gap-4 md:gap-6 px-8 md:px-12 lg:px-16 pb-4 min-h-0">
-                {/* Video Section - Landscape, 70% width */}
-                <div className="flex-[7] relative rounded-lg overflow-hidden shadow-2xl bg-black">
-                    {highlights.length > 0 && highlights[mediaIndex] ? (
-                        <>
-                            <iframe
-                                className="absolute inset-0 w-full h-full"
-                                src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex].videoId}`}
-                                title={highlights[mediaIndex].title}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            />
-                            {/* Video indicator dots */}
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                                {highlights.map((_, idx) => (
-                                    <div 
-                                        key={idx}
-                                        className={`w-2 h-2 rounded-full transition-all
-                                            ${idx === mediaIndex ? 'bg-white w-2.5 h-2.5 shadow-lg' : 'bg-white/50'}`}
+            {/* Content Area: Video + Stats */}
+            <div className="flex-1 flex gap-4 md:gap-5 lg:gap-6 min-h-0">
+                {/* Video Section - 16:9 Landscape Container */}
+                <div className="flex-[7] flex flex-col min-w-0">
+                    <div className="flex-1 bg-black rounded-lg overflow-hidden shadow-2xl relative">
+                        {highlights.length > 0 && highlights[mediaIndex] ? (
+                            <>
+                                {/* 16:9 aspect ratio container */}
+                                <div className="aspect-video w-full">
+                                    <iframe
+                                        className="w-full h-full"
+                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex].videoId}`}
+                                        title={highlights[mediaIndex].title}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
                                     />
-                                ))}
+                                </div>
+                                {/* Video indicator dots */}
+                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                    {highlights.map((_, idx) => (
+                                        <div 
+                                            key={idx}
+                                            className={`w-2 h-2 rounded-full transition-all
+                                                ${idx === mediaIndex ? 'bg-white w-2.5 h-2.5 shadow-lg' : 'bg-white/50'}`}
+                                        />
+                                    ))}
+                                </div>
+                            </>
+                        ) : (
+                            <div className="aspect-video w-full flex items-center justify-center">
+                                <div className="flex flex-col items-center gap-3 p-4">
+                                    <div className="w-12 h-12 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                    <span className="text-white/50 text-sm">Loading highlights...</span>
+                                </div>
                             </div>
-                        </>
-                    ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="flex flex-col items-center gap-3">
-                                <div className="w-12 h-12 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                <span className="text-white/50 text-sm">Loading highlights...</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Season Stats Panel - Floating, 30% width */}
-                <div className="flex-[3] flex items-start">
-                    <div className="w-full sticky top-4">
-                        <SeasonStatsPanel stats={seasonStats} cycleIndex={statCycleIndex} />
+                        )}
                     </div>
                 </div>
+
+                {/* Stats Panel - Right Side */}
+                <div className="flex-[3] flex flex-col min-w-0">
+                    {isLive && liveStats ? (
+                        <LiveStatsSection stats={liveStats} />
+                    ) : (
+                        <SeasonStatsPanel stats={seasonStats} cycleIndex={statCycleIndex} />
+                    )}
+                </div>
             </div>
-            
-            {/* Fade-in animation */}
-            <style>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(-10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-fadeIn {
-                    animation: fadeIn 0.5s ease-out;
-                }
-            `}</style>
         </div>
     );
 };

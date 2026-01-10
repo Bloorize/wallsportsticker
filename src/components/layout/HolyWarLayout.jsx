@@ -3,18 +3,26 @@ import RivalryTicker from '../display/RivalryTicker';
 import logo from '/logo.png';
 
 /**
- * Holy War Layout - Minimal header, dashboard owns the space
- * Broadcast graphics aesthetic - clean, minimal chrome
+ * Holy War Layout - Floating logo, minimal header
+ * Logo floats over grid boundaries with z-50
  */
 const HolyWarLayout = ({ children }) => {
     return (
-        <div className="h-screen w-screen flex flex-col bg-[#002E5D] overflow-hidden">
+        <div className="h-screen w-screen flex flex-col bg-[#002E5D] overflow-hidden relative">
+            {/* Floating Wall Sports Logo - BIG, top left, z-50 */}
+            <div className="absolute top-4 left-4 md:top-6 md:left-6 z-50">
+                <img 
+                    src={logo} 
+                    alt="Wall Sports Logo" 
+                    className="h-20 md:h-24 lg:h-28 object-contain drop-shadow-2xl"
+                />
+            </div>
+
             {/* Minimal Header Bar */}
-            <header className="flex-none h-12 md:h-14 flex items-center justify-between px-4 md:px-6 
-                bg-black/20 backdrop-blur-sm border-b border-white/10">
+            <header className="flex-none h-12 md:h-14 flex items-center justify-between px-4 md:px-6 pl-28 md:pl-32 lg:pl-36
+                bg-[#001428] border-b border-white/10">
                 
                 <div className="flex items-center gap-3 md:gap-4">
-                    <img src={logo} alt="BYU Logo" className="h-7 md:h-8 object-contain" />
                     <div className="flex flex-col">
                         <h1 className="text-sm md:text-base font-black text-white uppercase tracking-tight leading-none">
                             THE HOLY WAR
@@ -26,7 +34,7 @@ const HolyWarLayout = ({ children }) => {
                 </div>
 
                 {/* Live indicator */}
-                <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-white/10 rounded backdrop-blur-sm">
+                <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-white/10 rounded">
                     <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                     <span className="text-xs font-bold text-white uppercase tracking-wide">LIVE</span>
                 </div>
