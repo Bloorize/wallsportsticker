@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import GlassLayout from './components/layout/GlassLayout'
 import Dashboard from './components/display/Dashboard'
+import HolyWar from './pages/HolyWar'
 import { getScores, getNews, getTransactions, getInjuries } from './services/espn'
 import { FAVORITES, POWER_CONFERENCE_GROUPS } from './config/favorites'
 
@@ -214,14 +216,21 @@ function App() {
   }, []);
 
   return (
-    <GlassLayout filter={filter} games={allGames} tickerData={tickerData}>
-      <Dashboard
-        filter={filter}
-        onFilterChange={setFilter}
-        allGames={allGames}
-        loading={loading}
-      />
-    </GlassLayout>
+    <Router>
+      <Routes>
+        <Route path="/holywar" element={<HolyWar />} />
+        <Route path="/" element={
+          <GlassLayout filter={filter} games={allGames} tickerData={tickerData}>
+            <Dashboard
+              filter={filter}
+              onFilterChange={setFilter}
+              allGames={allGames}
+              loading={loading}
+            />
+          </GlassLayout>
+        } />
+      </Routes>
+    </Router>
   )
 }
 

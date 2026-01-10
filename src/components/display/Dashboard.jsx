@@ -12,7 +12,7 @@ const isFavoriteGame = (game) => {
     return teamAbbrevs.some(abbr => allFavs.includes(abbr));
 };
 
-const Dashboard = ({ filter, onFilterChange, allGames, loading }) => {
+const Dashboard = ({ filter, onFilterChange, allGames, loading, isHolyWar = false }) => {
     const [filteredGames, setFilteredGames] = useState([]);
     const [spotlightIndex, setSpotlightIndex] = useState(0);
     const [marqueeOffset, setMarqueeOffset] = useState(280);
@@ -132,7 +132,7 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading }) => {
                     ) : filteredGames.length > 0 ? (
                         <>
                             <div className="flex-grow">
-                                <SpotlightGame key={filteredGames[spotlightIndex]?.id} game={filteredGames[spotlightIndex]} />
+                                <SpotlightGame key={filteredGames[spotlightIndex]?.id} game={filteredGames[spotlightIndex]} isHolyWar={isHolyWar} />
                             </div>
 
                             {/* Horizontal Stepped Marquee */}

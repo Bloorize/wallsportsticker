@@ -241,7 +241,7 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
             {/* Highlights Section - Only if playable videos exist */}
             {highlights.length > 0 ? (
                 <section className="space-y-4">
-                    <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 mb-2">
+                    <div className={`flex items-center gap-2 md:gap-3 border-l-4 ${borderColor} pl-3 md:pl-4 mb-2`}>
                         <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Game Footage</h3>
                     </div>
                     <div className="space-y-3">
@@ -271,7 +271,7 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
                 displayedMedia.length > 0 && (
                     <section className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 mb-2">
+                            <div className={`flex items-center gap-2 md:gap-3 border-l-4 ${borderColor} pl-3 md:pl-4 mb-2`}>
                                 <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Visual Intel</h3>
                             </div>
                             <span className="text-[8px] font-black text-white/20 uppercase tracking-widest mr-2">
@@ -288,7 +288,7 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2.5 md:p-3">
-                                            <span className="text-[7px] md:text-[8px] font-black text-red-500 uppercase tracking-[0.2em] mb-1">{item.type}</span>
+                                            <span className={`text-[7px] md:text-[8px] font-black ${accentColor} uppercase tracking-[0.2em] mb-1`}>{item.type}</span>
                                             <p className="text-[9px] md:text-[10px] font-black text-white line-clamp-2 uppercase leading-tight tracking-tighter">
                                                 {item.title}
                                             </p>
@@ -463,7 +463,7 @@ const StatAvatar = ({ leader }) => {
     );
 };
 
-const IntelligenceHub = ({ game }) => {
+const IntelligenceHub = ({ game, isHolyWar = false }) => {
     const [subMode, setSubMode] = useState(0); // 0: Stats, 1: Media, 2: Feed/Field
     const [statPage, setStatPage] = useState(0);
     const [fullSummary, setFullSummary] = useState(null);
@@ -680,7 +680,7 @@ const IntelligenceHub = ({ game }) => {
     
     // Get game status badge
     const getStatusBadge = () => {
-        if (gameState === 'in') return { text: 'LIVE', color: 'bg-red-600' };
+        if (gameState === 'in') return { text: 'LIVE', color: isHolyWar ? 'bg-[#0047BA]' : 'bg-red-600' };
         if (gameState === 'pre') return { text: 'UPCOMING', color: 'bg-white/20' };
         return { text: 'FINAL', color: 'bg-white/10' };
     };
@@ -689,10 +689,18 @@ const IntelligenceHub = ({ game }) => {
     const awayTeam = competition.competitors.find(c => c.homeAway === 'away');
     const homeTeam = competition.competitors.find(c => c.homeAway === 'home');
 
+    // BYU colors for Holy War page
+    const borderColor = isHolyWar ? 'border-[#0047BA]' : 'border-red-600';
+    const accentColor = isHolyWar ? 'text-[#0047BA]' : 'text-red-500';
+    const accentBg = isHolyWar ? 'bg-[#0047BA]' : 'bg-red-600';
+    const accentBg700 = isHolyWar ? 'bg-[#003a9e]' : 'bg-red-700';
+    const bgColor = isHolyWar ? 'bg-[#001a3d]' : 'bg-black';
+    const headerBg = isHolyWar ? 'bg-[#001a3d]' : 'bg-black';
+
     return (
-        <div className="flex-grow flex flex-col overflow-y-auto no-scrollbar bg-[#1a1b1c]">
+        <div className={`flex-grow flex flex-col overflow-y-auto no-scrollbar ${isHolyWar ? 'bg-[#002E5D]' : 'bg-[#1a1b1c]'}`}>
             {/* Compact Header */}
-            <div className="flex-none p-4 md:p-6 lg:p-8 bg-black border-b-4 border-red-600">
+            <div className={`flex-none p-4 md:p-6 lg:p-8 ${headerBg} border-b-4 ${borderColor}`}>
                 <div className="flex items-center justify-between mb-3 md:mb-3.5 lg:mb-4">
                     <div className="flex items-center gap-2 md:gap-3 lg:gap-4 pl-2">
                         <div className={`${statusBadge.color} px-3 md:px-3.5 lg:px-4 py-1 md:py-1.5 text-[9px] md:text-[10px] font-black text-white uppercase tracking-widest`}>
@@ -714,7 +722,7 @@ const IntelligenceHub = ({ game }) => {
             <div className="flex-grow p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6 lg:space-y-8">
                 {/* 1. BETTING ODDS CARDS */}
                 <section className="space-y-4 md:space-y-5">
-                    <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 lg:pl-5 mb-2">
+                    <div className={`flex items-center gap-2 md:gap-3 border-l-4 ${borderColor} pl-3 md:pl-4 lg:pl-5 mb-2`}>
                         <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Market Dynamics</h3>
                     </div>
 
@@ -727,28 +735,28 @@ const IntelligenceHub = ({ game }) => {
                             <div className="grid grid-cols-2 gap-3 md:gap-4">
                                 {/* Spread Card */}
                                 <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
-                                    <div className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest mb-2 md:mb-3">Spread</div>
+                                    <div className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest mb-2 md:mb-3`}>Spread</div>
                                     <div className="text-2xl md:text-3xl font-mono font-black text-white tabular-nums tracking-tighter mb-2 md:mb-3">
-                                        {odds?.details || 'EVEN'}
-                                    </div>
+                                {odds?.details || 'EVEN'}
+                            </div>
                                     {odds?.details && (
                                         <div className="flex items-center gap-1.5 md:gap-2">
-                                            <div className="bg-red-600 px-2 md:px-3 py-0.5 md:py-1 text-[8px] md:text-[9px] font-black text-white uppercase">
+                                            <div className={`${accentBg} px-2 md:px-3 py-0.5 md:py-1 text-[8px] md:text-[9px] font-black text-white uppercase`}>
                                                 {odds.details.includes(awayTeam.team.abbreviation) ? awayTeam.team.abbreviation : homeTeam.team.abbreviation}
                                             </div>
                                             <span className="text-[8px] md:text-[9px] text-white/40 uppercase">Favorite</span>
                                         </div>
                                     )}
-                                </div>
+                        </div>
                                 
                                 {/* Total Card */}
                                 <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
-                                    <div className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest mb-2 md:mb-3">Total</div>
+                                    <div className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest mb-2 md:mb-3`}>Total</div>
                                     <div className="text-2xl md:text-3xl font-mono font-black text-white tabular-nums tracking-tighter">
-                                        {odds?.overUnder || '--'}
-                                    </div>
-                                </div>
+                                {odds?.overUnder || '--'}
                             </div>
+                        </div>
+                    </div>
                         </>
                     )}
 
@@ -757,7 +765,7 @@ const IntelligenceHub = ({ game }) => {
                         <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
                             <div className="flex justify-between items-center mb-2 md:mb-3">
                                 <span className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest">{awayTeam.team.abbreviation}</span>
-                                <span className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest">Win Probability</span>
+                                <span className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest`}>Win Probability</span>
                                 <span className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest">{homeTeam.team.abbreviation}</span>
                             </div>
                             <div className="h-5 md:h-6 bg-white/5 rounded-full overflow-hidden flex relative">
@@ -768,7 +776,7 @@ const IntelligenceHub = ({ game }) => {
                                     <span className="text-[9px] md:text-[10px] font-black text-black">{Math.round(situation.lastPlay.probability.awayWinPercentage * 100)}%</span>
                                 </div>
                                 <div
-                                    className="h-full bg-red-600 transition-all duration-1000 flex items-center justify-end pr-2 md:pr-3"
+                                    className={`h-full ${accentBg} transition-all duration-1000 flex items-center justify-end pr-2 md:pr-3`}
                                     style={{ width: `${situation.lastPlay.probability.homeWinPercentage * 100}%` }}
                                 >
                                     <span className="text-[9px] md:text-[10px] font-black text-white">{Math.round(situation.lastPlay.probability.homeWinPercentage * 100)}%</span>
@@ -807,19 +815,19 @@ const IntelligenceHub = ({ game }) => {
                                     <div className="flex items-center gap-3 md:gap-4 lg:gap-5">
                                         <div className="relative flex-shrink-0">
                                             <StatAvatar leader={cat.leaders?.[0]} />
-                                            <div className="absolute -top-1 -right-1 bg-red-600 text-white px-1.5 md:px-2 py-0.5 text-[7px] md:text-[8px] font-black uppercase rounded">
-                                                {cat.leaders?.[0]?.team?.abbreviation || '---'}
-                                            </div>
+                                            <div className={`absolute -top-1 -right-1 ${accentBg} text-white px-1.5 md:px-2 py-0.5 text-[7px] md:text-[8px] font-black uppercase rounded`}>
+                                            {cat.leaders?.[0]?.team?.abbreviation || '---'}
                                         </div>
+                                    </div>
                                         <div className="flex-grow min-w-0">
-                                            <div className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest mb-1 md:mb-2">
-                                                {cat.displayName}
-                                            </div>
-                                            <div className="text-sm md:text-base font-black text-white uppercase tracking-tighter line-clamp-2">
+                                            <div className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest mb-1 md:mb-2`}>
+                                            {cat.displayName}
+                                        </div>
+                                            <div className="text-sm md:text-base font-black text-white uppercase tracking-tighter truncate">
                                                 {cat.isTeamStat ? (cat.leaders?.[0]?.team?.displayName || 'TEAM') : (cat.leaders?.[0]?.athlete?.displayName || 'N/A')}
                                             </div>
                                             {cat.leaders?.[0]?.description && (
-                                                <div className="text-[8px] md:text-[9px] font-bold text-white/40 uppercase tracking-tight mt-1 line-clamp-2 leading-tight">
+                                                <div className="text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-tight mt-1 line-clamp-1">
                                                     {cat.leaders[0].description}
                                                 </div>
                                             )}
@@ -830,12 +838,12 @@ const IntelligenceHub = ({ game }) => {
                                             </div>
                                             <div className="text-[7px] md:text-[8px] font-bold text-white/20 uppercase tracking-widest">
                                                 {cat.isRivalryStat ? 'HISTORY' : (gameState === 'in' ? 'Game' : 'Season')}
-                                            </div>
-                                        </div>
+                                    </div>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
+                    </div>
                     ) : (
                         <div className="bg-white/5 border border-white/8 rounded-xl p-6 md:p-7 lg:p-8 text-center">
                             <span className="text-white/40 text-[10px] md:text-xs font-black uppercase tracking-widest">
@@ -848,7 +856,7 @@ const IntelligenceHub = ({ game }) => {
                 {/* 4. FIELD / COURT VISUALIZATION - Only show for live games (Below fold) */}
                 {gameState === 'in' && (
                     <section className="space-y-3 md:space-y-4">
-                        <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 lg:pl-5 mb-2">
+                        <div className={`flex items-center gap-2 md:gap-3 border-l-4 ${borderColor} pl-3 md:pl-4 lg:pl-5 mb-2`}>
                             <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Live Field View</h3>
                         </div>
                         <FieldVisualization game={game} gameState={gameState} />
@@ -858,19 +866,19 @@ const IntelligenceHub = ({ game }) => {
                 {/* 5. LIVE FEED - Show for live and post games (Below fold) */}
                 {(gameState === 'in' || gameState === 'post') && (
                     <section className="space-y-4 md:space-y-5">
-                        <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 lg:pl-5 mb-2">
+                        <div className={`flex items-center gap-2 md:gap-3 border-l-4 ${borderColor} pl-3 md:pl-4 lg:pl-5 mb-2`}>
                             <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">
                                 {gameState === 'in' ? 'Live Feed' : 'Last Play'}
                             </h3>
                         </div>
 
                         <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-red-600" />
+                            <div className={`absolute top-0 left-0 w-1 h-full ${accentBg}`} />
                             <p className="text-xs md:text-sm font-black text-white leading-relaxed italic tracking-tight opacity-90 pl-3 md:pl-4">
                                 "{situation?.lastPlay?.text || (gameState === 'in' ? "Synchronizing live stadium data feed..." : "Game completed")}"
-                            </p>
-                        </div>
-                    </section>
+                        </p>
+                    </div>
+                </section>
                 )}
 
                 {/* 6. INTELLIGENCE MEDIA - Videos (if playable) + Photos */}
