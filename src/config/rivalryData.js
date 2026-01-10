@@ -53,9 +53,15 @@ export const RIVALRY_DATA = {
         // Optional: Specify specific YouTube video IDs to play (in order)
         // Leave empty array [] to use automatic search instead
         videoIds: [
-            // Example format - add your video IDs here:
-            // 'dQw4w9WgXcQ',  // Replace with actual BYU vs Utah highlight video IDs
-            // 'jNQXAC9IVRw',  // Add more video IDs as needed
+            '4ZHgBq5WQm0',
+            'CNvIN6QRjw8',
+            'rV3k5sWP_l0',
+            'Az7X0RUOqWY',
+            'eBLyzGG-rMg',
+            'MabDY6n02mY',
+            'EU49HQMI7nE',
+            'lkKCkEvkOuQ',
+            '5beUYudXFic',
         ],
         seriesBreakdown: {
             title: "Series Breakdown (Favoring BYU)",

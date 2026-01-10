@@ -205,6 +205,8 @@ const HolyWarDashboard = ({ game, loading }) => {
     const [gameSummary, setGameSummary] = useState(null);
     const [liveStats, setLiveStats] = useState(null);
     const [statCycleIndex, setStatCycleIndex] = useState(0);
+    const [playerReady, setPlayerReady] = useState(false);
+    const playerRef = React.useRef(null);
 
     // Fetch highlights and media
     useEffect(() => {
@@ -318,14 +320,86 @@ const HolyWarDashboard = ({ game, loading }) => {
         return () => clearInterval(interval);
     }, [game]);
 
-    // Rotate media every 1 minute
+    // Initialize YouTube IFrame API and handle video end events
     useEffect(() => {
         if (highlights.length === 0) return;
-        const interval = setInterval(() => {
-            setMediaIndex(prev => (prev + 1) % highlights.length);
-        }, 60000);
-        return () => clearInterval(interval);
-    }, [highlights.length]);
+
+        // Wait for YouTube IFrame API to be ready
+        const initPlayer = () => {
+            if (typeof window.YT === 'undefined' || typeof window.YT.Player === 'undefined') {
+                // Retry after a short delay if API isn't loaded yet
+                setTimeout(initPlayer, 100);
+                return;
+            }
+
+            // Create player instance
+            const playerId = 'holy-war-video-player';
+            const container = document.getElementById(playerId);
+            if (!container) return;
+
+            // Remove existing player if any
+            if (playerRef.current) {
+                try {
+                    playerRef.current.destroy();
+                } catch (e) {
+                    // Ignore errors
+                }
+            }
+
+            playerRef.current = new window.YT.Player(playerId, {
+                videoId: highlights[mediaIndex]?.videoId,
+                playerVars: {
+                    autoplay: 1,
+                    mute: 1,
+                    modestbranding: 1,
+                    rel: 0,
+                    controls: 0,
+                    loop: 0, // Don't loop - let video end naturally
+                },
+                events: {
+                    onReady: (event) => {
+                        setPlayerReady(true);
+                        event.target.playVideo();
+                    },
+                    onStateChange: (event) => {
+                        // When video ends (state 0 = ended), advance to next video
+                        if (event.data === window.YT.PlayerState.ENDED) {
+                            setMediaIndex(prev => (prev + 1) % highlights.length);
+                        }
+                    },
+                    onError: (event) => {
+                        console.error('YouTube player error:', event.data);
+                        // Skip to next video on error
+                        setMediaIndex(prev => (prev + 1) % highlights.length);
+                    }
+                }
+            });
+        };
+
+        initPlayer();
+
+        return () => {
+            if (playerRef.current) {
+                try {
+                    playerRef.current.destroy();
+                } catch (e) {
+                    // Ignore errors
+                }
+                playerRef.current = null;
+            }
+        };
+    }, [highlights, mediaIndex]);
+
+    // Update player when mediaIndex changes (manual selection or auto-advance)
+    useEffect(() => {
+        if (playerRef.current && highlights[mediaIndex]?.videoId && playerReady) {
+            try {
+                playerRef.current.loadVideoById(highlights[mediaIndex].videoId);
+            } catch (e) {
+                console.error('Error loading video:', e);
+            }
+        }
+    }, [mediaIndex, highlights, playerReady]);
 
     // Cycle through season stats every 10 seconds
     useEffect(() => {
@@ -440,15 +514,9 @@ const HolyWarDashboard = ({ game, loading }) => {
                     <div className="flex-1 bg-[#001428] rounded-lg overflow-hidden shadow-2xl relative">
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
-                                {/* 16:9 aspect ratio container */}
+                                {/* 16:9 aspect ratio container - YouTube IFrame API Player */}
                                 <div className="aspect-video w-full">
-                                    <iframe
-                                        className="w-full h-full"
-                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex].videoId}`}
-                                        title={highlights[mediaIndex].title}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                    />
+                                    <div id="holy-war-video-player" className="w-full h-full"></div>
                                 </div>
                                 {/* Video indicator dots - Clickable for manual selection */}
                                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
