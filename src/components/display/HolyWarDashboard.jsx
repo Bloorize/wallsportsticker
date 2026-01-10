@@ -48,24 +48,24 @@ const LiveStatsSection = ({ stats, awayTeam, homeTeam }) => {
                 </h3>
                 <div className="flex items-center text-xs md:text-sm text-white/60">
                     <span className="w-24 md:w-32">STAT</span>
-                    <div className="flex items-center gap-2 ml-auto">
-                        <StatAvatar 
-                            imageUrl={awayTeam?.logo} 
-                            teamAbbrev={awayTeam?.abbreviation}
-                            isError={awayLogoError}
-                            onError={() => setAwayLogoError(true)}
-                        />
-                        <span className="w-16 md:w-20 text-right">BYU</span>
-                    </div>
-                    <div className="w-px h-4 mx-2 bg-white/20" />
-                    <div className="flex items-center gap-2">
-                        <StatAvatar 
-                            imageUrl={homeTeam?.logo} 
-                            teamAbbrev={homeTeam?.abbreviation}
-                            isError={homeLogoError}
-                            onError={() => setHomeLogoError(true)}
-                        />
-                        <span className="w-16 md:w-20 text-right">UTAH</span>
+                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
+                        <div className="w-16 md:w-20 flex justify-end">
+                            <StatAvatar 
+                                imageUrl={awayTeam?.logo} 
+                                teamAbbrev={awayTeam?.abbreviation}
+                                isError={awayLogoError}
+                                onError={() => setAwayLogoError(true)}
+                            />
+                        </div>
+                        <div className="w-px h-4 bg-white/20" />
+                        <div className="w-16 md:w-20 flex justify-end">
+                            <StatAvatar 
+                                imageUrl={homeTeam?.logo} 
+                                teamAbbrev={homeTeam?.abbreviation}
+                                isError={homeLogoError}
+                                onError={() => setHomeLogoError(true)}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
