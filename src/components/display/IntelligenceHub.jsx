@@ -698,9 +698,9 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
     const headerBg = isHolyWar ? 'bg-[#001a3d]' : 'bg-black';
 
     return (
-        <div className={`flex-grow flex flex-col overflow-y-auto no-scrollbar ${isHolyWar ? 'bg-[#002E5D]' : 'bg-[#1a1b1c]'}`}>
+        <div className={`flex-grow flex flex-col overflow-y-auto no-scrollbar ${isHolyWar ? 'bg-white' : 'bg-[#1a1b1c]'}`}>
             {/* Compact Header */}
-            <div className={`flex-none p-4 md:p-6 lg:p-8 ${headerBg} border-b-4 ${borderColor}`}>
+            <div className={`flex-none p-4 md:p-6 lg:p-8 ${isHolyWar ? 'bg-white border-b-4 border-[#0047BA]' : `${headerBg} border-b-4 ${borderColor}`}`}>
                 <div className="flex items-center justify-between mb-3 md:mb-3.5 lg:mb-4">
                     <div className="flex items-center gap-2 md:gap-3 lg:gap-4 pl-2">
                         <div className={`${statusBadge.color} px-3 md:px-3.5 lg:px-4 py-1 md:py-1.5 text-[9px] md:text-[10px] font-black text-white uppercase tracking-widest`}>
@@ -708,7 +708,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                         </div>
                         <span className="text-[10px] md:text-xs font-black text-white/60 uppercase tracking-[0.3em]">Game Intelligence</span>
                     </div>
-                    <div className="px-3 md:px-3.5 lg:px-4 py-1 md:py-1.5 bg-white text-black text-[9px] md:text-[10px] font-black uppercase tracking-tighter italic mr-2">
+                    <div className={`px-3 md:px-3.5 lg:px-4 py-1 md:py-1.5 ${isHolyWar ? 'bg-[#002E5D] text-white' : 'bg-white text-black'} text-[9px] md:text-[10px] font-black uppercase tracking-tighter italic mr-2`}>
                         ESPN ANALYTICS
                     </div>
                 </div>
@@ -723,7 +723,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                 {/* 1. BETTING ODDS CARDS */}
                 <section className="space-y-4 md:space-y-5">
                     <div className={`flex items-center gap-2 md:gap-3 border-l-4 ${borderColor} pl-3 md:pl-4 lg:pl-5 mb-2`}>
-                        <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Market Dynamics</h3>
+                        <h3 className={`text-xs md:text-sm font-black ${isHolyWar ? 'text-[#002E5D]/70' : 'text-white/60'} uppercase tracking-[0.3em]`}>Market Dynamics</h3>
                     </div>
 
                     {/* Try Odds API first, fallback to ESPN odds */}
@@ -734,9 +734,9 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                         <>
                             <div className="grid grid-cols-2 gap-3 md:gap-4">
                                 {/* Spread Card */}
-                                <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
+                                <div className={`${isHolyWar ? 'bg-blue-50 border border-[#0047BA]/20' : 'bg-white/5 border border-white/8'} rounded-xl p-4 md:p-5 lg:p-6`}>
                                     <div className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest mb-2 md:mb-3`}>Spread</div>
-                                    <div className="text-2xl md:text-3xl font-mono font-black text-white tabular-nums tracking-tighter mb-2 md:mb-3">
+                                    <div className={`text-2xl md:text-3xl font-mono font-black ${isHolyWar ? 'text-[#002E5D]' : 'text-white'} tabular-nums tracking-tighter mb-2 md:mb-3`}>
                                 {odds?.details || 'EVEN'}
                             </div>
                                     {odds?.details && (
@@ -764,9 +764,9 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                     {situation?.lastPlay?.probability && (
                         <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
                             <div className="flex justify-between items-center mb-2 md:mb-3">
-                                <span className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest">{awayTeam.team.abbreviation}</span>
+                                <span className={`text-[8px] md:text-[9px] font-black ${isHolyWar ? 'text-[#002E5D]/60' : 'text-white/40'} uppercase tracking-widest`}>{awayTeam.team.abbreviation}</span>
                                 <span className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest`}>Win Probability</span>
-                                <span className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest">{homeTeam.team.abbreviation}</span>
+                                <span className={`text-[8px] md:text-[9px] font-black ${isHolyWar ? 'text-[#002E5D]/60' : 'text-white/40'} uppercase tracking-widest`}>{homeTeam.team.abbreviation}</span>
                             </div>
                             <div className="h-5 md:h-6 bg-white/5 rounded-full overflow-hidden flex relative">
                                 <div
@@ -802,7 +802,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                             )}
                         </h3>
                         {rivalryData && rivalryData.specialContent?.subtitle && (
-                            <span className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest ml-2">
+                            <span className={`text-[8px] md:text-[9px] font-black ${isHolyWar ? 'text-[#002E5D]/50' : 'text-white/40'} uppercase tracking-widest ml-2`}>
                                 {rivalryData.specialContent.subtitle}
                             </span>
                         )}
@@ -823,20 +823,20 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                                             <div className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest mb-1 md:mb-2`}>
                                             {cat.displayName}
                                         </div>
-                                            <div className="text-sm md:text-base font-black text-white uppercase tracking-tighter truncate">
+                                            <div className={`text-sm md:text-base font-black ${isHolyWar ? 'text-[#002E5D]' : 'text-white'} uppercase tracking-tighter truncate`}>
                                                 {cat.isTeamStat ? (cat.leaders?.[0]?.team?.displayName || 'TEAM') : (cat.leaders?.[0]?.athlete?.displayName || 'N/A')}
                                             </div>
                                             {cat.leaders?.[0]?.description && (
-                                                <div className="text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-tight mt-1 line-clamp-1">
+                                                <div className={`text-[9px] md:text-[10px] font-bold ${isHolyWar ? 'text-[#002E5D]/60' : 'text-white/40'} uppercase tracking-tight mt-1 line-clamp-1`}>
                                                     {cat.leaders[0].description}
                                                 </div>
                                             )}
                                         </div>
                                         <div className="flex flex-col items-end gap-1 md:gap-2 flex-shrink-0">
-                                            <div className="text-xl md:text-2xl font-mono font-black text-white tabular-nums">
+                                            <div className={`text-xl md:text-2xl font-mono font-black ${isHolyWar ? 'text-[#002E5D]' : 'text-white'} tabular-nums`}>
                                                 {cat.leaders?.[0]?.displayValue || '0'}
                                             </div>
-                                            <div className="text-[7px] md:text-[8px] font-bold text-white/20 uppercase tracking-widest">
+                                            <div className={`text-[7px] md:text-[8px] font-bold ${isHolyWar ? 'text-[#002E5D]/40' : 'text-white/20'} uppercase tracking-widest`}>
                                                 {cat.isRivalryStat ? 'HISTORY' : (gameState === 'in' ? 'Game' : 'Season')}
                                     </div>
                                     </div>
@@ -870,7 +870,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                             <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">
                                 {gameState === 'in' ? 'Live Feed' : 'Last Play'}
                             </h3>
-                        </div>
+                    </div>
 
                         <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6 relative overflow-hidden">
                             <div className={`absolute top-0 left-0 w-1 h-full ${accentBg}`} />

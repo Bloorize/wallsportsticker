@@ -73,7 +73,7 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading, isHolyWar = fals
     }, []);
 
     return (
-        <div className="flex flex-col lg:flex-row gap-0 h-full overflow-hidden min-h-0 bg-[#0a0a0a]">
+        <div className={`flex flex-col lg:flex-row gap-0 h-full overflow-hidden min-h-0 ${isHolyWar ? 'bg-white' : 'bg-[#0a0a0a]'}`}>
             {/* Primary Stage (Left) */}
             <div className="flex-1 lg:flex-[3] flex flex-col min-w-0 h-full p-4 md:p-6 lg:p-8 gap-4 md:gap-6 lg:gap-8">
 
@@ -136,9 +136,9 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading, isHolyWar = fals
                             </div>
 
                             {/* Horizontal Stepped Marquee */}
-                            <div className="flex-none h-32 md:h-40 lg:h-48 relative overflow-hidden bg-black/40 border-y border-white/5">
-                                <div className="absolute top-0 left-0 bottom-0 w-16 md:w-24 lg:w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-                                <div className="absolute top-0 right-0 bottom-0 w-16 md:w-24 lg:w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+                            <div className={`flex-none h-32 md:h-40 lg:h-48 relative overflow-hidden ${isHolyWar ? 'bg-blue-50 border-y border-[#0047BA]/20' : 'bg-black/40 border-y border-white/5'}`}>
+                                <div className={`absolute top-0 left-0 bottom-0 w-16 md:w-24 lg:w-32 bg-gradient-to-r ${isHolyWar ? 'from-white to-transparent' : 'from-black to-transparent'} z-10 pointer-events-none`} />
+                                <div className={`absolute top-0 right-0 bottom-0 w-16 md:w-24 lg:w-32 bg-gradient-to-l ${isHolyWar ? 'from-white to-transparent' : 'from-black to-transparent'} z-10 pointer-events-none`} />
 
                                 <div className="h-full flex items-center px-4 md:px-6 lg:px-10">
                                     <div
