@@ -28,9 +28,9 @@ const RivalryTicker = () => {
                 animate-shimmer pointer-events-none" style={{ backgroundSize: '200% 100%' }} />
             
             {/* Category Badge */}
-            <div className="h-full px-8 md:px-10 lg:px-12 flex flex-col justify-center items-center 
+            <div className="h-full px-10 md:px-12 lg:px-14 flex flex-col justify-center items-center 
                 bg-[#0047BA]/40 backdrop-blur-xl border-r border-white/[0.1]
-                min-w-[180px] md:min-w-[220px] lg:min-w-[260px] relative z-20">
+                min-w-[200px] md:min-w-[240px] lg:min-w-[280px] relative z-20">
                 <span className="text-[9px] md:text-[10px] lg:text-xs text-white/60 font-semibold uppercase tracking-[0.4em]">
                     RIVALRY
                 </span>
@@ -47,10 +47,10 @@ const RivalryTicker = () => {
                 
                 <div className="flex animate-scroll whitespace-nowrap items-center h-full min-w-max">
                     {[...items, ...items].map((item, idx) => (
-                        <div key={idx} className="flex-shrink-0 flex items-center h-full px-8 md:px-10 lg:px-12">
-                            <div className="flex items-center gap-5">
+                        <div key={idx} className="flex-shrink-0 flex items-center h-full px-10 md:px-12 lg:px-14">
+                            <div className="flex items-center gap-6">
                                 {/* Decorative dot */}
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#0047BA] shadow-[0_0_10px_rgba(0,71,186,0.8)]" />
+                                <div className="w-2 h-2 rounded-full bg-[#0047BA] shadow-[0_0_10px_rgba(0,71,186,0.8)]" />
                                 <span className="font-semibold text-white/90 text-sm md:text-lg lg:text-xl tracking-wide">
                                     {item}
                                 </span>

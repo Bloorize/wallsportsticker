@@ -11,7 +11,7 @@ import { RIVALRY_DATA } from '../../config/rivalryData';
  */
 
 // Glass Card Component
-const GlassCard = ({ children, className = '', glow = false, accentTop = false }) => (
+const GlassCard = ({ children, className = '', glow = false, accentTop = false, noPadding = false }) => (
     <div className={`
         relative overflow-hidden rounded-2xl
         bg-white/[0.06] backdrop-blur-xl 
@@ -22,11 +22,11 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false }
     `}>
         {/* Top accent line */}
         {accentTop && (
-            <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-[#0047BA]/50 to-transparent" />
+            <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#0047BA]/50 to-transparent" />
         )}
         {/* Inner highlight */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.08] via-transparent to-transparent rounded-2xl pointer-events-none" />
-        <div className="relative z-10 h-full">
+        <div className={`relative z-10 h-full ${noPadding ? '' : 'p-6 md:p-8 lg:p-10'}`}>
             {children}
         </div>
     </div>
@@ -35,19 +35,19 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false }
 // Stat Row Component
 const StatRow = ({ label, awayValue, homeValue, highlight = false }) => (
     <div className={`
-        flex items-center justify-between py-3 md:py-4 px-5 md:px-6 lg:px-8 mx-2 md:mx-3
-        ${highlight ? 'bg-[#0047BA]/20 rounded-xl' : 'border-b border-white/[0.06] last:border-0'}
-        transition-all duration-300 hover:bg-white/[0.05] rounded-lg
+        flex items-center justify-between py-4 md:py-5
+        ${highlight ? 'bg-[#0047BA]/20 rounded-xl px-4' : 'border-b border-white/[0.08] last:border-0'}
+        transition-all duration-300 hover:bg-white/[0.05]
     `}>
         <span className="text-white/60 text-sm md:text-base lg:text-lg font-medium uppercase tracking-wider">
             {label}
         </span>
-        <div className="flex items-center gap-4 md:gap-6 lg:gap-8">
-            <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold tabular-nums min-w-[60px] text-center">
+        <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
+            <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold tabular-nums min-w-[70px] text-center">
                 {awayValue}
             </span>
-            <div className="w-[2px] h-6 bg-white/10 rounded-full" />
-            <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold tabular-nums min-w-[60px] text-center">
+            <div className="w-[2px] h-6 bg-white/20 rounded-full" />
+            <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold tabular-nums min-w-[70px] text-center">
                 {homeValue}
             </span>
         </div>
@@ -207,8 +207,8 @@ const HolyWarDashboard = ({ game, loading }) => {
     return (
         <div className="w-full h-full flex flex-col p-3 md:p-4 lg:p-6 gap-3 md:gap-4 lg:gap-6">
             {/* Top Score Section */}
-            <GlassCard className="flex-none" glow accentTop>
-                <div className="flex items-center justify-center py-6 md:py-8 lg:py-10 px-4 md:px-8">
+            <GlassCard className="flex-none" glow accentTop noPadding>
+                <div className="flex items-center justify-center py-8 md:py-10 lg:py-12 px-8 md:px-12 lg:px-16">
                     {/* Away Team */}
                     <div className="flex flex-col items-center gap-2 md:gap-3 flex-1">
                         <div className="relative">
@@ -268,7 +268,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                 </div>
 
                 {/* Game Status Bar */}
-                <div className="border-t border-white/[0.08] px-8 py-4 md:py-5 flex items-center justify-center">
+                <div className="border-t border-white/[0.08] px-8 md:px-12 py-5 md:py-6 flex items-center justify-center">
                     <span className="text-[#0047BA] text-sm md:text-base lg:text-lg font-semibold uppercase tracking-[0.2em]">
                         {isLive ? game.status.type.detail : (game.status.type.shortDetail || formatMountainTime(game.date))}
                     </span>
@@ -279,19 +279,17 @@ const HolyWarDashboard = ({ game, loading }) => {
             <div className="flex-grow flex gap-3 md:gap-4 lg:gap-6 min-h-0">
                 {/* Left Column: Live/Game Stats */}
                 <GlassCard className="flex-1 flex flex-col" accentTop>
-                    <div className="px-6 md:px-7 lg:px-8 py-4 md:py-5 border-b border-white/[0.08]">
-                        <div className="flex items-center gap-3">
-                            {isLive && (
-                                <div className="w-2 h-2 bg-[#0047BA] rounded-full animate-pulse shadow-[0_0_10px_rgba(0,71,186,0.8)]" />
-                            )}
-                            <h3 className="text-white text-base md:text-lg lg:text-xl font-bold uppercase tracking-wider">
-                                {isLive ? 'Live Stats' : 'Game Stats'}
-                            </h3>
-                        </div>
+                    <div className="flex items-center gap-3 mb-6">
+                        {isLive && (
+                            <div className="w-2.5 h-2.5 bg-[#0047BA] rounded-full animate-pulse shadow-[0_0_10px_rgba(0,71,186,0.8)]" />
+                        )}
+                        <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider">
+                            {isLive ? 'Live Stats' : 'Game Stats'}
+                        </h3>
                     </div>
-                    <div className="flex-grow overflow-auto py-3 md:py-4">
+                    <div className="flex-grow">
                         {isLive && liveStats ? (
-                            <div className="space-y-1">
+                            <div className="space-y-2">
                                 <StatRow label="FG %" awayValue={`${liveStats.away.fgPct}%`} homeValue={`${liveStats.home.fgPct}%`} />
                                 <StatRow label="3PT" awayValue={liveStats.away.fg3} homeValue={liveStats.home.fg3} />
                                 <StatRow label="REB" awayValue={liveStats.away.reb} homeValue={liveStats.home.reb} />
@@ -308,9 +306,9 @@ const HolyWarDashboard = ({ game, loading }) => {
                 </GlassCard>
 
                 {/* Center Column: Media/Highlights */}
-                <GlassCard className="flex-1 flex flex-col overflow-hidden" glow>
-                    <div className="px-6 md:px-7 lg:px-8 py-4 md:py-5 border-b border-white/[0.08]">
-                        <h3 className="text-white text-base md:text-lg lg:text-xl font-bold uppercase tracking-wider">
+                <GlassCard className="flex-1 flex flex-col overflow-hidden" glow noPadding>
+                    <div className="px-6 md:px-8 lg:px-10 py-5 md:py-6">
+                        <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider">
                             Highlights
                         </h3>
                     </div>
@@ -353,14 +351,21 @@ const HolyWarDashboard = ({ game, loading }) => {
 
                 {/* Right Column: Season Comparison */}
                 <GlassCard className="flex-1 flex flex-col" accentTop>
-                    <div className="px-6 md:px-7 lg:px-8 py-4 md:py-5 border-b border-white/[0.08]">
-                        <h3 className="text-white text-base md:text-lg lg:text-xl font-bold uppercase tracking-wider">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider">
                             Season Stats
                         </h3>
+                        {/* Stats cycle indicator */}
+                        <div className="flex gap-2">
+                            <div className={`w-2 h-2 rounded-full transition-all duration-300
+                                ${statCycleIndex === 0 ? 'bg-[#0047BA]' : 'bg-white/20'}`} />
+                            <div className={`w-2 h-2 rounded-full transition-all duration-300
+                                ${statCycleIndex === 1 ? 'bg-[#0047BA]' : 'bg-white/20'}`} />
+                        </div>
                     </div>
-                    <div className="flex-grow overflow-auto py-3 md:py-4">
+                    <div className="flex-grow">
                         {currentSeasonStats.length > 0 ? (
-                            <div className="space-y-1">
+                            <div className="space-y-2">
                                 {currentSeasonStats.map((row, i) => (
                                     <StatRow 
                                         key={i}
@@ -377,13 +382,6 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 </span>
                             </div>
                         )}
-                    </div>
-                    {/* Stats cycle indicator */}
-                    <div className="px-6 py-3 border-t border-white/[0.06] flex justify-center gap-2">
-                        <div className={`w-2 h-2 rounded-full transition-all duration-300
-                            ${statCycleIndex === 0 ? 'bg-[#0047BA]' : 'bg-white/20'}`} />
-                        <div className={`w-2 h-2 rounded-full transition-all duration-300
-                            ${statCycleIndex === 1 ? 'bg-[#0047BA]' : 'bg-white/20'}`} />
                     </div>
                 </GlassCard>
             </div>
