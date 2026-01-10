@@ -26,13 +26,13 @@ const HolyWarLayout = ({ children }) => {
             {/* Main content container with safe area */}
             <div className="absolute inset-3 md:inset-4 lg:inset-6 flex flex-col z-10 overflow-hidden">
                 {/* Glass Header */}
-                <header className="h-20 md:h-24 lg:h-28 flex items-center justify-between px-6 md:px-10 lg:px-12 
+                <header className="h-20 md:h-24 lg:h-28 flex items-center justify-between px-8 md:px-12 lg:px-16 
                     bg-white/[0.08] backdrop-blur-2xl border border-white/[0.15] rounded-2xl shadow-2xl
                     relative overflow-hidden mb-4 md:mb-5 lg:mb-6 flex-none">
                     {/* Inner glow effect */}
                     <div className="absolute inset-0 bg-gradient-to-b from-white/[0.1] to-transparent rounded-2xl pointer-events-none" />
                     
-                    <div className="flex items-center gap-4 md:gap-5 relative z-10">
+                    <div className="flex items-center gap-5 md:gap-6 relative z-10">
                         <div className="relative">
                             <div className="absolute inset-0 bg-white/20 blur-xl rounded-full" />
                             <img src={logo} alt="BYU Logo" className="h-12 md:h-16 lg:h-20 object-contain relative z-10 drop-shadow-2xl" />
@@ -49,7 +49,7 @@ const HolyWarLayout = ({ children }) => {
                     </div>
 
                     {/* Live indicator with glow */}
-                    <div className="hidden md:flex items-center gap-3 px-5 py-2.5 
+                    <div className="hidden md:flex items-center gap-3 px-5 py-2.5 mr-2
                         bg-[#0047BA]/30 backdrop-blur-xl border border-[#0047BA]/50 rounded-full
                         shadow-[0_0_30px_rgba(0,71,186,0.4)] relative z-10">
                         <div className="relative">
