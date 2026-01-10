@@ -46,90 +46,80 @@ const LiveStatsSection = ({ stats, awayTeam, homeTeam }) => {
                 <h3 className="text-white text-base md:text-lg font-bold uppercase tracking-wide mb-2">
                     LIVE STATS
                 </h3>
-                <div className="flex items-center text-xs md:text-sm text-white/60">
-                    <span className="w-24 md:w-32">STAT</span>
-                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
-                        <div className="w-16 md:w-20 flex justify-end">
-                            <StatAvatar 
-                                imageUrl={awayTeam?.logo} 
-                                teamAbbrev={awayTeam?.abbreviation}
-                                isError={awayLogoError}
-                                onError={() => setAwayLogoError(true)}
-                            />
-                        </div>
-                        <div className="w-px h-4 bg-white/20" />
-                        <div className="w-16 md:w-20 flex justify-end">
-                            <StatAvatar 
-                                imageUrl={homeTeam?.logo} 
-                                teamAbbrev={homeTeam?.abbreviation}
-                                isError={homeLogoError}
-                                onError={() => setHomeLogoError(true)}
-                            />
-                        </div>
+                <div className="flex items-center justify-center gap-8 md:gap-12 lg:gap-16 text-xs md:text-sm text-white/60">
+                    <span className="w-24 md:w-32 text-center">STAT</span>
+                    <div className="w-16 md:w-20 flex justify-center">
+                        <StatAvatar 
+                            imageUrl={awayTeam?.logo} 
+                            teamAbbrev={awayTeam?.abbreviation}
+                            isError={awayLogoError}
+                            onError={() => setAwayLogoError(true)}
+                        />
+                    </div>
+                    <div className="w-px h-4 bg-white/20" />
+                    <div className="w-16 md:w-20 flex justify-center">
+                        <StatAvatar 
+                            imageUrl={homeTeam?.logo} 
+                            teamAbbrev={homeTeam?.abbreviation}
+                            isError={homeLogoError}
+                            onError={() => setHomeLogoError(true)}
+                        />
                     </div>
                 </div>
             </div>
             
             {/* Stats Rows */}
             <div className="space-y-2">
-                <div className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
+                <div className="flex items-center justify-center gap-8 md:gap-12 lg:gap-16 py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32 text-center">
                         FG%
                     </span>
-                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
-                        <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                            {stats.away.fgPct}%
-                        </span>
-                        <div className="w-px h-4 bg-white/20" />
-                        <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                            {stats.home.fgPct}%
-                        </span>
-                    </div>
+                    <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                        {stats.away.fgPct}%
+                    </span>
+                    <div className="w-px h-4 bg-white/20" />
+                    <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                        {stats.home.fgPct}%
+                    </span>
                 </div>
                 
-                <div className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
+                <div className="flex items-center justify-center gap-8 md:gap-12 lg:gap-16 py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32 text-center">
                         3PT
                     </span>
-                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
-                        <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                            {stats.away.fg3}
-                        </span>
-                        <div className="w-px h-4 bg-white/20" />
-                        <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                            {stats.home.fg3}
-                        </span>
-                    </div>
+                    <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                        {stats.away.fg3}
+                    </span>
+                    <div className="w-px h-4 bg-white/20" />
+                    <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                        {stats.home.fg3}
+                    </span>
                 </div>
                 
-                <div className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
+                <div className="flex items-center justify-center gap-8 md:gap-12 lg:gap-16 py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32 text-center">
                         REB
                     </span>
-                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
-                        <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                            {stats.away.reb}
-                        </span>
-                        <div className="w-px h-4 bg-white/20" />
-                        <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                            {stats.home.reb}
-                        </span>
-                    </div>
+                    <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                        {stats.away.reb}
+                    </span>
+                    <div className="w-px h-4 bg-white/20" />
+                    <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                        {stats.home.reb}
+                    </span>
                 </div>
                 
-                <div className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
+                <div className="flex items-center justify-center gap-8 md:gap-12 lg:gap-16 py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                    <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32 text-center">
                         AST
                     </span>
-                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
-                        <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                            {stats.away.ast}
-                        </span>
-                        <div className="w-px h-4 bg-white/20" />
-                        <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                            {stats.home.ast}
-                        </span>
-                    </div>
+                    <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                        {stats.away.ast}
+                    </span>
+                    <div className="w-px h-4 bg-white/20" />
+                    <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                        {stats.home.ast}
+                    </span>
                 </div>
             </div>
         </div>
@@ -158,26 +148,24 @@ const SeasonStatsPanel = ({ stats, cycleIndex, awayTeam, homeTeam }) => {
                     </div>
                 </div>
                 {/* Column Headers with logos */}
-                <div className="flex items-center text-xs md:text-sm text-white/60 px-4">
-                    <span className="w-24 md:w-32">STAT</span>
-                    <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
-                        <div className="w-16 md:w-20 flex justify-end">
-                            <StatAvatar 
-                                imageUrl={awayTeam?.logo} 
-                                teamAbbrev={awayTeam?.abbreviation}
-                                isError={awayLogoError}
-                                onError={() => setAwayLogoError(true)}
-                            />
-                        </div>
-                        <div className="w-px h-4 bg-white/20" />
-                        <div className="w-16 md:w-20 flex justify-end">
-                            <StatAvatar 
-                                imageUrl={homeTeam?.logo} 
-                                teamAbbrev={homeTeam?.abbreviation}
-                                isError={homeLogoError}
-                                onError={() => setHomeLogoError(true)}
-                            />
-                        </div>
+                <div className="flex items-center justify-center gap-8 md:gap-12 lg:gap-16 text-xs md:text-sm text-white/60 px-4">
+                    <span className="w-24 md:w-32 text-center">STAT</span>
+                    <div className="w-16 md:w-20 flex justify-center">
+                        <StatAvatar 
+                            imageUrl={awayTeam?.logo} 
+                            teamAbbrev={awayTeam?.abbreviation}
+                            isError={awayLogoError}
+                            onError={() => setAwayLogoError(true)}
+                        />
+                    </div>
+                    <div className="w-px h-4 bg-white/20" />
+                    <div className="w-16 md:w-20 flex justify-center">
+                        <StatAvatar 
+                            imageUrl={homeTeam?.logo} 
+                            teamAbbrev={homeTeam?.abbreviation}
+                            isError={homeLogoError}
+                            onError={() => setHomeLogoError(true)}
+                        />
                     </div>
                 </div>
             </div>
@@ -187,19 +175,17 @@ const SeasonStatsPanel = ({ stats, cycleIndex, awayTeam, homeTeam }) => {
                 {currentStats.length > 0 ? (
                     <div className="space-y-2">
                         {currentStats.map((row, i) => (
-                            <div key={i} className="flex items-center py-2 px-4 hover:bg-white/5 rounded transition-colors">
-                                <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32">
+                            <div key={i} className="flex items-center justify-center gap-8 md:gap-12 lg:gap-16 py-2 px-4 hover:bg-white/5 rounded transition-colors">
+                                <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide w-24 md:w-32 text-center">
                                     {row[0]}
                                 </span>
-                                <div className="flex items-center justify-end gap-4 md:gap-6 ml-auto">
-                                    <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                                        {row[1]}
-                                    </span>
-                                    <div className="w-px h-4 bg-white/20" />
-                                    <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-right">
-                                        {row[2]}
-                                    </span>
-                                </div>
+                                <span className="text-white text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                                    {row[1]}
+                                </span>
+                                <div className="w-px h-4 bg-white/20" />
+                                <span className="text-white/60 text-base md:text-lg font-bold tabular-nums w-16 md:w-20 text-center">
+                                    {row[2]}
+                                </span>
                             </div>
                         ))}
                     </div>
