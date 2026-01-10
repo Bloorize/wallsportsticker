@@ -15,7 +15,6 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false, 
     <div className={`
         relative overflow-hidden rounded-2xl
         bg-white/[0.06] backdrop-blur-xl 
-        border border-white/[0.12]
         shadow-[0_8px_32px_rgba(0,0,0,0.3)]
         ${glow ? 'shadow-[0_0_60px_rgba(0,71,186,0.15)]' : ''}
         ${className}
@@ -36,7 +35,7 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false, 
 const StatRow = ({ label, awayValue, homeValue, highlight = false }) => (
     <div className={`
         flex items-center justify-between py-4 md:py-5 px-6 md:px-8 lg:px-10
-        ${highlight ? 'bg-[#0047BA]/20 rounded-xl' : 'border-b border-white/[0.08] last:border-0'}
+        ${highlight ? 'bg-[#0047BA]/20 rounded-xl' : ''}
         transition-all duration-300 hover:bg-white/[0.05] rounded-lg
     `}>
         <span className="text-white/60 uppercase"
@@ -317,7 +316,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                 </div>
 
                 {/* Game Status Bar */}
-                <div className="border-t border-white/[0.08] px-8 md:px-12 py-5 md:py-6 flex items-center justify-center">
+                <div className="px-8 md:px-12 py-5 md:py-6 flex items-center justify-center">
                     <span className="text-[#0047BA]"
                         style={{ 
                             fontFamily: "'IBM Plex Sans', sans-serif",
@@ -333,7 +332,7 @@ const HolyWarDashboard = ({ game, loading }) => {
             <div className="flex-grow flex gap-3 md:gap-4 lg:gap-6 min-h-0">
                 {/* Left Column: Live/Game Stats */}
                 <GlassCard className="flex-1 flex flex-col" accentTop noPadding>
-                    <div className="px-8 md:px-10 lg:px-12 pt-6 md:pt-8 pb-4 border-b border-white/[0.08]">
+                    <div className="px-8 md:px-10 lg:px-12 pt-6 md:pt-8 pb-4">
                         <div className="flex items-center justify-center gap-3">
                             {isLive && (
                                 <div className="w-2.5 h-2.5 bg-[#0047BA] rounded-full animate-pulse shadow-[0_0_10px_rgba(0,71,186,0.8)]" />
@@ -374,7 +373,7 @@ const HolyWarDashboard = ({ game, loading }) => {
 
                 {/* Center Column: Media/Highlights */}
                 <GlassCard className="flex-1 flex flex-col overflow-hidden" glow noPadding>
-                    <div className="px-6 md:px-8 lg:px-10 py-5 md:py-6 border-b border-white/[0.08]">
+                    <div className="px-6 md:px-8 lg:px-10 py-5 md:py-6">
                         <h3 className="text-white uppercase text-center"
                             style={{ 
                                 fontFamily: "'IBM Plex Sans', sans-serif",
@@ -417,7 +416,7 @@ const HolyWarDashboard = ({ game, loading }) => {
 
                 {/* Right Column: Season Comparison */}
                 <GlassCard className="flex-1 flex flex-col" accentTop noPadding>
-                    <div className="px-8 md:px-10 lg:px-12 pt-6 md:pt-8 pb-4 border-b border-white/[0.08]">
+                    <div className="px-8 md:px-10 lg:px-12 pt-6 md:pt-8 pb-4">
                         <div className="flex flex-col items-center">
                             <h3 className="text-white uppercase text-center"
                                 style={{ 

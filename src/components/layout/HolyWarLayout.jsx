@@ -27,7 +27,7 @@ const HolyWarLayout = ({ children }) => {
             <div className="absolute inset-3 md:inset-4 lg:inset-6 flex flex-col z-10 overflow-hidden gap-4 md:gap-5 lg:gap-6">
                 {/* Glass Header */}
                 <header className="h-20 md:h-24 lg:h-28 flex items-center justify-between px-10 md:px-14 lg:px-20 
-                    bg-white/[0.08] backdrop-blur-2xl border border-white/[0.15] rounded-2xl shadow-2xl
+                    bg-white/[0.08] backdrop-blur-2xl rounded-2xl shadow-2xl
                     relative overflow-hidden flex-none">
                     {/* Inner glow effect */}
                     <div className="absolute inset-0 bg-gradient-to-b from-white/[0.1] to-transparent rounded-2xl pointer-events-none" />
@@ -62,7 +62,7 @@ const HolyWarLayout = ({ children }) => {
 
                     {/* Live indicator with glow */}
                     <div className="hidden md:flex items-center gap-3 px-6 py-3
-                        bg-[#0047BA]/30 backdrop-blur-xl border border-[#0047BA]/50 rounded-full
+                        bg-[#0047BA]/30 backdrop-blur-xl rounded-full
                         shadow-[0_0_30px_rgba(0,71,186,0.4)] relative z-10">
                         <div className="relative">
                             <div className="w-2.5 h-2.5 bg-white rounded-full animate-ping absolute" />
@@ -82,7 +82,7 @@ const HolyWarLayout = ({ children }) => {
 
                 {/* Dashboard Content - Glass container */}
                 <section className="flex-grow relative overflow-hidden min-h-0 
-                    bg-white/[0.05] backdrop-blur-xl border border-white/[0.1] rounded-2xl
+                    bg-white/[0.05] backdrop-blur-xl rounded-2xl
                     shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
                     <div className="absolute inset-0 overflow-hidden rounded-2xl">
                         {children}

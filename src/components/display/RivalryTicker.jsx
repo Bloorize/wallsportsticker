@@ -20,7 +20,7 @@ const RivalryTicker = () => {
 
     return (
         <div className="h-16 md:h-20 lg:h-24 
-            bg-white/[0.08] backdrop-blur-2xl border border-white/[0.15] rounded-2xl
+            bg-white/[0.08] backdrop-blur-2xl rounded-2xl
             shadow-2xl overflow-hidden relative flex items-center">
             
             {/* Animated gradient shine */}
@@ -29,7 +29,7 @@ const RivalryTicker = () => {
             
             {/* Category Badge */}
             <div className="h-full px-10 md:px-12 lg:px-14 flex flex-col justify-center items-center 
-                bg-[#0047BA]/40 backdrop-blur-xl border-r border-white/[0.1]
+                bg-[#0047BA]/40 backdrop-blur-xl
                 min-w-[200px] md:min-w-[240px] lg:min-w-[280px] relative z-20">
                 <span className="text-white/60 uppercase"
                     style={{ 
