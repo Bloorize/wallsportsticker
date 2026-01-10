@@ -102,7 +102,7 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
             }, 100);
             return () => clearTimeout(timer);
         }
-    }, [displayItems, modeIndex]);
+    }, [displayItems, modeIndex, MODES.length]);
 
     if (!displayItems.length) return null;
 
