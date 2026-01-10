@@ -35,9 +35,9 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false, 
 // Stat Row Component
 const StatRow = ({ label, awayValue, homeValue, highlight = false }) => (
     <div className={`
-        flex items-center justify-between py-4 md:py-5
-        ${highlight ? 'bg-[#0047BA]/20 rounded-xl px-4' : 'border-b border-white/[0.08] last:border-0'}
-        transition-all duration-300 hover:bg-white/[0.05]
+        flex items-center justify-between py-4 md:py-5 px-4 md:px-6 lg:px-8
+        ${highlight ? 'bg-[#0047BA]/20 rounded-xl' : 'border-b border-white/[0.08] last:border-0'}
+        transition-all duration-300 hover:bg-white/[0.05] rounded-lg
     `}>
         <span className="text-white/60 text-sm md:text-base lg:text-lg font-medium uppercase tracking-wider">
             {label}
