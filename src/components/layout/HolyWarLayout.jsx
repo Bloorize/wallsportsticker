@@ -20,7 +20,7 @@ const HolyWarLayout = ({ children }) => {
 
             {/* Minimal Header Bar */}
             <header className="flex-none h-12 md:h-14 flex items-center justify-end px-4 md:px-6 pl-28 md:pl-32 lg:pl-36
-                bg-[#001428] border-b border-white/10">
+                bg-[#001428]">
                 {/* Live indicator */}
                 <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-white/10 rounded">
                     <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
