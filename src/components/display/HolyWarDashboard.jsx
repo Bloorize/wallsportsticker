@@ -34,7 +34,7 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false, 
 // Stat Row Component - with explicit padding to prevent edge touching
 const StatRow = ({ label, awayValue, homeValue, highlight = false }) => (
     <div className={`
-        flex items-center justify-between py-4 md:py-5 px-6 md:px-8 lg:px-10
+        flex items-center justify-between py-4 md:py-5 px-8 md:px-10 lg:px-12
         ${highlight ? 'bg-[#0047BA]/20 rounded-xl' : ''}
         transition-all duration-300 hover:bg-white/[0.05] rounded-lg
     `}>
@@ -348,7 +348,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                         </h3>
                         </div>
                     </div>
-                    <div className="flex-grow py-4 md:py-6">
+                    <div className="flex-grow py-4 md:py-6 px-2 md:px-3">
                         {isLive && liveStats ? (
                             <div className="space-y-2">
                                 <StatRow label="FG %" awayValue={`${liveStats.away.fgPct}%`} homeValue={`${liveStats.home.fgPct}%`} />
@@ -436,7 +436,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-grow py-4 md:py-6">
+                    <div className="flex-grow py-4 md:py-6 px-2 md:px-3">
                         {currentSeasonStats.length > 0 ? (
                             <div className="space-y-2">
                                 {currentSeasonStats.map((row, i) => (
