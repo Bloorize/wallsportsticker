@@ -324,19 +324,18 @@ const HolyWarDashboard = ({ game, loading }) => {
     useEffect(() => {
         if (highlights.length === 0) return;
 
-        // Check if YouTube API is available (may not be on some smart TVs)
-        if (typeof window === 'undefined' || typeof window.YT === 'undefined' || typeof window.YT.Player === 'undefined') {
-            // Use fallback iframe - videos won't auto-advance but will play
-            console.warn('YouTube IFrame API not available, using fallback iframe');
-            setPlayerReady(true);
-            return;
-        }
-
         let retryCount = 0;
-        const maxRetries = 50; // 5 seconds max wait
+        const maxRetries = 100; // 10 seconds max wait
 
         // Wait for YouTube IFrame API to be ready
         const initPlayer = () => {
+            // Check if we're in a browser environment
+            if (typeof window === 'undefined') {
+                setPlayerReady(true);
+                return;
+            }
+
+            // Check if YouTube API is loaded
             if (typeof window.YT === 'undefined' || typeof window.YT.Player === 'undefined') {
                 retryCount++;
                 if (retryCount < maxRetries) {
@@ -353,7 +352,15 @@ const HolyWarDashboard = ({ game, loading }) => {
             // Create player instance
             const playerId = 'holy-war-video-player';
             const container = document.getElementById(playerId);
-            if (!container) return;
+            if (!container) {
+                // Container not ready yet, retry
+                if (retryCount < maxRetries) {
+                    setTimeout(initPlayer, 100);
+                } else {
+                    setPlayerReady(true);
+                }
+                return;
+            }
 
             // Remove existing player if any
             if (playerRef.current) {
@@ -364,37 +371,47 @@ const HolyWarDashboard = ({ game, loading }) => {
                 }
             }
 
-            playerRef.current = new window.YT.Player(playerId, {
-                videoId: highlights[mediaIndex]?.videoId,
-                playerVars: {
-                    autoplay: 1,
-                    mute: 1,
-                    modestbranding: 1,
-                    rel: 0,
-                    controls: 0,
-                    loop: 0, // Don't loop - let video end naturally
-                },
-                events: {
-                    onReady: (event) => {
-                        setPlayerReady(true);
-                        event.target.playVideo();
+            try {
+                playerRef.current = new window.YT.Player(playerId, {
+                    videoId: highlights[mediaIndex]?.videoId,
+                    playerVars: {
+                        autoplay: 1,
+                        mute: 1,
+                        modestbranding: 1,
+                        rel: 0,
+                        controls: 0,
+                        loop: 0, // Don't loop - let video end naturally
                     },
-                    onStateChange: (event) => {
-                        // When video ends (state 0 = ended), advance to next video
-                        if (event.data === window.YT.PlayerState.ENDED) {
+                    events: {
+                        onReady: (event) => {
+                            setPlayerReady(true);
+                            try {
+                                event.target.playVideo();
+                            } catch (e) {
+                                console.warn('Error playing video:', e);
+                            }
+                        },
+                        onStateChange: (event) => {
+                            // When video ends (state 0 = ended), advance to next video
+                            if (event.data === window.YT.PlayerState.ENDED) {
+                                setMediaIndex(prev => (prev + 1) % highlights.length);
+                            }
+                        },
+                        onError: (event) => {
+                            console.error('YouTube player error:', event.data);
+                            // Skip to next video on error
                             setMediaIndex(prev => (prev + 1) % highlights.length);
                         }
-                    },
-                    onError: (event) => {
-                        console.error('YouTube player error:', event.data);
-                        // Skip to next video on error
-                        setMediaIndex(prev => (prev + 1) % highlights.length);
                     }
-                }
-            });
+                });
+            } catch (e) {
+                console.error('Error creating YouTube player:', e);
+                setPlayerReady(true); // Fall back to iframe
+            }
         };
 
-        initPlayer();
+        // Wait a bit for DOM to be ready
+        setTimeout(initPlayer, 100);
 
         return () => {
             if (playerRef.current) {
@@ -534,11 +551,12 @@ const HolyWarDashboard = ({ game, loading }) => {
                             <>
                                 {/* 16:9 aspect ratio container - YouTube IFrame API Player or Fallback */}
                                 <div className="aspect-video w-full">
-                                    {typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' ? (
+                                    {typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady ? (
                                         <div id="holy-war-video-player" className="w-full h-full"></div>
                                     ) : (
                                         // Fallback iframe for browsers without YouTube API support (like some smart TVs)
                                         <iframe
+                                            key={highlights[mediaIndex].videoId}
                                             className="w-full h-full"
                                             src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0`}
                                             title={highlights[mediaIndex].title}
