@@ -236,6 +236,10 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
         ? [...media, ...media].slice((cycleIndex % Math.ceil(media.length / 2)) * 2, ((cycleIndex % Math.ceil(media.length / 2)) * 2) + 2)
         : media;
 
+    // Define colors based on isHolyWar prop
+    const borderColor = isHolyWar ? 'border-[#0047BA]' : 'border-red-600';
+    const accentColor = isHolyWar ? 'text-[#0047BA]' : 'text-red-500';
+
     return (
         <div className="space-y-6 md:space-y-8">
             {/* Highlights Section - Only if playable videos exist */}
@@ -883,7 +887,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
 
                 {/* 6. INTELLIGENCE MEDIA - Videos (if playable) + Photos */}
                 {(gameState === 'post' || gameState === 'pre') && (
-                    <IntelligenceMedia game={game} gameState={gameState} cycleIndex={statPage} />
+                    <IntelligenceMedia game={game} gameState={gameState} cycleIndex={statPage} isHolyWar={isHolyWar} />
                 )}
             </div>
 
