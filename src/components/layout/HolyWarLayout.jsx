@@ -24,7 +24,7 @@ const HolyWarLayout = ({ children }) => {
                 <img 
                     src={holyWarLogo} 
                     alt="Holy War Logo" 
-                    className="h-30 md:h-36 lg:h-42 object-contain drop-shadow-2xl"
+                    className="h-[120px] md:h-[144px] lg:h-[168px] object-contain drop-shadow-2xl"
                 />
             </div>
 
