@@ -2,11 +2,15 @@ import React from 'react';
 import { formatMountainDateTime, formatMountainTime } from '../../utils/timeUtils';
 
 const SpotlightGame = ({ game, isHolyWar = false }) => {
-    if (!game) return null;
+    if (!game || !game.competitions || !game.competitions[0]) return null;
 
     const competition = game.competitions[0];
+    if (!competition.competitors) return null;
+    
     const home = competition.competitors.find(c => c.homeAway === 'home');
     const away = competition.competitors.find(c => c.homeAway === 'away');
+    
+    if (!home || !away) return null;
 
     return (
         <div className={`w-full h-full flex flex-col ${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-black border border-white/5'} shadow-3xl overflow-hidden`}>
@@ -15,7 +19,7 @@ const SpotlightGame = ({ game, isHolyWar = false }) => {
                 <div className="flex items-center gap-3 md:gap-4 lg:gap-6 pl-2">
                     <span className={`text-base md:text-xl lg:text-2xl font-black italic tracking-tighter ${isHolyWar ? 'text-white' : 'text-white'}`}>LIVE SCOREBOARD</span>
                     <div className={`h-4 md:h-5 lg:h-6 w-px ${isHolyWar ? 'bg-white/30' : 'bg-white/20'}`} />
-                    <span className={`text-xs md:text-sm font-black ${isHolyWar ? 'text-white/90' : 'text-white/80'} uppercase tracking-widest`}>{game.status.type.detail}</span>
+                    <span className={`text-xs md:text-sm font-black ${isHolyWar ? 'text-white/90' : 'text-white/80'} uppercase tracking-widest`}>{game.status?.type?.detail || game.status?.type?.shortDetail || 'Game'}</span>
                 </div>
                 <div className="flex items-center gap-2 md:gap-3 lg:gap-4 pr-2">
                     <span className="text-[10px] md:text-xs font-black text-white/50 uppercase tracking-[0.2em] hidden sm:inline">{competition.venue?.fullName}</span>
@@ -44,8 +48,8 @@ const SpotlightGame = ({ game, isHolyWar = false }) => {
 
                 {/* 2. Away Score */}
                 <div className="flex items-center justify-center">
-                    <span className={`text-4xl md:text-6xl lg:text-[8rem] font-mono font-black tabular-nums tracking-tighter leading-none transition-all duration-1000 ${parseInt(away.score) > parseInt(home.score) ? (isHolyWar ? 'text-[#002E5D]' : 'text-white') : (isHolyWar ? 'text-[#002E5D]/30' : 'text-white/20')}`}>
-                        {away.score}
+                    <span className={`text-4xl md:text-6xl lg:text-[8rem] font-mono font-black tabular-nums tracking-tighter leading-none transition-all duration-1000 ${parseInt(away.score || 0) > parseInt(home.score || 0) ? (isHolyWar ? 'text-[#002E5D]' : 'text-white') : (isHolyWar ? 'text-[#002E5D]/30' : 'text-white/20')}`}>
+                        {away.score || '0'}
                     </span>
                 </div>
 
@@ -57,9 +61,9 @@ const SpotlightGame = ({ game, isHolyWar = false }) => {
                         <span className="text-[9px] md:text-xs lg:text-sm font-black text-red-500 uppercase tracking-[0.3em] whitespace-nowrap">
                             {(() => {
                                 // Format date and time in Mountain Time
-                                if (!game.date) return game.status.type.shortDetail;
+                                if (!game.date) return game.status?.type?.shortDetail || 'TBD';
                                 const gameDate = new Date(game.date);
-                                if (isNaN(gameDate.getTime())) return game.status.type.shortDetail;
+                                if (isNaN(gameDate.getTime())) return game.status?.type?.shortDetail || 'TBD';
                                 
                                 const dateStr = gameDate.toLocaleDateString('en-US', {
                                     timeZone: 'America/Denver',
@@ -75,8 +79,8 @@ const SpotlightGame = ({ game, isHolyWar = false }) => {
 
                 {/* 4. Home Score */}
                 <div className="flex items-center justify-center">
-                    <span className={`text-4xl md:text-6xl lg:text-[8rem] font-mono font-black tabular-nums tracking-tighter leading-none transition-all duration-1000 ${parseInt(home.score) > parseInt(away.score) ? (isHolyWar ? 'text-[#002E5D]' : 'text-white') : (isHolyWar ? 'text-[#002E5D]/30' : 'text-white/20')}`}>
-                        {home.score}
+                    <span className={`text-4xl md:text-6xl lg:text-[8rem] font-mono font-black tabular-nums tracking-tighter leading-none transition-all duration-1000 ${parseInt(home.score || 0) > parseInt(away.score || 0) ? (isHolyWar ? 'text-[#002E5D]' : 'text-white') : (isHolyWar ? 'text-[#002E5D]/30' : 'text-white/20')}`}>
+                        {home.score || '0'}
                     </span>
                 </div>
 
