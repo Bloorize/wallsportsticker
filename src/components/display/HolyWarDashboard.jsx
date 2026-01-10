@@ -228,7 +228,7 @@ const HolyWarDashboard = ({ game, loading }) => {
     const currentSeasonStats = statCycleIndex === 0 ? statsSet1 : statsSet2;
 
     return (
-        <div className="w-full h-full flex flex-col p-3 md:p-4 lg:p-6 gap-3 md:gap-4 lg:gap-6">
+        <div className="w-full h-full flex flex-col p-4 md:p-5 lg:p-6 gap-4 md:gap-5 lg:gap-6">
             {/* Top Score Section */}
             <GlassCard className="flex-none" glow accentTop noPadding>
                 <div className="flex items-center justify-center py-8 md:py-10 lg:py-12 px-8 md:px-12 lg:px-16">

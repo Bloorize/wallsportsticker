@@ -83,14 +83,14 @@ const HolyWarLayout = ({ children }) => {
                 {/* Dashboard Content - Glass container */}
                 <section className="flex-grow relative overflow-hidden min-h-0 
                     bg-white/[0.05] backdrop-blur-xl border border-white/[0.1] rounded-2xl
-                    shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                    shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] my-4 md:my-5 lg:my-6">
                     <div className="absolute inset-0 overflow-hidden rounded-2xl">
                         {children}
                     </div>
                 </section>
 
                 {/* Rivalry Ticker */}
-                <div className="flex-none mt-4 md:mt-5 lg:mt-6">
+                <div className="flex-none">
                     <RivalryTicker />
                 </div>
             </div>
