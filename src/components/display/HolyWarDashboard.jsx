@@ -279,11 +279,11 @@ const HolyWarDashboard = ({ game, loading }) => {
             <div className="flex-grow flex gap-3 md:gap-4 lg:gap-6 min-h-0">
                 {/* Left Column: Live/Game Stats */}
                 <GlassCard className="flex-1 flex flex-col" accentTop>
-                    <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center justify-center gap-3 mb-6 pb-4 border-b border-white/[0.08]">
                         {isLive && (
                             <div className="w-2.5 h-2.5 bg-[#0047BA] rounded-full animate-pulse shadow-[0_0_10px_rgba(0,71,186,0.8)]" />
                         )}
-                        <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider">
+                        <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider text-center">
                             {isLive ? 'Live Stats' : 'Game Stats'}
                         </h3>
                     </div>
@@ -307,8 +307,8 @@ const HolyWarDashboard = ({ game, loading }) => {
 
                 {/* Center Column: Media/Highlights */}
                 <GlassCard className="flex-1 flex flex-col overflow-hidden" glow noPadding>
-                    <div className="px-6 md:px-8 lg:px-10 py-5 md:py-6">
-                        <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider">
+                    <div className="px-6 md:px-8 lg:px-10 py-5 md:py-6 border-b border-white/[0.08]">
+                        <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider text-center">
                             Highlights
                         </h3>
                     </div>
@@ -351,12 +351,12 @@ const HolyWarDashboard = ({ game, loading }) => {
 
                 {/* Right Column: Season Comparison */}
                 <GlassCard className="flex-1 flex flex-col" accentTop>
-                    <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider">
+                    <div className="flex flex-col items-center mb-6 pb-4 border-b border-white/[0.08]">
+                        <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider text-center">
                             Season Stats
                         </h3>
                         {/* Stats cycle indicator */}
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 mt-2">
                             <div className={`w-2 h-2 rounded-full transition-all duration-300
                                 ${statCycleIndex === 0 ? 'bg-[#0047BA]' : 'bg-white/20'}`} />
                             <div className={`w-2 h-2 rounded-full transition-all duration-300
