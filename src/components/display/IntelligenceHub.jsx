@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { formatMountainDateTime, formatMountainTime } from '../../utils/timeUtils';
+import { searchGameHighlights } from '../../services/youtube';
+import { getChannelId } from '../../config/youtubeChannels';
+import OddsComparison from './OddsComparison';
+import { getWeather, getWeatherIconUrl, formatWindDirection } from '../../services/weather';
+import { getVenueCoordinates, isOutdoorSport } from '../../utils/venueCoordinates';
 
 const FieldVisualization = ({ game, gameState }) => {
     // Only show field visualization for live games
@@ -85,7 +90,352 @@ const FieldVisualization = ({ game, gameState }) => {
     return null;
 };
 
+import { getNewsWithPhotos, getGameSummary } from '../../services/espn';
+import { getTeamPhotos } from '../../services/thesportsdb';
+
+const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
+    const [media, setMedia] = useState([]);
+    const [highlights, setHighlights] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!game || !game.competitions?.[0]) {
+                setLoading(false);
+                return;
+            }
+
+            const competition = game.competitions[0];
+            const competitors = competition.competitors || [];
+            const category = game._category;
+            
+            const getPath = (cat) => {
+                switch (cat) {
+                    case 'NBA': return { s: 'basketball', l: 'nba' };
+                    case 'NFL': return { s: 'football', l: 'nfl' };
+                    case 'NCAAM': return { s: 'basketball', l: 'mens-college-basketball' };
+                    case 'NCAAF': return { s: 'football', l: 'college-football' };
+                    case 'MLB': return { s: 'baseball', l: 'mlb' };
+                    case 'NHL': return { s: 'hockey', l: 'nhl' };
+                    case 'SOCCER': return { s: 'soccer', l: 'eng.1' };
+                    default: return { s: 'basketball', l: 'nba' };
+                }
+            };
+            const path = getPath(category);
+
+            setLoading(true);
+            try {
+                // 1. Fetch Highlights (Smart Check)
+                const team1 = competitors[0].team?.displayName || '';
+                const team2 = competitors[1].team?.displayName || '';
+                const gameDate = gameState === 'post' ? (game.date ? new Date(game.date).toISOString().split('T')[0] : '') : '';
+                const channelId = getChannelId(category);
+
+                const youtubeResults = await searchGameHighlights(team1, team2, gameDate, channelId);
+                // Only keep highlights that are explicitly embeddable
+                const playable = youtubeResults?.filter(vid => vid.embeddable) || [];
+                setHighlights(playable.slice(0, 1)); // Only show the top 1 highlight
+
+                // 2. Fetch Media Gallery (Photos)
+                const mediaItems = [];
+
+                // Venue Photos
+                const summary = await getGameSummary(path.s, path.l, game.id);
+                if (summary?.gameInfo?.venue?.images) {
+                    summary.gameInfo.venue.images.forEach(img => {
+                        mediaItems.push({ url: img.href, title: `VENUE: ${summary.gameInfo.venue.fullName}`, type: 'STADIUM' });
+                    });
+                }
+
+                // Team Photos
+                for (const competitor of competitors) {
+                    const teamName = competitor.team?.displayName;
+                    if (teamName) {
+                        const teamPhotos = await getTeamPhotos(teamName, category);
+                        teamPhotos.forEach(url => {
+                            mediaItems.push({ url, title: `${teamName.toUpperCase()} ACTION`, type: 'MATCHUP' });
+                        });
+                    }
+                }
+
+                // News Photos
+                const news = await getNewsWithPhotos(path.s, path.l);
+                const teamIds = competitors.map(c => c.team.id);
+                const relevantNews = news.filter(n => teamIds.includes(n.teamId));
+                (relevantNews.length > 0 ? relevantNews : news).forEach(article => {
+                    if (article.image) {
+                        mediaItems.push({ url: article.image, title: article.headline, type: 'NEWS' });
+                    }
+                });
+
+                const uniqueMedia = Array.from(new Map(mediaItems.map(item => [item.url, item])).values());
+                setMedia(uniqueMedia);
+            } catch (err) {
+                console.error('Error fetching intelligence media:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [game, gameState]);
+
+    if (loading) return (
+        <div className="flex items-center justify-center py-12">
+            <div className="w-8 h-8 border-2 border-white/20 border-t-red-600 rounded-full animate-spin" />
+        </div>
+    );
+
+    // Cycle photos 2 at a time based on cycleIndex
+    const displayedMedia = media.length > 2
+        ? [...media, ...media].slice((cycleIndex % Math.ceil(media.length / 2)) * 2, ((cycleIndex % Math.ceil(media.length / 2)) * 2) + 2)
+        : media;
+
+    return (
+        <div className="space-y-6 md:space-y-8">
+            {/* Highlights Section - Only if playable videos exist */}
+            {highlights.length > 0 ? (
+                <section className="space-y-4">
+                    <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 mb-2">
+                        <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Game Footage</h3>
+                    </div>
+                    <div className="space-y-3">
+                        {highlights.map((vid, i) => (
+                            <div key={i} className="bg-white/5 border border-white/8 rounded-xl overflow-hidden shadow-2xl">
+                                <div className="relative aspect-video">
+                                    <iframe
+                                        className="absolute inset-0 w-full h-full"
+                                        src={`https://www.youtube.com/embed/${vid.videoId}?modestbranding=1&rel=0&autoplay=1&mute=1`}
+                                        title={vid.title}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    />
+                                </div>
+                                <div className="p-3 bg-black/40">
+                                    <p className="text-[10px] md:text-xs font-black text-white/90 uppercase tracking-tight line-clamp-1">
+                                        {vid.title}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            ) : (
+                /* Visual Intel Section (Photos) - ONLY if no video */
+                displayedMedia.length > 0 && (
+                    <section className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 mb-2">
+                                <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Visual Intel</h3>
+                            </div>
+                            <span className="text-[8px] font-black text-white/20 uppercase tracking-widest mr-2">
+                                {media.length > 2 && `Slide ${(cycleIndex % Math.ceil(media.length / 2)) + 1} / ${Math.ceil(media.length / 2)}`}
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 md:gap-3">
+                            {displayedMedia.map((item, index) => (
+                                <div key={index} className="relative aspect-video bg-white/5 border border-white/8 rounded-xl overflow-hidden group">
+                                    <img 
+                                        src={item.url} 
+                                        alt={item.title}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2.5 md:p-3">
+                                        <span className="text-[7px] md:text-[8px] font-black text-red-500 uppercase tracking-[0.2em] mb-1">{item.type}</span>
+                                        <p className="text-[9px] md:text-[10px] font-black text-white line-clamp-2 uppercase leading-tight tracking-tighter">
+                                            {item.title}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )
+            )}
+        </div>
+    );
+};
+
+const WeatherSection = ({ game }) => {
+    const [weather, setWeather] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchWeather = async () => {
+            if (!game || !game.competitions?.[0]) {
+                setLoading(false);
+                return;
+            }
+
+            const venueName = game.competitions[0].venue?.fullName;
+            if (!venueName) {
+                setLoading(false);
+                return;
+            }
+
+            const coords = getVenueCoordinates(venueName);
+            if (!coords) {
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
+            try {
+                const weatherData = await getWeather(coords.lat, coords.lon);
+                setWeather(weatherData);
+            } catch (err) {
+                console.error('Error fetching weather:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchWeather();
+    }, [game]);
+
+    if (loading) {
+        return (
+            <section className="space-y-4 md:space-y-5">
+                <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 lg:pl-5 mb-2">
+                    <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Game Conditions</h3>
+                </div>
+                <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
+                    <div className="flex items-center justify-center py-4">
+                        <div className="w-6 h-6 border-2 border-white/20 border-t-red-600 rounded-full animate-spin" />
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    if (!weather) {
+        return null; // Don't show section if no weather data
+    }
+
+    return (
+        <section className="space-y-4 md:space-y-5">
+            <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 lg:pl-5 mb-2">
+                <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Game Conditions</h3>
+            </div>
+
+            <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
+                <div className="flex items-center justify-between mb-3 md:mb-4">
+                    <div className="flex items-center gap-3 md:gap-4">
+                        {weather.icon && (
+                            <img 
+                                src={getWeatherIconUrl(weather.icon)} 
+                                alt={weather.condition}
+                                className="w-12 h-12 md:w-16 md:h-16"
+                            />
+                        )}
+                        <div>
+                            <div className="text-2xl md:text-3xl font-mono font-black text-white tabular-nums">
+                                {weather.temperature}°F
+                            </div>
+                            <div className="text-[9px] md:text-[10px] font-black text-white/60 uppercase tracking-widest">
+                                {weather.description}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <div className="text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">
+                            Feels Like
+                        </div>
+                        <div className="text-lg md:text-xl font-mono font-black text-white/80 tabular-nums">
+                            {weather.feelsLike}°F
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 md:gap-4 pt-3 md:pt-4 border-t border-white/5">
+                    <div>
+                        <div className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest mb-1">
+                            Wind
+                        </div>
+                        <div className="text-sm md:text-base font-black text-white">
+                            {weather.windSpeed} mph {formatWindDirection(weather.windDirection)}
+                        </div>
+                    </div>
+                    <div>
+                        <div className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest mb-1">
+                            Humidity
+                        </div>
+                        <div className="text-sm md:text-base font-black text-white">
+                            {weather.humidity}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+const StatAvatar = ({ leader }) => {
+    const [isError, setIsError] = useState(false);
+    const athlete = leader?.athlete;
+    const team = leader?.team;
+
+    // Use team logo if it's a team-level stat (no athlete)
+    const displayImage = athlete?.headshot || team?.logo;
+
+    return (
+        <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-black/40 overflow-hidden rounded-lg border border-white/10 relative flex-shrink-0">
+            {displayImage && !isError ? (
+                <img 
+                    src={displayImage} 
+                    className="w-full h-full object-cover" 
+                    alt=""
+                    onError={() => setIsError(true)}
+                />
+            ) : (
+                <div className="w-full h-full flex items-center justify-center bg-white/5">
+                    <span className="text-white/20 text-[8px] md:text-[9px] lg:text-[10px] font-black uppercase">
+                        {team?.abbreviation || '---'}
+                    </span>
+                </div>
+            )}
+        </div>
+    );
+};
+
 const IntelligenceHub = ({ game }) => {
+    const [subMode, setSubMode] = useState(0); // 0: Stats, 1: Media, 2: Feed/Field
+    const [statPage, setStatPage] = useState(0);
+    const [fullSummary, setFullSummary] = useState(null);
+
+    // Sub-mode and Stat rotation every 10 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setStatPage(prev => prev + 1);
+        }, 10000);
+        return () => clearInterval(interval);
+    }, []);
+
+    // Fetch full summary for more stats
+    useEffect(() => {
+        const fetchSummary = async () => {
+            if (!game) return;
+            const category = game._category;
+            const getPath = (cat) => {
+                switch (cat) {
+                    case 'NBA': return { s: 'basketball', l: 'nba' };
+                    case 'NFL': return { s: 'football', l: 'nfl' };
+                    case 'NCAAM': return { s: 'basketball', l: 'mens-college-basketball' };
+                    case 'NCAAF': return { s: 'football', l: 'college-football' };
+                    case 'MLB': return { s: 'baseball', l: 'mlb' };
+                    case 'NHL': return { s: 'hockey', l: 'nhl' };
+                    case 'SOCCER': return { s: 'soccer', l: 'eng.1' };
+                    default: return { s: 'basketball', l: 'nba' };
+                }
+            };
+            const path = getPath(category);
+            const summary = await getGameSummary(path.s, path.l, game.id);
+            setFullSummary(summary);
+        };
+        fetchSummary();
+    }, [game]);
+
     if (!game) return (
         <div className="h-full flex flex-col items-center justify-center opacity-20 gap-4">
             <div className="w-12 h-12 border-4 border-white/10 border-t-red-600 rounded-full animate-spin" />
@@ -100,40 +450,110 @@ const IntelligenceHub = ({ game }) => {
     
     // Get stats based on game state
     const getStats = () => {
-        if (gameState === 'in') {
-            // Live game: Use box score stats from competitors
-            const stats = [];
-            competition.competitors?.forEach(competitor => {
-                const teamStats = competitor.statistics || [];
-                teamStats.forEach(stat => {
-                    // Find or create stat category
-                    let category = stats.find(s => s.name === stat.name);
-                    if (!category) {
-                        category = { name: stat.name, displayName: stat.displayName || stat.name, leaders: [] };
-                        stats.push(category);
-                    }
-                    // Add this competitor's stat value
-                    category.leaders.push({
-                        athlete: competitor.athlete || { displayName: competitor.team?.displayName },
-                        team: competitor.team,
-                        displayValue: stat.displayValue || stat.value,
-                        value: stat.value
+        const stats = [];
+        const category = game._category;
+        
+        // Accurate ESPN headshot path mapping
+        const getSportPath = (cat) => {
+            switch (cat) {
+                case 'NBA': return 'nba';
+                case 'NFL': return 'nfl';
+                case 'NCAAM': return 'mens-college-basketball';
+                case 'NCAAF': return 'college-football';
+                case 'MLB': return 'mlb';
+                case 'NHL': return 'nhl';
+                case 'SOCCER': return 'soccer';
+                default: return 'nba';
+            }
+        };
+        const sportPath = getSportPath(category);
+        
+        // 1. Add Leaders from game object (Season leaders - usually have images)
+        if (competition.leaders) {
+            competition.leaders.forEach(leaderCat => {
+                const processedCat = {
+                    ...leaderCat,
+                    leaders: leaderCat.leaders?.map(l => ({
+                        ...l,
+                        athlete: {
+                            ...l.athlete,
+                            headshot: l.athlete?.headshot || `https://a.espncdn.com/i/headshots/${sportPath}/players/full/${l.athlete?.id}.png`
+                        }
+                    }))
+                };
+                stats.push(processedCat);
+            });
+        }
+
+        // 2. Add Box Score Stats if available (from fullSummary)
+        if (fullSummary?.boxscore?.players) {
+            fullSummary.boxscore.players.forEach(teamData => {
+                const team = teamData.team;
+                // Only process the first few relevant categories to avoid bloat
+                teamData.statistics?.forEach(statCat => {
+                    statCat.athletes?.forEach(athleteStat => {
+                        // Only add if they actually have a stat value
+                        if (athleteStat.stats?.[0] && athleteStat.stats[0] !== '0') {
+                            stats.push({
+                                name: statCat.name,
+                                displayName: statCat.labels?.[0] || statCat.name,
+                                leaders: [{
+                                    athlete: {
+                                        ...athleteStat.athlete,
+                                        headshot: athleteStat.athlete?.headshot || `https://a.espncdn.com/i/headshots/${sportPath}/players/full/${athleteStat.athlete?.id}.png`
+                                    },
+                                    team: team,
+                                    displayValue: athleteStat.stats[0],
+                                    value: athleteStat.stats[0]
+                                }]
+                            });
+                        }
                     });
                 });
             });
-            // Sort by value and take top performers
-            return stats.map(cat => ({
-                ...cat,
-                leaders: cat.leaders.sort((a, b) => parseFloat(b.value || 0) - parseFloat(a.value || 0)).slice(0, 1)
-            })).slice(0, 3);
-        } else {
-            // Pregame or post-game: Use season leaders
-            return competition.leaders?.slice(0, 3) || [];
         }
+        
+        // 3. Add Situation leaders (In-game performers & team stats)
+        if (gameState === 'in') {
+            competition.competitors?.forEach(competitor => {
+                const teamStats = competitor.statistics || [];
+                teamStats.forEach(stat => {
+                    // Only add if it's a "team" level stat (no athlete associated)
+                    // and clean up the label (e.g. fieldGoalsMade -> FG Made)
+                    const cleanLabel = stat.displayName || stat.name
+                        .replace(/([A-Z])/g, ' $1') // Add space before capitals
+                        .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
+                        .replace('Pct', '%')
+                        .trim();
+
+                    stats.push({
+                        name: stat.name,
+                        displayName: `TEAM ${cleanLabel}`,
+                        isTeamStat: true,
+                        leaders: [{
+                            athlete: {
+                                ...competitor.athlete,
+                                displayName: competitor.athlete?.displayName || competitor.team?.displayName,
+                                headshot: competitor.athlete?.headshot || (competitor.athlete?.id ? `https://a.espncdn.com/i/headshots/${sportPath}/players/full/${competitor.athlete?.id}.png` : null)
+                            },
+                            team: competitor.team,
+                            displayValue: stat.displayValue || stat.value,
+                            value: stat.value
+                        }]
+                    });
+                });
+            });
+        }
+
+        return stats;
     };
     
-    const displayStats = getStats();
-
+    const allStats = getStats();
+    // Cycle through stats 3 at a time - much larger pool now
+    const displayStats = allStats.length > 0
+        ? [...allStats, ...allStats].slice((statPage % Math.max(1, Math.ceil(allStats.length / 3))) * 3, ((statPage % Math.max(1, Math.ceil(allStats.length / 3))) * 3) + 3)
+        : [];
+    
     // Get game status badge
     const getStatusBadge = () => {
         if (gameState === 'in') return { text: 'LIVE', color: 'bg-red-600' };
@@ -174,31 +594,39 @@ const IntelligenceHub = ({ game }) => {
                         <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Market Dynamics</h3>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 md:gap-4">
-                        {/* Spread Card */}
-                        <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
-                            <div className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest mb-2 md:mb-3">Spread</div>
-                            <div className="text-2xl md:text-3xl font-mono font-black text-white tabular-nums tracking-tighter mb-2 md:mb-3">
-                                {odds?.details || 'EVEN'}
-                            </div>
-                            {odds?.details && (
-                                <div className="flex items-center gap-1.5 md:gap-2">
-                                    <div className="bg-red-600 px-2 md:px-3 py-0.5 md:py-1 text-[8px] md:text-[9px] font-black text-white uppercase">
-                                        {odds.details.includes(awayTeam.team.abbreviation) ? awayTeam.team.abbreviation : homeTeam.team.abbreviation}
+                    {/* Try Odds API first, fallback to ESPN odds */}
+                    <OddsComparison game={game} />
+                    
+                    {/* Fallback to ESPN odds if Odds API not available */}
+                    {!import.meta.env.VITE_ODDS_API_KEY && (
+                        <>
+                            <div className="grid grid-cols-2 gap-3 md:gap-4">
+                                {/* Spread Card */}
+                                <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
+                                    <div className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest mb-2 md:mb-3">Spread</div>
+                                    <div className="text-2xl md:text-3xl font-mono font-black text-white tabular-nums tracking-tighter mb-2 md:mb-3">
+                                        {odds?.details || 'EVEN'}
                                     </div>
-                                    <span className="text-[8px] md:text-[9px] text-white/40 uppercase">Favorite</span>
+                                    {odds?.details && (
+                                        <div className="flex items-center gap-1.5 md:gap-2">
+                                            <div className="bg-red-600 px-2 md:px-3 py-0.5 md:py-1 text-[8px] md:text-[9px] font-black text-white uppercase">
+                                                {odds.details.includes(awayTeam.team.abbreviation) ? awayTeam.team.abbreviation : homeTeam.team.abbreviation}
+                                            </div>
+                                            <span className="text-[8px] md:text-[9px] text-white/40 uppercase">Favorite</span>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                        
-                        {/* Total Card */}
-                        <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
-                            <div className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest mb-2 md:mb-3">Total</div>
-                            <div className="text-2xl md:text-3xl font-mono font-black text-white tabular-nums tracking-tighter">
-                                {odds?.overUnder || '--'}
+                                
+                                {/* Total Card */}
+                                <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
+                                    <div className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest mb-2 md:mb-3">Total</div>
+                                    <div className="text-2xl md:text-3xl font-mono font-black text-white tabular-nums tracking-tighter">
+                                        {odds?.overUnder || '--'}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </>
+                    )}
 
                     {/* Win Probability Bar */}
                     {situation?.lastPlay?.probability && (
@@ -226,7 +654,12 @@ const IntelligenceHub = ({ game }) => {
                     )}
                 </section>
 
-                {/* 2. STATS SECTION */}
+                {/* 2. WEATHER - Show for outdoor sports in pre-game */}
+                {gameState === 'pre' && isOutdoorSport(game._category) && (
+                    <WeatherSection game={game} />
+                )}
+
+                {/* 3. STATS SECTION */}
                 <section className="space-y-4 md:space-y-5">
                     <div className="flex items-center gap-2 md:gap-3 border-l-4 border-white/40 pl-3 md:pl-4 lg:pl-5 mb-2">
                         <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">
@@ -240,15 +673,7 @@ const IntelligenceHub = ({ game }) => {
                                 <div key={i} className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
                                     <div className="flex items-center gap-3 md:gap-4 lg:gap-5">
                                         <div className="relative flex-shrink-0">
-                                            <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-black/40 overflow-hidden rounded-lg border border-white/10">
-                                                {cat.leaders?.[0]?.athlete?.headshot ? (
-                                                    <img src={cat.leaders[0].athlete.headshot} className="w-full h-full object-cover" alt="" />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center bg-white/5">
-                                                        <span className="text-white/20 text-[8px] md:text-[9px] lg:text-[10px] font-black">{cat.leaders?.[0]?.team?.abbreviation || '---'}</span>
-                                                    </div>
-                                                )}
-                                            </div>
+                                            <StatAvatar leader={cat.leaders?.[0]} />
                                             <div className="absolute -top-1 -right-1 bg-red-600 text-white px-1.5 md:px-2 py-0.5 text-[7px] md:text-[8px] font-black uppercase rounded">
                                                 {cat.leaders?.[0]?.team?.abbreviation || '---'}
                                             </div>
@@ -258,7 +683,7 @@ const IntelligenceHub = ({ game }) => {
                                                 {cat.displayName}
                                             </div>
                                             <div className="text-sm md:text-base font-black text-white uppercase tracking-tighter truncate">
-                                                {cat.leaders?.[0]?.athlete?.displayName || 'N/A'}
+                                                {cat.isTeamStat ? (cat.leaders?.[0]?.team?.displayName || 'TEAM') : (cat.leaders?.[0]?.athlete?.displayName || 'N/A')}
                                             </div>
                                         </div>
                                         <div className="flex flex-col items-end gap-1 md:gap-2 flex-shrink-0">
@@ -282,7 +707,7 @@ const IntelligenceHub = ({ game }) => {
                     )}
                 </section>
 
-                {/* 3. FIELD / COURT VISUALIZATION - Only show for live games (Below fold) */}
+                {/* 4. FIELD / COURT VISUALIZATION - Only show for live games (Below fold) */}
                 {gameState === 'in' && (
                     <section className="space-y-3 md:space-y-4">
                         <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 lg:pl-5 mb-2">
@@ -292,7 +717,7 @@ const IntelligenceHub = ({ game }) => {
                     </section>
                 )}
 
-                {/* 4. LIVE FEED - Show for live and post games (Below fold) */}
+                {/* 5. LIVE FEED - Show for live and post games (Below fold) */}
                 {(gameState === 'in' || gameState === 'post') && (
                     <section className="space-y-4 md:space-y-5">
                         <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 lg:pl-5 mb-2">
@@ -308,6 +733,11 @@ const IntelligenceHub = ({ game }) => {
                             </p>
                         </div>
                     </section>
+                )}
+
+                {/* 6. INTELLIGENCE MEDIA - Videos (if playable) + Photos */}
+                {(gameState === 'post' || gameState === 'pre') && (
+                    <IntelligenceMedia game={game} gameState={gameState} cycleIndex={statPage} />
                 )}
             </div>
 

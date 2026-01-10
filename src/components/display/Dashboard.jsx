@@ -16,6 +16,7 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading }) => {
     const [filteredGames, setFilteredGames] = useState([]);
     const [spotlightIndex, setSpotlightIndex] = useState(0);
     const [marqueeOffset, setMarqueeOffset] = useState(280);
+    const [isPaused, setIsPaused] = useState(false);
 
     const CATEGORIES = [
         { id: 'All', label: 'Scoreboard' },
@@ -39,12 +40,17 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading }) => {
 
     // Update rotation timing to 10 seconds (10000ms)
     useEffect(() => {
-        if (filteredGames.length <= 1) return;
+        if (filteredGames.length <= 1 || isPaused) return;
         const interval = setInterval(() => {
             setSpotlightIndex(prev => (prev + 1) % filteredGames.length);
         }, 10000);
         return () => clearInterval(interval);
-    }, [filteredGames.length]);
+    }, [filteredGames.length, isPaused]);
+
+    const handleNext = () => {
+        if (filteredGames.length <= 1) return;
+        setSpotlightIndex(prev => (prev + 1) % filteredGames.length);
+    };
 
     // Calculate marquee offset based on screen size
     useEffect(() => {
@@ -75,7 +81,7 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading }) => {
                             {filter === 'All' ? 'SCORE' : filter}
                         </span>
                     </div>
-                    <div className="flex gap-4 md:gap-6 lg:gap-8 px-4 md:px-6 lg:px-10 overflow-x-auto no-scrollbar py-3 md:py-3.5 lg:py-4">
+                    <div className="flex gap-4 md:gap-6 lg:gap-8 px-4 md:px-6 lg:px-10 overflow-x-auto no-scrollbar py-3 md:py-3.5 lg:py-4 flex-grow">
                         {CATEGORIES.map(cat => (
                             <button
                                 key={cat.id}
@@ -90,6 +96,30 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading }) => {
                                 {cat.label}
                             </button>
                         ))}
+                    </div>
+
+                    {/* Minimal Controls */}
+                    <div className="flex items-center gap-4 md:gap-6 px-4 md:px-6 lg:px-8 h-full border-l border-white/10 bg-white/5">
+                        <button 
+                            onClick={() => setIsPaused(!isPaused)}
+                            className="flex items-center gap-2 group outline-none"
+                            title={isPaused ? "Resume Rotation" : "Pause Rotation"}
+                        >
+                            <div className={`w-2 h-2 rounded-full ${isPaused ? 'bg-red-600 shadow-[0_0_10px_rgba(220,38,38,1)]' : 'bg-green-500 animate-pulse'} transition-all`} />
+                            <span className={`text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-colors ${isPaused ? 'text-red-500' : 'text-white/40 group-hover:text-white'}`}>
+                                {isPaused ? 'Paused' : 'Live'}
+                            </span>
+                        </button>
+                        <button 
+                            onClick={handleNext}
+                            className="group flex items-center gap-2 outline-none border-l border-white/5 pl-4 md:pl-6"
+                            title="Next Game"
+                        >
+                            <span className="text-[10px] md:text-xs font-black text-white/40 group-hover:text-white uppercase tracking-[0.2em] transition-colors">Next</span>
+                            <svg className="w-2.5 h-2.5 md:w-3 md:h-3 fill-white/40 group-hover:fill-white transition-colors" viewBox="0 0 24 24">
+                                <path d="M5 3l14 9-14 9V3z"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
