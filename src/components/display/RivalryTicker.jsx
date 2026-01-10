@@ -66,7 +66,7 @@ const RivalryTicker = () => {
                                 <span className="text-white/90"
                                     style={{ 
                                         fontFamily: "'IBM Plex Sans', sans-serif",
-                                        fontSize: '13px',
+                                        fontSize: '18px',
                                         fontWeight: 400
                                     }}>
                                     {item}
