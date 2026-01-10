@@ -412,7 +412,7 @@ const IntelligenceHub = ({ game }) => {
         return () => clearInterval(interval);
     }, []);
 
-    // Fetch full summary for more stats
+    // Fetch full summary for more stats - refetch when game goes live
     useEffect(() => {
         const fetchSummary = async () => {
             if (!game) return;
@@ -434,7 +434,14 @@ const IntelligenceHub = ({ game }) => {
             setFullSummary(summary);
         };
         fetchSummary();
-    }, [game]);
+        
+        // If game is live, refetch every 30 seconds for updated stats
+        const gameState = game.status?.type?.state;
+        if (gameState === 'in') {
+            const interval = setInterval(fetchSummary, 30000);
+            return () => clearInterval(interval);
+        }
+    }, [game, game?.status?.type?.state]);
 
     if (!game) return (
         <div className="h-full flex flex-col items-center justify-center opacity-20 gap-4">
@@ -469,7 +476,7 @@ const IntelligenceHub = ({ game }) => {
         const sportPath = getSportPath(category);
         
         // 1. Add Leaders from game object (Season leaders - usually have images)
-        if (competition.leaders) {
+        if (competition.leaders && competition.leaders.length > 0) {
             competition.leaders.forEach(leaderCat => {
                 const processedCat = {
                     ...leaderCat,
@@ -482,6 +489,27 @@ const IntelligenceHub = ({ game }) => {
                     }))
                 };
                 stats.push(processedCat);
+            });
+        } else if (gameState === 'pre') {
+            // Fallback: Show team records/rankings for upcoming games without leaders
+            competition.competitors?.forEach(competitor => {
+                const team = competitor.team;
+                const record = competitor.records?.[0]?.summary || 'N/A';
+                const rank = team.rank || null;
+                
+                stats.push({
+                    name: 'teamRecord',
+                    displayName: rank ? `#${rank} ${team.displayName}` : team.displayName,
+                    leaders: [{
+                        athlete: {
+                            displayName: team.displayName,
+                            headshot: null
+                        },
+                        team: team,
+                        displayValue: record,
+                        value: record
+                    }]
+                });
             });
         }
 
