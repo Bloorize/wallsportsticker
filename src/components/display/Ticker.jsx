@@ -129,13 +129,13 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
             <div key={`${filter}-${activeMode.id}`} className={`flex animate-scroll whitespace-nowrap items-center h-full min-w-max ${isHolyWar ? 'bg-white' : 'bg-[#121212]'}`}>
                 {displayItems.map((item, idx) => (
                     <div key={`${item.id}-${idx}`} className="flex-shrink-0 flex items-center h-full">
-                        <div className="flex flex-col justify-center px-4 md:px-6 lg:px-8 border-l border-white/5">
+                        <div className={`flex flex-col justify-center px-4 md:px-6 lg:px-8 ${isHolyWar ? 'border-l border-[#0047BA]/20' : 'border-l border-white/5'}`}>
                             <div className="flex items-center gap-3 md:gap-4 lg:gap-6 mb-0.5 md:mb-1">
                                 {item.logo ? (
                                     <img 
                                         src={item.logo} 
                                         alt={item.indicator}
-                                        className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 object-contain rounded-full bg-white/10 p-0.5"
+                                        className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 object-contain rounded-full ${isHolyWar ? 'bg-[#0047BA]/10' : 'bg-white/10'} p-0.5`}
                                         onError={(e) => {
                                             // Hide image and show text badge if logo fails to load
                                             e.target.style.display = 'none';
@@ -143,17 +143,17 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
                                     />
                                 ) : null}
                                 {!item.logo && (
-                                    <span className="bg-red-700 px-1.5 md:px-2 py-0.5 text-[8px] md:text-[9px] lg:text-[10px] font-black text-white uppercase tracking-widest">
+                                    <span className={`${isHolyWar ? 'bg-[#0047BA]' : 'bg-red-700'} px-1.5 md:px-2 py-0.5 text-[8px] md:text-[9px] lg:text-[10px] font-black text-white uppercase tracking-widest`}>
                                         {item.indicator === 'NCAAM' ? 'NCAA BB' : item.indicator === 'NCAAF' ? 'NCAA FB' : item.indicator}
                                     </span>
                                 )}
-                                <span className="font-black text-white text-base md:text-2xl lg:text-3xl leading-none uppercase tracking-tight">{item.title}</span>
+                                <span className={`font-black ${isHolyWar ? 'text-[#002E5D]' : 'text-white'} text-base md:text-2xl lg:text-3xl leading-none uppercase tracking-tight`}>{item.title}</span>
                             </div>
-                            <span className="text-white/30 text-xs md:text-base lg:text-xl font-bold tracking-tight pl-0">{item.detail}</span>
+                            <span className={`${isHolyWar ? 'text-[#002E5D]/60' : 'text-white/30'} text-xs md:text-base lg:text-xl font-bold tracking-tight pl-0`}>{item.detail}</span>
                         </div>
                         {/* High Contrast Separator */}
                         <div className="w-[60px] md:w-[80px] lg:w-[100px] flex-shrink-0 flex items-center justify-center">
-                            <div className="w-1 h-4 md:h-6 lg:h-8 bg-white/10" />
+                            <div className={`w-1 h-4 md:h-6 lg:h-8 ${isHolyWar ? 'bg-[#0047BA]/20' : 'bg-white/10'}`} />
                         </div>
                     </div>
                 ))}
