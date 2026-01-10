@@ -10,27 +10,69 @@ import { RIVALRY_DATA } from '../../config/rivalryData';
  * PADDING EVERYWHERE - Text never touches edges
  */
 
-// Live Stats Section Component - With clear HEADING
-const LiveStatsSection = ({ stats }) => {
+// Stat Avatar Component - Like IntelligenceHub
+const StatAvatar = ({ imageUrl, teamAbbrev, isError, onError }) => {
+    return (
+        <div className="w-8 h-8 md:w-10 md:h-10 bg-white border border-white/10 overflow-hidden rounded-lg relative flex-shrink-0">
+            {imageUrl && !isError ? (
+                <img 
+                    src={imageUrl} 
+                    className="w-full h-full object-cover" 
+                    alt=""
+                    onError={onError}
+                />
+            ) : (
+                <div className="w-full h-full flex items-center justify-center bg-white/5">
+                    <span className="text-white/40 text-[8px] md:text-[9px] font-black uppercase">
+                        {teamAbbrev || '---'}
+                    </span>
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Live Stats Section Component - With clear HEADING and team logos
+const LiveStatsSection = ({ stats, awayTeam, homeTeam }) => {
+    const [awayLogoError, setAwayLogoError] = useState(false);
+    const [homeLogoError, setHomeLogoError] = useState(false);
+    
     if (!stats) return null;
     
     return (
         <div className="bg-[#001428] p-4 md:p-5 lg:p-6">
             {/* HEADING */}
-            <div className="border-b border-white/20 pb-3 mb-4">
+            <div className="border-b border-white/20 pb-3 mb-4 px-4">
                 <h3 className="text-white text-base md:text-lg font-bold uppercase tracking-wide mb-2">
                     LIVE STATS
                 </h3>
-                <div className="flex text-xs md:text-sm text-white/60 px-2">
+                <div className="flex items-center text-xs md:text-sm text-white/60">
                     <span className="w-24 md:w-32">STAT</span>
-                    <span className="w-16 md:w-20 text-right">BYU</span>
-                    <span className="w-16 md:w-20 text-right">UTAH</span>
+                    <div className="flex items-center gap-2 ml-auto">
+                        <StatAvatar 
+                            imageUrl={awayTeam?.logo} 
+                            teamAbbrev={awayTeam?.abbreviation}
+                            isError={awayLogoError}
+                            onError={() => setAwayLogoError(true)}
+                        />
+                        <span className="w-16 md:w-20 text-right">BYU</span>
+                    </div>
+                    <div className="w-px h-4 mx-2 bg-white/20" />
+                    <div className="flex items-center gap-2">
+                        <StatAvatar 
+                            imageUrl={homeTeam?.logo} 
+                            teamAbbrev={homeTeam?.abbreviation}
+                            isError={homeLogoError}
+                            onError={() => setHomeLogoError(true)}
+                        />
+                        <span className="w-16 md:w-20 text-right">UTAH</span>
+                    </div>
                 </div>
             </div>
             
             {/* Stats Rows */}
-            <div className="space-y-2">
-                <div className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+            <div className="space-y-2 px-4">
+                <div className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
                     <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
                         FG%
                     </span>
@@ -45,7 +87,7 @@ const LiveStatsSection = ({ stats }) => {
                     </div>
                 </div>
                 
-                <div className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+                <div className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
                     <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
                         3PT
                     </span>
@@ -60,7 +102,7 @@ const LiveStatsSection = ({ stats }) => {
                     </div>
                 </div>
                 
-                <div className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+                <div className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
                     <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
                         REB
                     </span>
@@ -75,7 +117,7 @@ const LiveStatsSection = ({ stats }) => {
                     </div>
                 </div>
                 
-                <div className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+                <div className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
                     <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
                         AST
                     </span>
@@ -94,11 +136,13 @@ const LiveStatsSection = ({ stats }) => {
     );
 };
 
-// Season Stats Panel - With clear HEADING
-const SeasonStatsPanel = ({ stats, cycleIndex }) => {
+// Season Stats Panel - With clear HEADING and team logos
+const SeasonStatsPanel = ({ stats, cycleIndex, awayTeam, homeTeam }) => {
     const statsSet1 = stats.slice(0, 4);
     const statsSet2 = stats.slice(4, 8);
     const currentStats = cycleIndex === 0 ? statsSet1 : statsSet2;
+    const [awayLogoError, setAwayLogoError] = useState(false);
+    const [homeLogoError, setHomeLogoError] = useState(false);
     
     return (
         <div className="bg-[#001428] h-full flex flex-col shadow-2xl border border-white/10 overflow-hidden">
@@ -113,11 +157,28 @@ const SeasonStatsPanel = ({ stats, cycleIndex }) => {
                         <div className={`w-1.5 h-1.5 rounded-full transition-all ${cycleIndex === 1 ? 'bg-white w-2 h-2' : 'bg-white/30'}`} />
                     </div>
                 </div>
-                {/* Column Headers */}
-                <div className="flex text-xs md:text-sm text-white/60 px-2">
+                {/* Column Headers with logos */}
+                <div className="flex items-center text-xs md:text-sm text-white/60 px-4">
                     <span className="w-24 md:w-32">STAT</span>
-                    <span className="w-16 md:w-20 text-right">BYU</span>
-                    <span className="w-16 md:w-20 text-right">UTAH</span>
+                    <div className="flex items-center gap-2 ml-auto">
+                        <StatAvatar 
+                            imageUrl={awayTeam?.logo} 
+                            teamAbbrev={awayTeam?.abbreviation}
+                            isError={awayLogoError}
+                            onError={() => setAwayLogoError(true)}
+                        />
+                        <span className="w-16 md:w-20 text-right">BYU</span>
+                    </div>
+                    <div className="w-px h-4 mx-2 bg-white/20" />
+                    <div className="flex items-center gap-2">
+                        <StatAvatar 
+                            imageUrl={homeTeam?.logo} 
+                            teamAbbrev={homeTeam?.abbreviation}
+                            isError={homeLogoError}
+                            onError={() => setHomeLogoError(true)}
+                        />
+                        <span className="w-16 md:w-20 text-right">UTAH</span>
+                    </div>
                 </div>
             </div>
             
@@ -126,7 +187,7 @@ const SeasonStatsPanel = ({ stats, cycleIndex }) => {
                 {currentStats.length > 0 ? (
                     <div className="space-y-2">
                         {currentStats.map((row, i) => (
-                            <div key={i} className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+                            <div key={i} className="flex items-center justify-between py-2 px-4 hover:bg-white/5 rounded transition-colors">
                                 <span className="text-white/70 text-xs md:text-sm font-medium uppercase tracking-wide flex-1">
                                     {row[0]}
                                 </span>
@@ -143,7 +204,7 @@ const SeasonStatsPanel = ({ stats, cycleIndex }) => {
                         ))}
                     </div>
                 ) : (
-                    <div className="py-8 text-center">
+                    <div className="py-8 text-center px-4">
                         <span className="text-white/50 text-xs md:text-sm">Loading stats...</span>
                     </div>
                 )}
@@ -301,22 +362,32 @@ const HolyWarDashboard = ({ game, loading }) => {
         <div className="w-full h-full flex flex-col bg-[#002E5D] p-4 md:p-5 lg:p-6 gap-4 md:gap-5 lg:gap-6">
             {/* Top Score Section */}
             <div className="flex-none bg-[#001428] p-6 md:p-8 lg:p-10 rounded-lg border border-white/10">
-                <div className="flex items-center justify-between">
-                    {/* Away Team Logo - LARGE */}
-                    <div className="flex flex-col items-center gap-3 md:gap-4 flex-shrink-0 px-4">
+                {/* THE HOLY WAR text centered above score */}
+                <div className="text-center mb-4 px-4">
+                    <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-white uppercase tracking-tight leading-none mb-1">
+                        THE HOLY WAR
+                    </h1>
+                    <p className="text-sm md:text-base font-medium text-white/60 uppercase tracking-wider">
+                        BYU vs UTAH
+                    </p>
+                </div>
+                
+                <div className="flex items-center justify-center gap-4 md:gap-6 lg:gap-8">
+                    {/* Away Team Logo - CLOSER to score */}
+                    <div className="flex flex-col items-center gap-2 md:gap-3 flex-shrink-0 px-4">
                         <img 
                             src={awayTeam.team.logo} 
                             alt={awayTeam.team.displayName}
-                            className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain drop-shadow-2xl"
+                            className="w-20 h-20 md:w-28 md:h-28 lg:w-36 lg:h-36 object-contain drop-shadow-2xl"
                         />
-                        <span className="text-white text-lg md:text-xl lg:text-2xl font-black uppercase tracking-wide">
+                        <span className="text-white text-base md:text-lg lg:text-xl font-black uppercase tracking-wide">
                             {awayTeam.team.abbreviation}
                         </span>
                     </div>
 
                     {/* Score Display - HUGE */}
-                    <div className="flex-1 flex flex-col items-center justify-center mx-6 md:mx-8 lg:mx-12 px-4">
-                        <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
+                    <div className="flex flex-col items-center justify-center px-4">
+                        <div className="flex items-center gap-4 md:gap-6 lg:gap-8">
                             <div className={`text-6xl md:text-7xl lg:text-8xl font-black tabular-nums leading-none
                                 ${parseInt(awayTeam.score || 0) > parseInt(homeTeam.score || 0) 
                                     ? 'text-white' 
@@ -324,7 +395,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 {awayTeam.score || '0'}
                             </div>
                             
-                            <div className="flex flex-col items-center gap-2 px-4">
+                            <div className="flex flex-col items-center gap-2 px-2">
                                 {isLive && (
                                     <div className="w-2 h-2 bg-white rounded-full animate-pulse shadow-lg shadow-white/50" />
                                 )}
@@ -349,15 +420,15 @@ const HolyWarDashboard = ({ game, loading }) => {
                         </div>
                     </div>
 
-                    {/* Home Team Logo - LARGE, Grayscale */}
-                    <div className="flex flex-col items-center gap-3 md:gap-4 flex-shrink-0 px-4">
+                    {/* Home Team Logo - CLOSER to score, RED */}
+                    <div className="flex flex-col items-center gap-2 md:gap-3 flex-shrink-0 px-4">
                         <img 
                             src={homeTeam.team.logo} 
                             alt={homeTeam.team.displayName}
-                            className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain drop-shadow-2xl"
-                            style={{ filter: 'grayscale(100%) brightness(1.5)' }}
+                            className="w-20 h-20 md:w-28 md:h-28 lg:w-36 lg:h-36 object-contain drop-shadow-2xl"
+                            style={{ filter: 'brightness(0) saturate(100%) invert(15%) sepia(94%) saturate(7151%) hue-rotate(358deg) brightness(95%) contrast(118%)' }}
                         />
-                        <span className="text-white text-lg md:text-xl lg:text-2xl font-black uppercase tracking-wide">
+                        <span className="text-white text-base md:text-lg lg:text-xl font-black uppercase tracking-wide">
                             {homeTeam.team.abbreviation}
                         </span>
                     </div>
@@ -406,9 +477,9 @@ const HolyWarDashboard = ({ game, loading }) => {
                 {/* Stats Panel - Right Side */}
                 <div className="flex-[3] flex flex-col min-w-0">
                     {isLive && liveStats ? (
-                        <LiveStatsSection stats={liveStats} />
+                        <LiveStatsSection stats={liveStats} awayTeam={awayTeam.team} homeTeam={homeTeam.team} />
                     ) : (
-                        <SeasonStatsPanel stats={seasonStats} cycleIndex={statCycleIndex} />
+                        <SeasonStatsPanel stats={seasonStats} cycleIndex={statCycleIndex} awayTeam={awayTeam.team} homeTeam={homeTeam.team} />
                     )}
                 </div>
             </div>

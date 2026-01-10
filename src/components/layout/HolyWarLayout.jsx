@@ -19,20 +19,8 @@ const HolyWarLayout = ({ children }) => {
             </div>
 
             {/* Minimal Header Bar */}
-            <header className="flex-none h-12 md:h-14 flex items-center justify-between px-4 md:px-6 pl-28 md:pl-32 lg:pl-36
+            <header className="flex-none h-12 md:h-14 flex items-center justify-end px-4 md:px-6 pl-28 md:pl-32 lg:pl-36
                 bg-[#001428] border-b border-white/10">
-                
-                <div className="flex items-center gap-3 md:gap-4">
-                    <div className="flex flex-col">
-                        <h1 className="text-sm md:text-base font-black text-white uppercase tracking-tight leading-none">
-                            THE HOLY WAR
-                        </h1>
-                        <p className="text-[10px] md:text-xs font-medium text-white/60 uppercase tracking-wider">
-                            BYU vs UTAH
-                        </p>
-                    </div>
-                </div>
-
                 {/* Live indicator */}
                 <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-white/10 rounded">
                     <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
