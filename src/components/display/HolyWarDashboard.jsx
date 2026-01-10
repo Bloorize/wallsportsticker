@@ -556,29 +556,21 @@ const HolyWarDashboard = ({ game, loading }) => {
                     <div className="flex-1 bg-[#001428] rounded-lg overflow-hidden shadow-2xl relative">
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
-                                {/* 16:9 aspect ratio container - YouTube IFrame API Player or Fallback */}
-                                <div className="aspect-video w-full relative">
-                                    {/* YouTube API Player Container - Hidden by default, shown when API player is ready */}
-                                    <div 
-                                        id="holy-war-video-player" 
-                                        className="w-full h-full absolute inset-0"
-                                        style={{ 
-                                            display: (playerRef.current && playerReady) ? 'block' : 'none',
-                                            zIndex: 10
-                                        }}
-                                    ></div>
-                                    {/* Fallback iframe - Always visible unless API player is active */}
+                                {/* 16:9 aspect ratio container - Simple YouTube iframe */}
+                                <div className="aspect-video w-full">
                                     <iframe
                                         key={`video-${highlights[mediaIndex].videoId}-${mediaIndex}`}
                                         className="w-full h-full"
-                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0&enablejsapi=1`}
+                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0`}
                                         title={highlights[mediaIndex].title || 'Video'}
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
-                                        style={{
-                                            display: (playerRef.current && playerReady) ? 'none' : 'block'
-                                        }}
                                     />
+                                    {/* Hidden container for YouTube API player (for future use) */}
+                                    <div 
+                                        id="holy-war-video-player" 
+                                        className="hidden"
+                                    ></div>
                                 </div>
                                 {/* Video indicator dots - Clickable for manual selection */}
                                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
