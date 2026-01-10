@@ -1,0 +1,18 @@
+{
+  "name": "Wall Sports Ticker",
+  "short_name": "Wall Sports",
+  "description": "Sports ticker and Holy War dashboard",
+  "start_url": "/wallsportsticker/",
+  "display": "standalone",
+  "background_color": "#002E5D",
+  "theme_color": "#002E5D",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "/wallsportsticker/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

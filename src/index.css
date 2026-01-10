@@ -31,12 +31,25 @@ body {
   overflow: hidden;
   height: 100vh;
   width: 100vw;
+  /* Prevent iOS Safari UI from showing */
+  position: fixed;
+  -webkit-overflow-scrolling: touch;
+  /* Fill entire viewport including safe areas */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  margin: 0;
 }
 
 #root {
   height: 100%;
   width: 100%;
   background-image: linear-gradient(to bottom, #141414, #000000);
+  /* Ensure root fills entire viewport */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 /* Custom Scrollbar for list views */
