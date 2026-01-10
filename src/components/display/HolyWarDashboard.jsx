@@ -13,7 +13,7 @@ import { RIVALRY_DATA } from '../../config/rivalryData';
 // Stat Avatar Component - Like IntelligenceHub
 const StatAvatar = ({ imageUrl, teamAbbrev, isError, onError }) => {
     return (
-        <div className="w-8 h-8 md:w-10 md:h-10 bg-white border border-white/10 overflow-hidden rounded-lg relative flex-shrink-0">
+        <div className="w-8 h-8 md:w-10 md:h-10 bg-white overflow-hidden rounded-lg relative flex-shrink-0">
             {imageUrl && !isError ? (
                 <img 
                     src={imageUrl} 
@@ -42,7 +42,7 @@ const LiveStatsSection = ({ stats, awayTeam, homeTeam }) => {
     return (
         <div className="bg-[#001428] p-4 md:p-5 lg:p-6">
             {/* HEADING */}
-            <div className="border-b border-white/20 pb-3 mb-4 px-4">
+            <div className="pb-3 mb-4 px-4">
                 <h3 className="text-white text-base md:text-lg font-bold uppercase tracking-wide mb-2">
                     LIVE STATS
                 </h3>
@@ -135,9 +135,9 @@ const SeasonStatsPanel = ({ stats, cycleIndex, awayTeam, homeTeam }) => {
     const [homeLogoError, setHomeLogoError] = useState(false);
     
     return (
-        <div className="bg-[#001428] h-full flex flex-col shadow-2xl border border-white/10 overflow-hidden">
+        <div className="bg-[#001428] h-full flex flex-col shadow-2xl overflow-hidden">
             {/* Header with HEADING */}
-            <div className="px-4 md:px-5 lg:px-6 py-4 bg-white/5 border-b border-white/10">
+            <div className="px-4 md:px-5 lg:px-6 py-4 bg-white/5">
                 <div className="flex items-center justify-between mb-3">
                     <h3 className="text-white text-base md:text-lg font-bold uppercase tracking-wide">
                         SEASON STATS
@@ -347,7 +347,7 @@ const HolyWarDashboard = ({ game, loading }) => {
     return (
         <div className="w-full h-full flex flex-col bg-[#002E5D] p-4 md:p-5 lg:p-6 gap-4 md:gap-5 lg:gap-6">
             {/* Top Score Section */}
-            <div className="flex-none bg-[#001428] p-6 md:p-8 lg:p-10 rounded-lg border-x border-b border-white/10">
+            <div className="flex-none bg-[#001428] p-6 md:p-8 lg:p-10 rounded-lg">
                 {/* THE HOLY WAR text centered above score */}
                 <div className="text-center mb-4 px-4">
                     <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-white uppercase tracking-tight leading-none mb-1">
@@ -399,7 +399,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                         </div>
                         
                         {/* Game Status Badge */}
-                        <div className="mt-4 px-6 py-2 bg-black/40 rounded-full border border-white/20">
+                        <div className="mt-4 px-6 py-2 bg-black/40 rounded-full">
                             <span className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">
                                 {isLive ? game.status.type.detail : (game.status.type.shortDetail || formatMountainTime(game.date))}
                             </span>
