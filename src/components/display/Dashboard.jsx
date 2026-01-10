@@ -213,7 +213,7 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading, isHolyWar = fals
 
             {/* Side Rail (Right) - Intelligence Hub */}
             <div className="w-full lg:w-[550px] md:w-[400px] flex flex-col h-auto lg:h-full bg-[#1a1b1c] border-t lg:border-t-0 lg:border-l border-white/10 shadow-[0_0_100px_rgba(0,0,0,1)]">
-                <IntelligenceHub game={filteredGames[spotlightIndex]} />
+                <IntelligenceHub game={filteredGames[spotlightIndex]} isHolyWar={isHolyWar} />
             </div>
         </div>
     );
