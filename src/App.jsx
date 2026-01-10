@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import GlassLayout from './components/layout/GlassLayout'
 import Dashboard from './components/display/Dashboard'
 import HolyWar from './pages/HolyWar'
@@ -220,6 +220,16 @@ function App() {
       <Routes>
         <Route path="/holywar" element={<HolyWar />} />
         <Route path="/" element={
+          <GlassLayout filter={filter} games={allGames} tickerData={tickerData}>
+            <Dashboard
+              filter={filter}
+              onFilterChange={setFilter}
+              allGames={allGames}
+              loading={loading}
+            />
+          </GlassLayout>
+        } />
+        <Route path="*" element={
           <GlassLayout filter={filter} games={allGames} tickerData={tickerData}>
             <Dashboard
               filter={filter}
