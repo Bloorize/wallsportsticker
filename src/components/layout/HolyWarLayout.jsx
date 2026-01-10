@@ -14,7 +14,7 @@ const HolyWarLayout = ({ children, filter, games, tickerData }) => {
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#0047BA]" />
 
             {/* TV SAFE AREA WRAPPER */}
-            <div className="absolute inset-2 md:inset-4 lg:inset-[25px] flex flex-col z-10 overflow-hidden bg-white border-2 border-[#0047BA] rounded-lg md:rounded-2xl lg:rounded-[40px] shadow-2xl">
+            <div className="absolute inset-1 md:inset-2 lg:inset-[12px] flex flex-col z-10 overflow-hidden bg-white">
                 {/* Internal Content Area */}
                 <div className="flex-grow flex flex-col min-h-0 overflow-hidden">
                     {/* Top Bar - BYU Styled Light Mode */}

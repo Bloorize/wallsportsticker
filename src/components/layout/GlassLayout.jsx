@@ -11,9 +11,9 @@ const GlassLayout = ({ children, filter, games, tickerData }) => {
 
             {/* 
                 TV SAFE AREA WRAPPER 
-                Mobile: Reduced padding, Tablet: Medium padding, Desktop: Full 25px padding
+                Reduced padding - no border, no rounded corners
             */}
-            <div className="absolute inset-2 md:inset-4 lg:inset-[25px] flex flex-col z-10 overflow-hidden bg-black/20 backdrop-blur-md border border-white/5 rounded-lg md:rounded-2xl lg:rounded-[40px] shadow-2xl">
+            <div className="absolute inset-1 md:inset-2 lg:inset-[12px] flex flex-col z-10 overflow-hidden bg-black/20 backdrop-blur-md">
 
                 {/* Internal Content Area */}
                 <div className="flex-grow flex flex-col min-h-0 overflow-hidden">
