@@ -94,7 +94,7 @@ const FieldVisualization = ({ game, gameState }) => {
 import { getNewsWithPhotos, getGameSummary } from '../../services/espn';
 import { getTeamPhotos } from '../../services/thesportsdb';
 
-const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
+const IntelligenceMedia = ({ game, gameState, cycleIndex = 0, isHolyWar = false }) => {
     const [media, setMedia] = useState([]);
     const [highlights, setHighlights] = useState([]);
     const [loading, setLoading] = useState(true);
