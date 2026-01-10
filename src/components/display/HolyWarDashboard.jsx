@@ -35,22 +35,22 @@ const GlassCard = ({ children, className = '', accentTop = false, noPadding = fa
     </div>
 );
 
-// Stat Row Component - Generous padding, text never touches edges
+// Stat Row Component - MASSIVE text for TV viewing, generous spacing
 const StatRow = ({ label, awayValue, homeValue, highlight = false }) => (
     <div className={`
-        flex items-center justify-between py-6 md:py-7 px-10 md:px-12
-        ${highlight ? 'bg-[#0047BA]' : 'border-b border-white/10 last:border-0'}
-        transition-all duration-300 hover:bg-white/5
+        flex items-center justify-between py-8 md:py-10 px-12 md:px-16
+        ${highlight ? 'bg-[#0047BA]/30' : ''}
+        transition-all duration-300 mb-3
     `}>
-        <span className="text-white text-base md:text-lg lg:text-xl font-semibold uppercase tracking-wider">
+        <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold uppercase tracking-wider">
             {label}
         </span>
-        <div className="flex items-center gap-10 md:gap-12">
-            <span className="text-white text-2xl md:text-3xl lg:text-4xl font-bold tabular-nums min-w-[90px] text-center">
+        <div className="flex items-center gap-12 md:gap-16">
+            <span className="text-white text-3xl md:text-4xl lg:text-5xl font-black tabular-nums min-w-[120px] text-center">
                 {awayValue}
             </span>
-            <div className="w-[1px] h-10 bg-white/20" />
-            <span className="text-white text-2xl md:text-3xl lg:text-4xl font-bold tabular-nums min-w-[90px] text-center">
+            <div className="w-[2px] h-12 bg-white/40 rounded-full" />
+            <span className="text-white text-3xl md:text-4xl lg:text-5xl font-black tabular-nums min-w-[120px] text-center opacity-60">
                 {homeValue}
             </span>
         </div>
@@ -208,87 +208,88 @@ const HolyWarDashboard = ({ game, loading }) => {
     const currentSeasonStats = statCycleIndex === 0 ? statsSet1 : statsSet2;
 
     return (
-        <div className="w-full h-full flex flex-col p-6 md:p-8 lg:p-10 gap-5 md:gap-6 lg:gap-8 bg-[#002E5D]">
+        <div className="w-full h-full flex flex-col p-8 md:p-10 lg:p-12 gap-6 md:gap-8 lg:gap-10 bg-[#002E5D]">
             {/* Top Score Section */}
-            <GlassCard className="flex-none" accentTop noPadding>
-                <div className="flex items-center justify-center py-12 md:py-14 lg:py-16 px-12 md:px-16 lg:px-20">
+            <GlassCard className="flex-none" noPadding>
+                <div className="flex items-center justify-center py-16 md:py-20 lg:py-24 px-16 md:px-20 lg:px-24">
                     {/* Away Team */}
-                    <div className="flex flex-col items-center gap-4 md:gap-5 flex-1">
+                    <div className="flex flex-col items-center gap-5 md:gap-6 flex-1">
                         <img 
                             src={awayTeam.team.logo} 
                             alt={awayTeam.team.displayName}
-                            className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 object-contain drop-shadow-2xl"
+                            className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain drop-shadow-2xl"
                         />
-                        <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold uppercase tracking-wide">
+                        <span className="text-white text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-wide">
                             {awayTeam.team.abbreviation}
                         </span>
                     </div>
 
                     {/* Score Display */}
-                    <div className="flex items-center gap-8 md:gap-12 lg:gap-16 mx-8 md:mx-12 lg:mx-16">
-                        <div className={`text-6xl md:text-8xl lg:text-9xl font-black tabular-nums leading-none
+                    <div className="flex items-center gap-12 md:gap-16 lg:gap-20 mx-12 md:mx-16 lg:mx-20">
+                        <div className={`text-7xl md:text-9xl font-black tabular-nums leading-none
                             ${parseInt(awayTeam.score || 0) > parseInt(homeTeam.score || 0) 
                                 ? 'text-white' 
-                                : 'text-white/40'}`}
+                                : 'text-white/50'}`}
                             style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
                             {awayTeam.score || '0'}
                         </div>
                         
-                        <div className="flex flex-col items-center gap-3">
-                            <div className="w-[1px] h-12 md:h-16 bg-white/30" />
-                            <span className="text-white text-sm md:text-base font-bold uppercase tracking-widest opacity-80">
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="w-[2px] h-16 md:h-20 bg-white/40 rounded-full" />
+                            <span className="text-white text-lg md:text-xl font-black uppercase tracking-widest">
                                 {isLive ? 'LIVE' : 'VS'}
                             </span>
-                            <div className="w-[1px] h-12 md:h-16 bg-white/30" />
+                            <div className="w-[2px] h-16 md:h-20 bg-white/40 rounded-full" />
                         </div>
                         
-                        <div className={`text-6xl md:text-8xl lg:text-9xl font-black tabular-nums leading-none
+                        <div className={`text-7xl md:text-9xl font-black tabular-nums leading-none
                             ${parseInt(homeTeam.score || 0) > parseInt(awayTeam.score || 0) 
                                 ? 'text-white' 
-                                : 'text-white/40'}`}
+                                : 'text-white/50'}`}
                             style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
                             {homeTeam.score || '0'}
                         </div>
                     </div>
 
-                    {/* Home Team */}
-                    <div className="flex flex-col items-center gap-4 md:gap-5 flex-1">
+                    {/* Home Team - Desaturate Utah logo to remove red */}
+                    <div className="flex flex-col items-center gap-5 md:gap-6 flex-1">
                         <img 
                             src={homeTeam.team.logo} 
                             alt={homeTeam.team.displayName}
-                            className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 object-contain drop-shadow-2xl"
+                            className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain drop-shadow-2xl grayscale brightness-150"
+                            style={{ filter: 'grayscale(100%) brightness(1.5) contrast(1.2)' }}
                         />
-                        <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold uppercase tracking-wide">
+                        <span className="text-white text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-wide">
                             {homeTeam.team.abbreviation}
                         </span>
                     </div>
                 </div>
 
                 {/* Game Status Bar */}
-                <div className="border-t border-white/10 px-12 md:px-16 py-7 md:py-8 flex items-center justify-center">
-                    <span className="text-white text-base md:text-lg lg:text-xl font-semibold uppercase tracking-[0.2em] opacity-90">
+                <div className="border-t-2 border-white/30 px-16 md:px-20 py-8 md:py-10 flex items-center justify-center">
+                    <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold uppercase tracking-[0.2em]">
                         {isLive ? game.status.type.detail : (game.status.type.shortDetail || formatMountainTime(game.date))}
                     </span>
                 </div>
             </GlassCard>
 
             {/* Three-Column Content Section */}
-            <div className="flex-grow flex gap-5 md:gap-6 lg:gap-8 min-h-0">
+            <div className="flex-grow flex gap-6 md:gap-8 lg:gap-10 min-h-0">
                 {/* Left Column: Live/Game Stats */}
-                <GlassCard className="flex-1 flex flex-col" accentTop noPadding>
-                    <div className="px-12 md:px-14 lg:px-16 pt-10 md:pt-12 pb-8 border-b border-white/10">
-                        <div className="flex items-center justify-center gap-3">
+                <GlassCard className="flex-1 flex flex-col" noPadding>
+                    <div className="px-16 md:px-20 pt-12 md:pt-14 pb-10 border-b-2 border-white/30">
+                        <div className="flex items-center justify-center gap-4">
                             {isLive && (
-                                <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
+                                <div className="w-3 h-3 bg-white rounded-full animate-pulse shadow-lg" />
                             )}
-                            <h3 className="text-white text-xl md:text-2xl lg:text-3xl font-bold uppercase tracking-wider text-center">
+                            <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-wider text-center">
                                 {isLive ? 'Live Stats' : 'Game Stats'}
                             </h3>
                         </div>
                     </div>
-                    <div className="flex-grow py-8 md:py-10 px-6 md:px-8">
+                    <div className="flex-grow py-10 md:py-12">
                         {isLive && liveStats ? (
-                            <div className="space-y-1">
+                            <div className="space-y-0">
                                 <StatRow label="FG %" awayValue={`${liveStats.away.fgPct}%`} homeValue={`${liveStats.home.fgPct}%`} />
                                 <StatRow label="3PT" awayValue={liveStats.away.fg3} homeValue={liveStats.home.fg3} />
                                 <StatRow label="REB" awayValue={liveStats.away.reb} homeValue={liveStats.home.reb} />
@@ -296,7 +297,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             </div>
                         ) : (
                             <div className="h-full flex items-center justify-center">
-                                <span className="text-white text-lg md:text-xl font-medium opacity-70">
+                                <span className="text-white text-2xl md:text-3xl font-bold">
                                     {gameState === 'pre' ? 'Stats at game time' : 'Final stats'}
                                 </span>
                             </div>
@@ -305,9 +306,9 @@ const HolyWarDashboard = ({ game, loading }) => {
                 </GlassCard>
 
                 {/* Center Column: Media/Highlights */}
-                <div className="flex-1 flex flex-col overflow-hidden rounded-3xl border border-white/20 shadow-xl bg-[#002E5D]">
-                    <div className="px-10 md:px-12 lg:px-14 py-7 md:py-8 border-b border-white/10">
-                        <h3 className="text-white text-xl md:text-2xl lg:text-3xl font-bold uppercase tracking-wider text-center">
+                <div className="flex-1 flex flex-col overflow-hidden rounded-2xl border-2 border-white/30 shadow-2xl bg-[#002E5D]">
+                    <div className="px-16 md:px-20 py-10 md:py-12 border-b-2 border-white/30">
+                        <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-wider text-center">
                             Highlights
                         </h3>
                     </div>
@@ -322,23 +323,23 @@ const HolyWarDashboard = ({ game, loading }) => {
                                     allowFullScreen
                                 />
                                 {/* Video indicator dots */}
-                                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-10">
                                     {highlights.map((_, idx) => (
                                         <div 
                                             key={idx}
-                                            className={`w-2.5 h-2.5 rounded-full transition-all duration-300
+                                            className={`w-3 h-3 rounded-full transition-all duration-300
                                                 ${idx === mediaIndex 
-                                                    ? 'bg-white scale-125' 
-                                                    : 'bg-white/40'}`}
+                                                    ? 'bg-white scale-125 shadow-lg' 
+                                                    : 'bg-white/50'}`}
                                         />
                                     ))}
                                 </div>
                             </>
                         ) : (
                             <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#002E5D]">
-                                <div className="flex flex-col items-center gap-4">
-                                    <div className="w-14 h-14 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    <span className="text-white text-base font-medium opacity-70">Loading media...</span>
+                                <div className="flex flex-col items-center gap-5">
+                                    <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+                                    <span className="text-white text-xl font-bold">Loading media...</span>
                                 </div>
                             </div>
                         )}
@@ -346,40 +347,40 @@ const HolyWarDashboard = ({ game, loading }) => {
                 </div>
 
                 {/* Right Column: Season Comparison */}
-                <GlassCard className="flex-1 flex flex-col" accentTop noPadding>
-                    <div className="px-12 md:px-14 lg:px-16 pt-10 md:pt-12 pb-8 border-b border-white/10">
+                <GlassCard className="flex-1 flex flex-col" noPadding>
+                    <div className="px-16 md:px-20 pt-12 md:pt-14 pb-10 border-b-2 border-white/30">
                         <div className="flex flex-col items-center">
-                            <h3 className="text-white text-xl md:text-2xl lg:text-3xl font-bold uppercase tracking-wider text-center">
+                            <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-wider text-center">
                                 Season Stats
                             </h3>
                             {/* Stats cycle indicator */}
-                            <div className="flex gap-2 mt-4">
-                                <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300
-                                    ${statCycleIndex === 0 ? 'bg-white' : 'bg-white/30'}`} />
-                                <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300
-                                    ${statCycleIndex === 1 ? 'bg-white' : 'bg-white/30'}`} />
+                            <div className="flex gap-3 mt-5">
+                                <div className={`w-3 h-3 rounded-full transition-all duration-300 shadow-lg
+                                    ${statCycleIndex === 0 ? 'bg-white scale-125' : 'bg-white/40'}`} />
+                                <div className={`w-3 h-3 rounded-full transition-all duration-300 shadow-lg
+                                    ${statCycleIndex === 1 ? 'bg-white scale-125' : 'bg-white/40'}`} />
                             </div>
                         </div>
                     </div>
-                    <div className="flex-grow py-8 md:py-10 px-6 md:px-8">
+                    <div className="flex-grow py-10 md:py-12">
                         {currentSeasonStats.length > 0 ? (
                             <>
                                 {/* Team Labels Header */}
-                                <div className="flex items-center justify-between py-5 px-10 md:px-12 border-b border-white/15 mb-3">
-                                    <span className="text-white text-sm md:text-base font-bold uppercase tracking-widest opacity-70">
+                                <div className="flex items-center justify-between py-6 px-12 md:px-16 border-b-2 border-white/30 mb-4">
+                                    <span className="text-white text-xl md:text-2xl font-black uppercase tracking-widest opacity-70">
                                         Stat
                                     </span>
-                                    <div className="flex items-center gap-10 md:gap-12">
-                                        <span className="text-white text-base md:text-lg lg:text-xl font-bold uppercase tracking-wide min-w-[90px] text-center">
+                                    <div className="flex items-center gap-12 md:gap-16">
+                                        <span className="text-white text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-wide min-w-[120px] text-center">
                                             BYU
                                         </span>
-                                        <div className="w-[1px] h-6 bg-white/20" />
-                                        <span className="text-white text-base md:text-lg lg:text-xl font-bold uppercase tracking-wide min-w-[90px] text-center opacity-80">
+                                        <div className="w-[2px] h-8 bg-white/40 rounded-full" />
+                                        <span className="text-white text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-wide min-w-[120px] text-center opacity-60">
                                             UTAH
                                         </span>
                                     </div>
                                 </div>
-                                <div className="space-y-1">
+                                <div className="space-y-0">
                                     {currentSeasonStats.map((row, i) => (
                                         <StatRow 
                                             key={i}
@@ -392,7 +393,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             </>
                         ) : (
                             <div className="h-full flex items-center justify-center">
-                                <span className="text-white text-lg md:text-xl font-medium opacity-70">
+                                <span className="text-white text-2xl md:text-3xl font-bold">
                                     Season data loading...
                                 </span>
                             </div>
