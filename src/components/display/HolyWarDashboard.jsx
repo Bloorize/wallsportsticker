@@ -22,13 +22,19 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false, 
     `}>
         {/* Top accent line */}
         {accentTop && (
-            <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#0047BA]/50 to-transparent" />
+            <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#0047BA]/50 to-transparent z-5" />
         )}
         {/* Inner highlight */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.08] via-transparent to-transparent rounded-2xl pointer-events-none z-0" />
-        <div className={`relative z-10 h-full ${noPadding ? '' : 'p-6 md:p-8 lg:p-10'}`}>
-            {children}
-        </div>
+        {noPadding ? (
+            <div className="relative z-10 h-full">
+                {children}
+            </div>
+        ) : (
+            <div className="relative z-10 h-full p-6 md:p-8 lg:p-10">
+                {children}
+            </div>
+        )}
     </div>
 );
 
@@ -314,22 +320,20 @@ const HolyWarDashboard = ({ game, loading }) => {
                             Highlights
                         </h3>
                     </div>
-                    <div className="flex-grow relative min-h-0" style={{ zIndex: 20 }}>
-                        {highlights.length > 0 ? (
+                    <div className="flex-grow relative min-h-0" style={{ zIndex: 15 }}>
+                        {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
-                                <div className="absolute inset-0" style={{ zIndex: 10 }}>
-                                    <iframe
-                                        className="w-full h-full"
-                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex]?.videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex]?.videoId}`}
-                                        title={highlights[mediaIndex]?.title}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 10 }}
-                                    />
-                                </div>
+                                <iframe
+                                    className="absolute inset-0 w-full h-full"
+                                    src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex].videoId}`}
+                                    title={highlights[mediaIndex].title}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    style={{ zIndex: 1 }}
+                                />
                                 {/* Video indicator dots */}
-                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" style={{ zIndex: 30 }}>
+                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" style={{ zIndex: 2 }}>
                                     {highlights.map((_, idx) => (
                                         <div 
                                             key={idx}
@@ -342,7 +346,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 </div>
                             </>
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#002E5D] to-[#001a35]">
+                            <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-[#002E5D] to-[#001a35]">
                                 <div className="flex flex-col items-center gap-3">
                                     <div className="w-12 h-12 border-2 border-[#0047BA]/40 border-t-[#0047BA] rounded-full animate-spin" />
                                     <span className="text-white/40 text-sm font-medium">Loading media...</span>
