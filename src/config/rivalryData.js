@@ -73,7 +73,8 @@ export const RIVALRY_DATA = {
                     ["BPG", 5.1, 3.7, "+1.4 BPG."],
                     ["FG%", 50.3, 46.5, "+3.8%."],
                     ["3PT%", 37.5, 35.6, "+1.9%."]
-            ]
+                ]
+            }
         },
         byuPlayers: [
             "AJ Dybantsa: 23.1 PPG, 7.2 RPG, Wooden Award watch.",
