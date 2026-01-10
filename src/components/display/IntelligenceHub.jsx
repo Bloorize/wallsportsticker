@@ -815,11 +815,11 @@ const IntelligenceHub = ({ game }) => {
                                             <div className="text-[8px] md:text-[9px] font-black text-red-500 uppercase tracking-widest mb-1 md:mb-2">
                                                 {cat.displayName}
                                             </div>
-                                            <div className="text-sm md:text-base font-black text-white uppercase tracking-tighter truncate">
+                                            <div className="text-sm md:text-base font-black text-white uppercase tracking-tighter line-clamp-2">
                                                 {cat.isTeamStat ? (cat.leaders?.[0]?.team?.displayName || 'TEAM') : (cat.leaders?.[0]?.athlete?.displayName || 'N/A')}
                                             </div>
                                             {cat.leaders?.[0]?.description && (
-                                                <div className="text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-tight mt-1 line-clamp-1">
+                                                <div className="text-[8px] md:text-[9px] font-bold text-white/40 uppercase tracking-tight mt-1 line-clamp-2 leading-tight">
                                                     {cat.leaders[0].description}
                                                 </div>
                                             )}
