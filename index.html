@@ -4,11 +4,32 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>bballcompanion</title>
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <title>Wall Sports Ticker</title>
+    <!-- Load YouTube API with error handling -->
+    <script>
+      // Fallback if YouTube API fails to load
+      window.onYouTubeIframeAPIReady = window.onYouTubeIframeAPIReady || function() {
+        console.warn('YouTube IFrame API not loaded');
+      };
+      
+      // Check for module support
+      if (!('noModule' in HTMLScriptElement.prototype)) {
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#002E5D;color:white;font-size:1.5rem;padding:20px;text-align:center">Your browser does not support ES6 modules. Please use a modern browser.</div>';
+      }
+    </script>
+    <script src="https://www.youtube.com/iframe_api" async defer onerror="console.warn('Failed to load YouTube API')"></script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Loading fallback -->
+      <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#002E5D;color:white;font-size:1.5rem">
+        Loading...
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
+    <!-- Fallback for browsers without module support -->
+    <script nomodule>
+      document.getElementById('root').innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#002E5D;color:white;padding:20px;text-align:center"><h1 style="font-size:2rem;margin-bottom:1rem">Browser Not Supported</h1><p style="font-size:1rem">This app requires a browser that supports ES6 modules.</p><p style="font-size:0.875rem;color:#ffffff80;margin-top:1rem">Please use a modern browser or update your TV\'s browser.</p></div>';
+    </script>
   </body>
 </html>

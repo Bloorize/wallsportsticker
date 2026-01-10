@@ -324,11 +324,21 @@ const HolyWarDashboard = ({ game, loading }) => {
     useEffect(() => {
         if (highlights.length === 0) return;
 
+        let retryCount = 0;
+        const maxRetries = 50; // 5 seconds max wait
+
         // Wait for YouTube IFrame API to be ready
         const initPlayer = () => {
             if (typeof window.YT === 'undefined' || typeof window.YT.Player === 'undefined') {
-                // Retry after a short delay if API isn't loaded yet
-                setTimeout(initPlayer, 100);
+                retryCount++;
+                if (retryCount < maxRetries) {
+                    // Retry after a short delay if API isn't loaded yet
+                    setTimeout(initPlayer, 100);
+                } else {
+                    // Fallback: YouTube API not available, use simple iframe
+                    console.warn('YouTube IFrame API not available, using fallback iframe');
+                    setPlayerReady(true); // Allow fallback to render
+                }
                 return;
             }
 
