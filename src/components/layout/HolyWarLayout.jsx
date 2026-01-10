@@ -10,8 +10,8 @@ import logo from '/logo.png';
 const HolyWarLayout = ({ children }) => {
     return (
         <div className="h-screen w-screen relative overflow-hidden">
-            {/* Solid background - BYU themed */}
-            <div className="absolute inset-0 bg-[#002E5D]" />
+            {/* Dynamic gradient background - BYU themed */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#001a35] via-[#002E5D] to-[#003366]" />
             
             {/* Animated orbs for depth - subtle BYU blue tones */}
             <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-[#0047BA]/20 blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
@@ -24,13 +24,13 @@ const HolyWarLayout = ({ children }) => {
             }} />
 
             {/* Main content container with safe area */}
-            <div className="absolute inset-3 md:inset-4 lg:inset-6 flex flex-col z-10 overflow-hidden gap-4 md:gap-5 lg:gap-6">
+            <div className="absolute inset-3 md:inset-4 lg:inset-6 flex flex-col z-10 overflow-hidden">
                 {/* Glass Header */}
                 <header className="h-20 md:h-24 lg:h-28 flex items-center justify-between px-10 md:px-14 lg:px-20 
-                    bg-white/[0.08] backdrop-blur-2xl rounded-2xl shadow-2xl
-                    relative overflow-hidden flex-none">
+                    bg-white/[0.08] backdrop-blur-2xl border border-white/[0.15] rounded-2xl shadow-2xl
+                    relative overflow-hidden mb-4 md:mb-5 lg:mb-6 flex-none">
                     {/* Inner glow effect */}
-                    <div className="absolute inset-0 bg-white/[0.05] rounded-2xl pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/[0.1] to-transparent rounded-2xl pointer-events-none" />
                     
                     <div className="flex items-center gap-6 md:gap-8 relative z-10">
                         <div className="relative">
@@ -38,23 +38,11 @@ const HolyWarLayout = ({ children }) => {
                             <img src={logo} alt="BYU Logo" className="h-12 md:h-16 lg:h-20 object-contain relative z-10 drop-shadow-2xl" />
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="text-white uppercase leading-none"
-                                style={{ 
-                                    fontFamily: "'IBM Plex Sans', sans-serif",
-                                    fontSize: '14px',
-                                    fontWeight: 600,
-                                    letterSpacing: '0.08em',
-                                    textShadow: '0 2px 20px rgba(0,71,186,0.5)'
-                                }}>
+                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight leading-none"
+                                style={{ fontFamily: "'Inter', system-ui, sans-serif", textShadow: '0 2px 20px rgba(0,71,186,0.5)' }}>
                                 THE HOLY WAR
                             </h1>
-                            <p className="text-[#0047BA] uppercase mt-1"
-                                style={{ 
-                                    fontFamily: "'IBM Plex Sans', sans-serif",
-                                    fontSize: '14px',
-                                    fontWeight: 600,
-                                    letterSpacing: '0.08em'
-                                }}>
+                            <p className="text-xs md:text-sm lg:text-base font-semibold text-[#0047BA] uppercase tracking-[0.3em] mt-1">
                                 BYU vs UTAH
                             </p>
                         </div>
@@ -62,27 +50,19 @@ const HolyWarLayout = ({ children }) => {
 
                     {/* Live indicator with glow */}
                     <div className="hidden md:flex items-center gap-3 px-6 py-3
-                        bg-[#0047BA]/30 backdrop-blur-xl rounded-full
+                        bg-[#0047BA]/30 backdrop-blur-xl border border-[#0047BA]/50 rounded-full
                         shadow-[0_0_30px_rgba(0,71,186,0.4)] relative z-10">
                         <div className="relative">
                             <div className="w-2.5 h-2.5 bg-white rounded-full animate-ping absolute" />
                             <div className="w-2.5 h-2.5 bg-white rounded-full relative" />
                         </div>
-                        <span className="text-white uppercase"
-                            style={{ 
-                                fontFamily: "'IBM Plex Sans', sans-serif",
-                                fontSize: '12px',
-                                fontWeight: 600,
-                                letterSpacing: '0.05em'
-                            }}>
-                            LIVE
-                        </span>
+                        <span className="text-sm font-bold text-white uppercase tracking-widest">LIVE</span>
                     </div>
                 </header>
 
                 {/* Dashboard Content - Glass container */}
                 <section className="flex-grow relative overflow-hidden min-h-0 
-                    bg-white/[0.05] backdrop-blur-xl rounded-2xl
+                    bg-white/[0.05] backdrop-blur-xl border border-white/[0.1] rounded-2xl
                     shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
                     <div className="absolute inset-0 overflow-hidden rounded-2xl">
                         {children}
@@ -90,7 +70,7 @@ const HolyWarLayout = ({ children }) => {
                 </section>
 
                 {/* Rivalry Ticker */}
-                <div className="flex-none">
+                <div className="flex-none mt-4 md:mt-5 lg:mt-6">
                     <RivalryTicker />
                 </div>
             </div>
