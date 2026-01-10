@@ -44,7 +44,7 @@ const SpotlightGame = ({ game, isHolyWar = false }) => {
 
                 {/* 2. Away Score */}
                 <div className="flex items-center justify-center">
-                    <span className={`text-4xl md:text-6xl lg:text-[8rem] font-mono font-black tabular-nums tracking-tighter leading-none transition-all duration-1000 ${parseInt(away.score) > parseInt(home.score) ? 'text-white' : 'text-white/20'}`}>
+                    <span className={`text-4xl md:text-6xl lg:text-[8rem] font-mono font-black tabular-nums tracking-tighter leading-none transition-all duration-1000 ${parseInt(away.score) > parseInt(home.score) ? (isHolyWar ? 'text-[#002E5D]' : 'text-white') : (isHolyWar ? 'text-[#002E5D]/30' : 'text-white/20')}`}>
                         {away.score}
                     </span>
                 </div>
@@ -75,7 +75,7 @@ const SpotlightGame = ({ game, isHolyWar = false }) => {
 
                 {/* 4. Home Score */}
                 <div className="flex items-center justify-center">
-                    <span className={`text-4xl md:text-6xl lg:text-[8rem] font-mono font-black tabular-nums tracking-tighter leading-none transition-all duration-1000 ${parseInt(home.score) > parseInt(away.score) ? 'text-white' : 'text-white/20'}`}>
+                    <span className={`text-4xl md:text-6xl lg:text-[8rem] font-mono font-black tabular-nums tracking-tighter leading-none transition-all duration-1000 ${parseInt(home.score) > parseInt(away.score) ? (isHolyWar ? 'text-[#002E5D]' : 'text-white') : (isHolyWar ? 'text-[#002E5D]/30' : 'text-white/20')}`}>
                         {home.score}
                     </span>
                 </div>
@@ -88,10 +88,10 @@ const SpotlightGame = ({ game, isHolyWar = false }) => {
                         alt={home.team.displayName}
                     />
                     <div className="flex flex-col items-center gap-1 w-full overflow-hidden">
-                        <span className="text-sm md:text-xl lg:text-3xl font-black text-white uppercase tracking-tighter leading-tight truncate w-full">
+                        <span className={`text-sm md:text-xl lg:text-3xl font-black ${isHolyWar ? 'text-[#002E5D]' : 'text-white'} uppercase tracking-tighter leading-tight truncate w-full`}>
                             {home.team.displayName}
                         </span>
-                        <span className="text-[10px] md:text-xs lg:text-sm font-black text-white/40 uppercase tracking-[0.3em]">
+                        <span className={`text-[10px] md:text-xs lg:text-sm font-black ${isHolyWar ? 'text-[#002E5D]/60' : 'text-white/40'} uppercase tracking-[0.3em]`}>
                             {home.team.abbreviation}
                         </span>
                     </div>

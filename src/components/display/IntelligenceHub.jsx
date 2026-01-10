@@ -53,7 +53,7 @@ const FieldVisualization = ({ game, gameState }) => {
                         <div className="w-3 h-3 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4 bg-red-500 rotate-45" />
                     </div>
                     {/* Endzones */}
-                    <div className="absolute left-0 top-0 bottom-0 w-8 md:w-10 lg:w-12 bg-black/60 flex items-center justify-center border-r border-white/10">
+                    <div className={`absolute left-0 top-0 bottom-0 w-8 md:w-10 lg:w-12 ${isHolyWar ? 'bg-[#002E5D] border-r border-[#0047BA]' : 'bg-black/60 border-r border-white/10'} flex items-center justify-center`}>
                         <div className="rotate-90 text-[8px] md:text-[9px] lg:text-[10px] font-black text-white/40 tracking-widest">VISITOR</div>
                     </div>
                     <div className="absolute right-0 top-0 bottom-0 w-8 md:w-10 lg:w-12 bg-red-700/40 flex items-center justify-center border-l border-white/10">
@@ -246,7 +246,7 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
                     </div>
                     <div className="space-y-3">
                         {highlights.map((vid, i) => (
-                            <div key={i} className="bg-white/5 border border-white/8 rounded-xl overflow-hidden shadow-2xl">
+                            <div key={i} className={`${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5 border border-white/8'} rounded-xl overflow-hidden shadow-2xl`}>
                                 <div className="relative aspect-video">
                                     <iframe
                                         className="absolute inset-0 w-full h-full"
@@ -281,13 +281,13 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
                         <div className="grid grid-cols-2 gap-2 md:gap-3">
                             {displayedMedia.map((item, index) => {
                                 const content = (
-                                    <div className="relative aspect-video bg-white/5 border border-white/8 rounded-xl overflow-hidden group">
+                                    <div className={`relative aspect-video ${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5 border border-white/8'} rounded-xl overflow-hidden group`}>
                                         <img 
                                             src={item.url} 
                                             alt={item.title}
                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2.5 md:p-3">
+                                        <div className={`absolute inset-0 ${isHolyWar ? 'bg-[#002E5D]/90' : 'bg-black/90'} opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2.5 md:p-3`}>
                                             <span className={`text-[7px] md:text-[8px] font-black ${accentColor} uppercase tracking-[0.2em] mb-1`}>{item.type}</span>
                                             <p className="text-[9px] md:text-[10px] font-black text-white line-clamp-2 uppercase leading-tight tracking-tighter">
                                                 {item.title}
@@ -364,7 +364,7 @@ const WeatherSection = ({ game }) => {
                 <div className="flex items-center gap-2 md:gap-3 border-l-4 border-red-600 pl-3 md:pl-4 lg:pl-5 mb-2">
                     <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Game Conditions</h3>
                 </div>
-                <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
+                <div className={`${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5 border border-white/8'} rounded-xl p-4 md:p-5 lg:p-6`}>
                     <div className="flex items-center justify-center py-4">
                         <div className="w-6 h-6 border-2 border-white/20 border-t-red-600 rounded-full animate-spin" />
                     </div>
@@ -383,7 +383,7 @@ const WeatherSection = ({ game }) => {
                 <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Game Conditions</h3>
             </div>
 
-            <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
+            <div className={`${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5 border border-white/8'} rounded-xl p-4 md:p-5 lg:p-6`}>
                 <div className="flex items-center justify-between mb-3 md:mb-4">
                     <div className="flex items-center gap-3 md:gap-4">
                         {weather.icon && (
@@ -444,7 +444,7 @@ const StatAvatar = ({ leader }) => {
     const displayImage = athlete?.headshot || team?.logo;
 
     return (
-        <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-black/40 overflow-hidden rounded-lg border border-white/10 relative flex-shrink-0">
+        <div className={`w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 ${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-black/40 border border-white/10'} overflow-hidden rounded-lg relative flex-shrink-0`}>
             {displayImage && !isError ? (
                 <img 
                     src={displayImage} 
@@ -453,7 +453,7 @@ const StatAvatar = ({ leader }) => {
                     onError={() => setIsError(true)}
                 />
             ) : (
-                <div className="w-full h-full flex items-center justify-center bg-white/5">
+                <div className={`w-full h-full flex items-center justify-center ${isHolyWar ? 'bg-white' : 'bg-white/5'}`}>
                     <span className="text-white/20 text-[8px] md:text-[9px] lg:text-[10px] font-black uppercase">
                         {team?.abbreviation || '---'}
                     </span>
@@ -750,7 +750,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                         </div>
                                 
                                 {/* Total Card */}
-                                <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
+                                <div className={`${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5 border border-white/8'} rounded-xl p-4 md:p-5 lg:p-6`}>
                                     <div className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest mb-2 md:mb-3`}>Total</div>
                                     <div className="text-2xl md:text-3xl font-mono font-black text-white tabular-nums tracking-tighter">
                                 {odds?.overUnder || '--'}
@@ -762,13 +762,13 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
 
                     {/* Win Probability Bar */}
                     {situation?.lastPlay?.probability && (
-                        <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
+                        <div className={`${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5 border border-white/8'} rounded-xl p-4 md:p-5 lg:p-6`}>
                             <div className="flex justify-between items-center mb-2 md:mb-3">
                                 <span className={`text-[8px] md:text-[9px] font-black ${isHolyWar ? 'text-[#002E5D]/60' : 'text-white/40'} uppercase tracking-widest`}>{awayTeam.team.abbreviation}</span>
                                 <span className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest`}>Win Probability</span>
                                 <span className={`text-[8px] md:text-[9px] font-black ${isHolyWar ? 'text-[#002E5D]/60' : 'text-white/40'} uppercase tracking-widest`}>{homeTeam.team.abbreviation}</span>
                             </div>
-                            <div className="h-5 md:h-6 bg-white/5 rounded-full overflow-hidden flex relative">
+                            <div className={`h-5 md:h-6 ${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5'} rounded-full overflow-hidden flex relative`}>
                                 <div
                                     className="h-full bg-white transition-all duration-1000 flex items-center justify-start pl-2 md:pl-3"
                                     style={{ width: `${situation.lastPlay.probability.awayWinPercentage * 100}%` }}
@@ -845,7 +845,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                         ))}
                     </div>
                     ) : (
-                        <div className="bg-white/5 border border-white/8 rounded-xl p-6 md:p-7 lg:p-8 text-center">
+                        <div className={`${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5 border border-white/8'} rounded-xl p-6 md:p-7 lg:p-8 text-center`}>
                             <span className="text-white/40 text-[10px] md:text-xs font-black uppercase tracking-widest">
                                 {gameState === 'pre' ? 'Stats available at game time' : 'No stats available'}
                             </span>
@@ -872,7 +872,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                             </h3>
                     </div>
 
-                        <div className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6 relative overflow-hidden">
+                        <div className={`${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5 border border-white/8'} rounded-xl p-4 md:p-5 lg:p-6 relative overflow-hidden`}>
                             <div className={`absolute top-0 left-0 w-1 h-full ${accentBg}`} />
                             <p className="text-xs md:text-sm font-black text-white leading-relaxed italic tracking-tight opacity-90 pl-3 md:pl-4">
                                 "{situation?.lastPlay?.text || (gameState === 'in' ? "Synchronizing live stadium data feed..." : "Game completed")}"
@@ -888,7 +888,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
             </div>
 
             {/* Compact Footer */}
-            <div className="flex-none p-4 md:p-5 lg:p-6 bg-black border-t border-white/5">
+            <div className={`flex-none p-4 md:p-5 lg:p-6 ${isHolyWar ? 'bg-white border-t border-[#0047BA]' : 'bg-black border-t border-white/5'}`}>
                 <div className="flex justify-between items-center opacity-40">
                     <div className="flex items-center gap-3 md:gap-4">
                         <div className="flex items-center gap-1.5 md:gap-2">

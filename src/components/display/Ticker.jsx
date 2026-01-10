@@ -6,10 +6,10 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
     const [displayItems, setDisplayItems] = useState([]);
 
     const MODES = [
-        { id: 'NEWS', label: 'NEWS WIRE', color: isHolyWar ? 'bg-[#001a3d]' : 'bg-slate-800' },
+        { id: 'NEWS', label: 'NEWS WIRE', color: isHolyWar ? 'bg-[#002E5D]' : 'bg-slate-800' },
         { id: 'TRANS', label: 'TRANSACTIONS', color: isHolyWar ? 'bg-[#003a9e]' : 'bg-red-700' },
         { id: 'INJURY', label: 'INJURY REPORT', color: isHolyWar ? 'bg-[#002E5D]' : 'bg-red-800' },
-        { id: 'STATS', label: 'TOP PERFORMERS', color: isHolyWar ? 'bg-[#001a3d]' : 'bg-slate-900' },
+        { id: 'STATS', label: 'TOP PERFORMERS', color: isHolyWar ? 'bg-[#002E5D]' : 'bg-slate-900' },
     ];
 
     useEffect(() => {
@@ -122,11 +122,11 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
                 </span>
                 <span className="text-lg md:text-2xl lg:text-3xl font-black text-white uppercase tracking-tighter leading-none whitespace-nowrap italic">{activeMode.label}</span>
                 {/* Visual Accent */}
-                <div className="absolute top-0 right-0 w-1 h-full bg-white/20" />
+                <div className={`absolute top-0 right-0 w-1 h-full ${isHolyWar ? 'bg-white/40' : 'bg-white/20'}`} />
             </div>
 
             {/* Scrolling Content */}
-            <div key={`${filter}-${activeMode.id}`} className="flex animate-scroll whitespace-nowrap items-center h-full min-w-max bg-[#121212]">
+            <div key={`${filter}-${activeMode.id}`} className={`flex animate-scroll whitespace-nowrap items-center h-full min-w-max ${isHolyWar ? 'bg-white' : 'bg-[#121212]'}`}>
                 {displayItems.map((item, idx) => (
                     <div key={`${item.id}-${idx}`} className="flex-shrink-0 flex items-center h-full">
                         <div className="flex flex-col justify-center px-4 md:px-6 lg:px-8 border-l border-white/5">
