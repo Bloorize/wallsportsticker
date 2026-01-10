@@ -385,32 +385,18 @@ const HolyWarDashboard = ({ game, loading }) => {
                             Highlights
                         </h3>
                     </div>
-                    <div className="flex-grow relative">
-                        {highlights.length > 0 ? (
-                            <>
-                                <div className="absolute inset-0">
-                                    <iframe
-                                        className="w-full h-full"
-                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex]?.videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex]?.videoId}`}
-                                        title={highlights[mediaIndex]?.title}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                    />
-                                </div>
-                                {/* Video indicator dots */}
-                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                                    {highlights.map((_, idx) => (
-                                        <div 
-                                            key={idx}
-                                            className={`w-2 h-2 rounded-full transition-all duration-300
-                                                ${idx === mediaIndex 
-                                                    ? 'bg-white scale-125' 
-                                                    : 'bg-white/30 hover:bg-white/50'}`}
-                                        />
-                                    ))}
-                                </div>
-                            </>
+                    <div className="flex-grow relative min-h-0">
+                        {highlights.length > 0 && highlights[mediaIndex] ? (
+                            <div className="absolute inset-0 w-full h-full">
+                                <iframe
+                                    className="w-full h-full"
+                                    src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex].videoId}`}
+                                    title={highlights[mediaIndex].title}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            </div>
                         ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#002E5D] to-[#001a35]">
                                 <div className="flex flex-col items-center gap-3">
@@ -421,7 +407,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                             fontSize: '13px',
                                             fontWeight: 500
                                         }}>
-                                        Loading media...
+                                        {highlights.length === 0 ? 'No highlights available' : 'Loading media...'}
                                     </span>
                                 </div>
                             </div>
