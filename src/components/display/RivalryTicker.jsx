@@ -16,7 +16,7 @@ const RivalryTicker = () => {
             <div className="h-full px-6 md:px-8 flex items-center justify-center 
                 bg-white/10 border-r border-white/10
                 min-w-[160px] md:min-w-[200px]">
-                <span className="text-sm md:text-base font-bold text-white uppercase tracking-wide">
+                <span className="text-lg md:text-xl font-bold text-white uppercase tracking-wide">
                     RIVALRY
                 </span>
             </div>
@@ -27,8 +27,8 @@ const RivalryTicker = () => {
                     {[...items, ...items].map((item, idx) => (
                         <div key={idx} className="flex-shrink-0 flex items-center h-full px-8 md:px-10">
                             <div className="flex items-center gap-4">
-                                <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                                <span className="font-medium text-white text-sm md:text-base">
+                                <div className="w-2 h-2 rounded-full bg-white/40" />
+                                <span className="font-semibold text-white text-base md:text-lg">
                                     {item}
                                 </span>
                             </div>
