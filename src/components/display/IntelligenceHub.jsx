@@ -507,12 +507,11 @@ const IntelligenceHub = ({ game }) => {
         fetchSummary();
         
         // If game is live, refetch every 2 minutes for updated stats (reduced from 30s to prevent flicker)
-        const gameState = game.status?.type?.state;
-        if (gameState === 'in') {
+        if (game?.status?.type?.state === 'in') {
             const interval = setInterval(fetchSummary, 120000);
             return () => clearInterval(interval);
         }
-    }, [game, game?.status?.type?.state]);
+    }, [game]);
 
     if (!game) return (
         <div className="h-full flex flex-col items-center justify-center opacity-20 gap-4">
