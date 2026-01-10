@@ -41,9 +41,9 @@ const HolyWarLayout = ({ children }) => {
                     </div>
                 </header>
 
-                {/* Dashboard Content - White background with refined border */}
+                {/* Dashboard Content - Navy background, consistent */}
                 <section className="flex-grow relative overflow-hidden min-h-0 
-                    bg-white border border-white/20 rounded-3xl shadow-xl">
+                    bg-[#002E5D] border border-white/20 rounded-3xl shadow-xl">
                     <div className="absolute inset-0 overflow-hidden rounded-3xl">
                         {children}
                     </div>
