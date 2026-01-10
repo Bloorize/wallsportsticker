@@ -553,7 +553,7 @@ const HolyWarDashboard = ({ game, loading }) => {
             <div className="flex-1 flex gap-4 md:gap-5 lg:gap-6 min-h-0">
                 {/* Video Section - 16:9 Landscape Container */}
                 <div className="flex-[7] flex flex-col min-w-0">
-                    <div className="flex-1 bg-[#001428] rounded-lg overflow-hidden shadow-2xl relative">
+                    <div className="flex-1 bg-[#002E5D] rounded-lg overflow-hidden shadow-2xl relative">
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
                                 {/* 16:9 aspect ratio container - Simple YouTube iframe */}
