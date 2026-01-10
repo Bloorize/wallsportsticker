@@ -734,7 +734,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                         <>
                             <div className="grid grid-cols-2 gap-3 md:gap-4">
                                 {/* Spread Card */}
-                                <div className={`${isHolyWar ? 'bg-blue-50 border border-[#0047BA]/20' : 'bg-white/5 border border-white/8'} rounded-xl p-4 md:p-5 lg:p-6`}>
+                                <div className={`${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-white/5 border border-white/8'} rounded-xl p-4 md:p-5 lg:p-6`}>
                                     <div className={`text-[8px] md:text-[9px] font-black ${accentColor} uppercase tracking-widest mb-2 md:mb-3`}>Spread</div>
                                     <div className={`text-2xl md:text-3xl font-mono font-black ${isHolyWar ? 'text-[#002E5D]' : 'text-white'} tabular-nums tracking-tighter mb-2 md:mb-3`}>
                                 {odds?.details || 'EVEN'}

@@ -9,7 +9,7 @@ const SpotlightGame = ({ game, isHolyWar = false }) => {
     const away = competition.competitors.find(c => c.homeAway === 'away');
 
     return (
-        <div className={`w-full h-full flex flex-col ${isHolyWar ? 'bg-white border border-[#0047BA]/20' : 'bg-black border border-white/5'} shadow-3xl overflow-hidden`}>
+        <div className={`w-full h-full flex flex-col ${isHolyWar ? 'bg-white border border-[#0047BA]' : 'bg-black border border-white/5'} shadow-3xl overflow-hidden`}>
             {/* ESPN Style Banner */}
             <div className={`flex-none ${isHolyWar ? 'bg-[#003a9e]' : 'bg-red-700'} px-4 md:px-8 lg:px-12 py-3 md:py-3.5 lg:py-4 flex items-center justify-between`}>
                 <div className="flex items-center gap-3 md:gap-4 lg:gap-6 pl-2">

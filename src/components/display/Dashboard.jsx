@@ -136,9 +136,9 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading, isHolyWar = fals
                             </div>
 
                             {/* Horizontal Stepped Marquee */}
-                            <div className={`flex-none h-32 md:h-40 lg:h-48 relative overflow-hidden ${isHolyWar ? 'bg-blue-50 border-y border-[#0047BA]/20' : 'bg-black/40 border-y border-white/5'}`}>
-                                <div className={`absolute top-0 left-0 bottom-0 w-16 md:w-24 lg:w-32 bg-gradient-to-r ${isHolyWar ? 'from-white to-transparent' : 'from-black to-transparent'} z-10 pointer-events-none`} />
-                                <div className={`absolute top-0 right-0 bottom-0 w-16 md:w-24 lg:w-32 bg-gradient-to-l ${isHolyWar ? 'from-white to-transparent' : 'from-black to-transparent'} z-10 pointer-events-none`} />
+                            <div className={`flex-none h-32 md:h-40 lg:h-48 relative overflow-hidden ${isHolyWar ? 'bg-white border-y border-[#0047BA]' : 'bg-black/40 border-y border-white/5'}`}>
+                                <div className={`absolute top-0 left-0 bottom-0 w-16 md:w-24 lg:w-32 ${isHolyWar ? 'bg-white' : 'bg-black'} z-10 pointer-events-none opacity-50`} />
+                                <div className={`absolute top-0 right-0 bottom-0 w-16 md:w-24 lg:w-32 ${isHolyWar ? 'bg-white' : 'bg-black'} z-10 pointer-events-none opacity-50`} />
 
                                 <div className="h-full flex items-center px-4 md:px-6 lg:px-10">
                                     <div

@@ -9,20 +9,16 @@ import logo from '/logo.png';
 const HolyWarLayout = ({ children, filter, games, tickerData }) => {
     return (
         <div className="h-screen w-screen relative overflow-hidden bg-white">
-            {/* Light BYU Background with Royal accents */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50 to-blue-100" />
-            <div className="absolute top-0 right-0 w-[60vw] h-[60vw] bg-[#0047BA] opacity-10 blur-[150px] rounded-full pointer-events-none translate-x-1/2 -translate-y-1/2" />
-            
-            {/* BYU Royal accent lines */}
+            {/* BYU Royal accent lines - No gradients */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-[#0047BA]" />
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#0047BA]" />
 
             {/* TV SAFE AREA WRAPPER */}
-            <div className="absolute inset-2 md:inset-4 lg:inset-[25px] flex flex-col z-10 overflow-hidden bg-white/95 backdrop-blur-md border-2 border-[#0047BA]/40 rounded-lg md:rounded-2xl lg:rounded-[40px] shadow-2xl">
+            <div className="absolute inset-2 md:inset-4 lg:inset-[25px] flex flex-col z-10 overflow-hidden bg-white border-2 border-[#0047BA] rounded-lg md:rounded-2xl lg:rounded-[40px] shadow-2xl">
                 {/* Internal Content Area */}
                 <div className="flex-grow flex flex-col min-h-0 overflow-hidden">
                     {/* Top Bar - BYU Styled Light Mode */}
-                    <header className="h-16 md:h-20 lg:h-[120px] flex items-center justify-between px-4 md:px-8 lg:px-16 bg-gradient-to-b from-[#002E5D] to-white z-50 flex-none border-b-2 border-[#0047BA]/30">
+                    <header className="h-16 md:h-20 lg:h-[120px] flex items-center justify-between px-4 md:px-8 lg:px-16 bg-[#002E5D] z-50 flex-none border-b-2 border-[#0047BA]">
                         <div className="flex items-center gap-3 md:gap-4">
                             <img src={logo} alt="BYU Logo" className="h-12 md:h-16 lg:h-24 object-contain drop-shadow-2xl" />
                             <div className="flex flex-col">
@@ -48,7 +44,7 @@ const HolyWarLayout = ({ children, filter, games, tickerData }) => {
                     </section>
 
                     {/* Ticker anchored at bottom - BYU styled light */}
-                    <div className="flex-none p-2 md:p-3 lg:p-4 border-t-2 border-[#0047BA]/30 bg-white">
+                    <div className="flex-none p-2 md:p-3 lg:p-4 border-t-2 border-[#0047BA] bg-white">
                         <Ticker filter={filter} games={games} tickerData={tickerData} isHolyWar={true} />
                     </div>
                 </div>
