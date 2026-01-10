@@ -21,10 +21,10 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false, 
     `}>
         {/* Top accent line */}
         {accentTop && (
-            <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#0047BA]/50 to-transparent" />
+            <div className="absolute top-0 left-8 right-8 h-[1px] bg-[#0047BA]/50" />
         )}
         {/* Inner highlight */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.08] via-transparent to-transparent rounded-2xl pointer-events-none" />
+        <div className="absolute inset-0 bg-white/[0.04] rounded-2xl pointer-events-none" />
         <div className={`relative z-10 h-full ${noPadding ? '' : 'p-6 md:p-8 lg:p-10'}`}>
             {children}
         </div>
@@ -267,7 +267,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                         </div>
                         
                         <div className="flex flex-col items-center gap-1 md:gap-2">
-                            <div className="w-1 h-8 md:h-12 bg-gradient-to-b from-[#0047BA] to-transparent rounded-full" />
+                            <div className="w-1 h-8 md:h-12 bg-[#0047BA] rounded-full" />
                             <span className="text-[#0047BA] uppercase"
                                 style={{ 
                                     fontFamily: "'IBM Plex Sans', sans-serif",
@@ -277,7 +277,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 }}>
                                 {isLive ? 'LIVE' : 'VS'}
                             </span>
-                            <div className="w-1 h-8 md:h-12 bg-gradient-to-t from-[#0047BA] to-transparent rounded-full" />
+                            <div className="w-1 h-8 md:h-12 bg-[#0047BA] rounded-full" />
                         </div>
                         
                         <div className={`leading-none
@@ -397,7 +397,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 />
                             </div>
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#002E5D] to-[#001a35]">
+                            <div className="w-full h-full flex items-center justify-center bg-[#002E5D]">
                                 <div className="flex flex-col items-center gap-3">
                                     <div className="w-12 h-12 border-2 border-[#0047BA]/40 border-t-[#0047BA] rounded-full animate-spin" />
                                     <span className="text-white/40"

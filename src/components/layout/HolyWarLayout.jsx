@@ -10,8 +10,8 @@ import logo from '/logo.png';
 const HolyWarLayout = ({ children }) => {
     return (
         <div className="h-screen w-screen relative overflow-hidden">
-            {/* Dynamic gradient background - BYU themed */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#001a35] via-[#002E5D] to-[#003366]" />
+            {/* Solid background - BYU themed */}
+            <div className="absolute inset-0 bg-[#002E5D]" />
             
             {/* Animated orbs for depth - subtle BYU blue tones */}
             <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-[#0047BA]/20 blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
@@ -30,7 +30,7 @@ const HolyWarLayout = ({ children }) => {
                     bg-white/[0.08] backdrop-blur-2xl rounded-2xl shadow-2xl
                     relative overflow-hidden flex-none">
                     {/* Inner glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/[0.1] to-transparent rounded-2xl pointer-events-none" />
+                    <div className="absolute inset-0 bg-white/[0.05] rounded-2xl pointer-events-none" />
                     
                     <div className="flex items-center gap-6 md:gap-8 relative z-10">
                         <div className="relative">

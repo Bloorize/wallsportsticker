@@ -23,9 +23,6 @@ const RivalryTicker = () => {
             bg-white/[0.08] backdrop-blur-2xl rounded-2xl
             shadow-2xl overflow-hidden relative flex items-center">
             
-            {/* Animated gradient shine */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent 
-                animate-shimmer pointer-events-none" style={{ backgroundSize: '200% 100%' }} />
             
             {/* Category Badge */}
             <div className="h-full px-10 md:px-12 lg:px-14 flex flex-col justify-center items-center 
@@ -53,9 +50,6 @@ const RivalryTicker = () => {
 
             {/* Scrolling Content Area */}
             <div className="flex-1 flex items-center h-full overflow-hidden relative">
-                {/* Fade edges */}
-                <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#002E5D]/80 to-transparent z-10 pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#002E5D]/80 to-transparent z-10 pointer-events-none" />
                 
                 <div className="flex animate-scroll whitespace-nowrap items-center h-full min-w-max">
                     {[...items, ...items].map((item, idx) => (
@@ -82,15 +76,8 @@ const RivalryTicker = () => {
                     0% { transform: translateX(0); } 
                     100% { transform: translateX(-50%); } 
                 }
-                @keyframes shimmer {
-                    0% { background-position: -200% 0; }
-                    100% { background-position: 200% 0; }
-                }
                 .animate-scroll { 
                     animation: scroll ${Math.max(80, items.length * 10)}s linear infinite; 
-                }
-                .animate-shimmer {
-                    animation: shimmer 8s ease-in-out infinite;
                 }
             `}</style>
         </div>
