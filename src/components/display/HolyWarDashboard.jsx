@@ -227,9 +227,14 @@ const HolyWarDashboard = ({ game, loading }) => {
                     // Use configured video IDs
                     const configuredVids = await getVideosByIds(configuredVideoIds);
                     console.log('Fetched configured videos:', configuredVids);
-                    // Don't filter by embeddable - use all videos (they should all be embeddable)
-                    setHighlights(configuredVids.length > 0 ? configuredVids : []);
-                    console.log('Set highlights:', configuredVids.length > 0 ? configuredVids : []);
+                    // Use all videos returned (they should all be valid)
+                    if (configuredVids.length > 0) {
+                        setHighlights(configuredVids);
+                        console.log('Set highlights count:', configuredVids.length);
+                    } else {
+                        console.warn('No videos returned from getVideosByIds');
+                        setHighlights([]);
+                    }
                     return;
                 }
                 
@@ -553,27 +558,26 @@ const HolyWarDashboard = ({ game, loading }) => {
                             <>
                                 {/* 16:9 aspect ratio container - YouTube IFrame API Player or Fallback */}
                                 <div className="aspect-video w-full relative">
-                                    {/* Always render container for YouTube API player (hidden until ready) */}
+                                    {/* YouTube API Player Container - Hidden by default, shown when API player is ready */}
                                     <div 
                                         id="holy-war-video-player" 
                                         className="w-full h-full absolute inset-0"
                                         style={{ 
-                                            display: (typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady && playerRef.current) ? 'block' : 'none',
+                                            display: (playerRef.current && playerReady) ? 'block' : 'none',
                                             zIndex: 10
                                         }}
                                     ></div>
-                                    {/* Fallback iframe - show when API not available or not ready */}
+                                    {/* Fallback iframe - Always visible unless API player is active */}
                                     <iframe
-                                        key={`fallback-${highlights[mediaIndex].videoId}-${mediaIndex}`}
-                                        className="w-full h-full absolute inset-0"
-                                        style={{
-                                            display: (typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady && playerRef.current) ? 'none' : 'block',
-                                            zIndex: 5
-                                        }}
-                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0`}
+                                        key={`video-${highlights[mediaIndex].videoId}-${mediaIndex}`}
+                                        className="w-full h-full"
+                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0&enablejsapi=1`}
                                         title={highlights[mediaIndex].title || 'Video'}
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
+                                        style={{
+                                            display: (playerRef.current && playerReady) ? 'none' : 'block'
+                                        }}
                                     />
                                 </div>
                                 {/* Video indicator dots - Clickable for manual selection */}
