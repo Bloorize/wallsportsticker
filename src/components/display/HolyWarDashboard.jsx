@@ -5,38 +5,99 @@ import { getGameSummary } from '../../services/espn';
 import { RIVALRY_DATA } from '../../config/rivalryData';
 
 /**
- * Holy War TV Dashboard - ESPN-inspired design
- * Clean, modern, professional with BYU colors
+ * Broadcast-Style Holy War Dashboard
+ * No grids, overlapping elements, broadcast graphics aesthetic
+ * Zero dead space - every pixel earns its place
  */
 
-// ESPN-style Card - Flat, minimal, clean
-const ESPNCard = ({ children, className = '', noPadding = false }) => (
-    <div className={`
-        bg-[#001a3d] 
-        shadow-md
-        ${className}
-    `}>
-        {noPadding ? children : <div className="p-4 md:p-5 lg:p-6">{children}</div>}
-    </div>
-);
-
-// ESPN-style Stat Row - Clean, readable
-const StatRow = ({ label, awayValue, homeValue }) => (
-    <div className="flex items-center justify-between py-3 px-4 hover:bg-white/5 transition-colors">
-        <span className="text-white/70 text-sm font-medium uppercase tracking-wide">
-            {label}
-        </span>
-        <div className="flex items-center gap-8">
-            <span className="text-white text-xl font-bold tabular-nums w-16 text-right">
-                {awayValue}
-            </span>
-            <div className="w-px h-6 bg-white/20" />
-            <span className="text-white/60 text-xl font-bold tabular-nums w-16 text-left">
-                {homeValue}
-            </span>
+// Live Stats Bar Component - Broadcast-style horizontal ticker
+const LiveStatsBar = ({ stats }) => {
+    if (!stats) return null;
+    
+    return (
+        <div className="w-full bg-black/40 backdrop-blur-sm border-y border-white/20 py-3 px-6">
+            <div className="flex items-center justify-center gap-8 md:gap-12">
+                <div className="flex items-center gap-2">
+                    <span className="text-white/60 text-xs font-bold uppercase tracking-wider">FG%</span>
+                    <span className="text-white text-lg font-black tabular-nums">
+                        {stats.away.fgPct} - {stats.home.fgPct}
+                    </span>
+                </div>
+                <div className="w-px h-6 bg-white/20" />
+                <div className="flex items-center gap-2">
+                    <span className="text-white/60 text-xs font-bold uppercase tracking-wider">3PT</span>
+                    <span className="text-white text-lg font-black tabular-nums">
+                        {stats.away.fg3} - {stats.home.fg3}
+                    </span>
+                </div>
+                <div className="w-px h-6 bg-white/20" />
+                <div className="flex items-center gap-2">
+                    <span className="text-white/60 text-xs font-bold uppercase tracking-wider">REB</span>
+                    <span className="text-white text-lg font-black tabular-nums">
+                        {stats.away.reb} - {stats.home.reb}
+                    </span>
+                </div>
+                <div className="w-px h-6 bg-white/20" />
+                <div className="flex items-center gap-2">
+                    <span className="text-white/60 text-xs font-bold uppercase tracking-wider">AST</span>
+                    <span className="text-white text-lg font-black tabular-nums">
+                        {stats.away.ast} - {stats.home.ast}
+                    </span>
+                </div>
+            </div>
         </div>
-    </div>
-);
+    );
+};
+
+// Season Stats Panel - Floating, minimal
+const SeasonStatsPanel = ({ stats, cycleIndex }) => {
+    const statsSet1 = stats.slice(0, 4);
+    const statsSet2 = stats.slice(4, 8);
+    const currentStats = cycleIndex === 0 ? statsSet1 : statsSet2;
+    
+    return (
+        <div className="bg-[#001428]/90 backdrop-blur-sm shadow-2xl rounded-lg border border-white/10 overflow-hidden">
+            {/* Header */}
+            <div className="px-4 py-3 bg-white/5 border-b border-white/10">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-white text-sm font-bold uppercase tracking-wide">Season Stats</h3>
+                    <div className="flex gap-1.5">
+                        <div className={`w-1.5 h-1.5 rounded-full transition-all ${cycleIndex === 0 ? 'bg-white w-2 h-2' : 'bg-white/30'}`} />
+                        <div className={`w-1.5 h-1.5 rounded-full transition-all ${cycleIndex === 1 ? 'bg-white w-2 h-2' : 'bg-white/30'}`} />
+                    </div>
+                </div>
+            </div>
+            
+            {/* Stats */}
+            <div className="p-3">
+                {currentStats.length > 0 ? (
+                    <div className="space-y-2">
+                        {currentStats.map((row, i) => (
+                            <div key={i} className="flex items-center justify-between py-2 px-2 hover:bg-white/5 rounded transition-colors">
+                                <span className="text-white/70 text-xs font-medium uppercase tracking-wide flex-1">
+                                    {row[0]}
+                                </span>
+                                <div className="flex items-center gap-6">
+                                    <span className="text-white text-base font-bold tabular-nums w-20 text-right">
+                                        {row[1]}
+                                    </span>
+                                    <div className="w-px h-4 bg-white/20" />
+                                    <span className="text-white/60 text-base font-bold tabular-nums w-20 text-left">
+                                        {row[2]}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="py-8 text-center">
+                        <span className="text-white/50 text-xs">Loading stats...</span>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
 
 const HolyWarDashboard = ({ game, loading }) => {
     const [highlights, setHighlights] = useState([]);
@@ -164,7 +225,7 @@ const HolyWarDashboard = ({ game, loading }) => {
 
     if (loading || !game) {
         return (
-            <div className="w-full h-full flex items-center justify-center bg-[#002E5D]">
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#002E5D] via-[#001a3d] to-[#001428]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-3 border-white/20 border-t-white rounded-full animate-spin" />
                     <div className="text-white/60 text-sm font-medium uppercase">Loading...</div>
@@ -181,199 +242,140 @@ const HolyWarDashboard = ({ game, loading }) => {
     const gameState = game.status?.type?.state;
     const isLive = gameState === 'in';
     const basketballData = RIVALRY_DATA.mensBasketball;
-
-    // Get season comparison stats in two sets
     const seasonStats = basketballData?.season2025_2026?.teamComparison?.rows || [];
-    const statsSet1 = seasonStats.slice(0, 4);
-    const statsSet2 = seasonStats.slice(4, 8);
-    const currentSeasonStats = statCycleIndex === 0 ? statsSet1 : statsSet2;
 
     return (
-        <div className="w-full h-full flex flex-col p-3 gap-3 bg-[#002E5D]">
-            {/* Top Score Section - ESPN style */}
-            <ESPNCard className="flex-none" noPadding>
-                <div className="flex items-center justify-center py-8 px-6">
-                    {/* Away Team */}
-                    <div className="flex flex-col items-center gap-2 flex-1">
+        <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-[#002E5D] via-[#001a3d] to-[#001428]">
+            {/* Subtle background texture */}
+            <div className="absolute inset-0 opacity-5" style={{
+                backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                                  radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)`
+            }} />
+            
+            {/* Top Score Section - Broadcast Style */}
+            <div className="relative z-10 px-8 md:px-12 lg:px-16 pt-6 md:pt-8 pb-4">
+                <div className="flex items-center justify-between">
+                    {/* Away Team Logo - LARGE */}
+                    <div className="flex flex-col items-center gap-3 flex-shrink-0">
                         <img 
                             src={awayTeam.team.logo} 
                             alt={awayTeam.team.displayName}
-                            className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                            className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 object-contain drop-shadow-2xl"
                         />
-                        <span className="text-white text-sm font-bold uppercase">
+                        <span className="text-white text-xl md:text-2xl font-black uppercase tracking-wide">
                             {awayTeam.team.abbreviation}
                         </span>
                     </div>
 
-                    {/* Score Display - ESPN style */}
-                    <div className="flex items-center gap-6 mx-6">
-                        <div className={`text-5xl md:text-6xl font-black tabular-nums leading-none
-                            ${parseInt(awayTeam.score || 0) > parseInt(homeTeam.score || 0) 
-                                ? 'text-white' 
-                                : 'text-white/40'}`}>
-                            {awayTeam.score || '0'}
+                    {/* Score Display - HUGE */}
+                    <div className="flex-1 flex flex-col items-center justify-center mx-8 md:mx-12">
+                        <div className="flex items-center gap-6 md:gap-10">
+                            <div className={`text-7xl md:text-8xl lg:text-9xl font-black tabular-nums leading-none
+                                ${parseInt(awayTeam.score || 0) > parseInt(homeTeam.score || 0) 
+                                    ? 'text-white' 
+                                    : 'text-white/50'}`}>
+                                {awayTeam.score || '0'}
+                            </div>
+                            
+                            <div className="flex flex-col items-center gap-2">
+                                {isLive && (
+                                    <div className="w-2 h-2 bg-white rounded-full animate-pulse shadow-lg shadow-white/50" />
+                                )}
+                                <span className="text-white/80 text-sm md:text-base font-black uppercase tracking-widest">
+                                    {isLive ? 'LIVE' : 'VS'}
+                                </span>
+                            </div>
+                            
+                            <div className={`text-7xl md:text-8xl lg:text-9xl font-black tabular-nums leading-none
+                                ${parseInt(homeTeam.score || 0) > parseInt(awayTeam.score || 0) 
+                                    ? 'text-white' 
+                                    : 'text-white/50'}`}>
+                                {homeTeam.score || '0'}
+                            </div>
                         </div>
                         
-                        <div className="flex flex-col items-center gap-1">
-                            {isLive && <div className="w-2 h-2 bg-white rounded-full animate-pulse" />}
-                            <span className="text-white/60 text-xs font-bold uppercase">
-                                {isLive ? 'LIVE' : 'VS'}
+                        {/* Game Status Badge */}
+                        <div className="mt-4 px-6 py-2 bg-black/40 backdrop-blur-sm rounded-full border border-white/20">
+                            <span className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">
+                                {isLive ? game.status.type.detail : (game.status.type.shortDetail || formatMountainTime(game.date))}
                             </span>
-                        </div>
-                        
-                        <div className={`text-5xl md:text-6xl font-black tabular-nums leading-none
-                            ${parseInt(homeTeam.score || 0) > parseInt(awayTeam.score || 0) 
-                                ? 'text-white' 
-                                : 'text-white/40'}`}>
-                            {homeTeam.score || '0'}
                         </div>
                     </div>
 
-                    {/* Home Team - Grayscale Utah */}
-                    <div className="flex flex-col items-center gap-2 flex-1">
+                    {/* Home Team Logo - LARGE, Grayscale */}
+                    <div className="flex flex-col items-center gap-3 flex-shrink-0">
                         <img 
                             src={homeTeam.team.logo} 
                             alt={homeTeam.team.displayName}
-                            className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                            className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 object-contain drop-shadow-2xl"
                             style={{ filter: 'grayscale(100%) brightness(1.5)' }}
                         />
-                        <span className="text-white text-sm font-bold uppercase">
+                        <span className="text-white text-xl md:text-2xl font-black uppercase tracking-wide">
                             {homeTeam.team.abbreviation}
                         </span>
                     </div>
                 </div>
-
-                {/* Game Status Bar - thin divider */}
-                <div className="border-t border-white/10 px-6 py-3 bg-black/20">
-                    <div className="text-white/80 text-xs font-medium uppercase tracking-wide text-center">
-                        {isLive ? game.status.type.detail : (game.status.type.shortDetail || formatMountainTime(game.date))}
-                    </div>
-                </div>
-            </ESPNCard>
-
-            {/* Three-Column Content Section */}
-            <div className="flex-grow flex gap-3 min-h-0">
-                {/* Left Column: Live/Game Stats */}
-                <ESPNCard className="flex-1 flex flex-col min-w-0" noPadding>
-                    {/* Header */}
-                    <div className="px-4 py-3 border-b border-white/10">
-                        <div className="flex items-center gap-2">
-                            {isLive && <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />}
-                            <h3 className="text-white text-sm font-bold uppercase tracking-wide">
-                                {isLive ? 'Live Stats' : 'Game Stats'}
-                            </h3>
-                        </div>
-                    </div>
-                    {/* Content */}
-                    <div className="flex-grow overflow-y-auto">
-                        {isLive && liveStats ? (
-                            <div>
-                                <StatRow label="FG %" awayValue={`${liveStats.away.fgPct}%`} homeValue={`${liveStats.home.fgPct}%`} />
-                                <StatRow label="3PT" awayValue={liveStats.away.fg3} homeValue={liveStats.home.fg3} />
-                                <StatRow label="REB" awayValue={liveStats.away.reb} homeValue={liveStats.home.reb} />
-                                <StatRow label="AST" awayValue={liveStats.away.ast} homeValue={liveStats.home.ast} />
-                            </div>
-                        ) : (
-                            <div className="h-full flex items-center justify-center p-4">
-                                <span className="text-white/50 text-sm">
-                                    {gameState === 'pre' ? 'Stats available at game time' : 'Final stats'}
-                                </span>
-                            </div>
-                        )}
-                    </div>
-                </ESPNCard>
-
-                {/* Center Column: Media/Highlights */}
-                <div className="flex-1 flex flex-col min-w-0 bg-[#001a3d] shadow-md">
-                    {/* Header */}
-                    <div className="px-4 py-3 border-b border-white/10">
-                        <h3 className="text-white text-sm font-bold uppercase tracking-wide">
-                            Highlights
-                        </h3>
-                    </div>
-                    {/* Video */}
-                    <div className="flex-grow relative bg-black">
-                        {highlights.length > 0 && highlights[mediaIndex] ? (
-                            <>
-                                <iframe
-                                    className="absolute inset-0 w-full h-full"
-                                    src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex].videoId}`}
-                                    title={highlights[mediaIndex].title}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                />
-                                {/* Dots */}
-                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                                    {highlights.map((_, idx) => (
-                                        <div 
-                                            key={idx}
-                                            className={`w-1.5 h-1.5 rounded-full transition-all
-                                                ${idx === mediaIndex ? 'bg-white w-2 h-2' : 'bg-white/50'}`}
-                                        />
-                                    ))}
-                                </div>
-                            </>
-                        ) : (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="flex flex-col items-center gap-3">
-                                    <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                    <span className="text-white/50 text-xs">Loading...</span>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Right Column: Season Comparison */}
-                <ESPNCard className="flex-1 flex flex-col min-w-0" noPadding>
-                    {/* Header */}
-                    <div className="px-4 py-3 border-b border-white/10">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-white text-sm font-bold uppercase tracking-wide">
-                                Season Stats
-                            </h3>
-                            {/* Cycle dots */}
-                            <div className="flex gap-1.5">
-                                <div className={`w-1.5 h-1.5 rounded-full transition-all
-                                    ${statCycleIndex === 0 ? 'bg-white w-2 h-2' : 'bg-white/30'}`} />
-                                <div className={`w-1.5 h-1.5 rounded-full transition-all
-                                    ${statCycleIndex === 1 ? 'bg-white w-2 h-2' : 'bg-white/30'}`} />
-                            </div>
-                        </div>
-                    </div>
-                    {/* Content */}
-                    <div className="flex-grow overflow-y-auto">
-                        {currentSeasonStats.length > 0 ? (
-                            <>
-                                {/* Team Labels */}
-                                <div className="flex items-center justify-between py-2 px-4 bg-white/5 sticky top-0">
-                                    <span className="text-white/50 text-xs font-bold uppercase">Stat</span>
-                                    <div className="flex items-center gap-8">
-                                        <span className="text-white text-xs font-bold uppercase w-16 text-right">BYU</span>
-                                        <div className="w-px h-4 bg-white/20" />
-                                        <span className="text-white/60 text-xs font-bold uppercase w-16 text-left">UTAH</span>
-                                    </div>
-                                </div>
-                                {/* Stats */}
-                                <div>
-                                    {currentSeasonStats.map((row, i) => (
-                                        <StatRow 
-                                            key={i}
-                                            label={row[0]} 
-                                            awayValue={row[1]} 
-                                            homeValue={row[2]}
-                                        />
-                                    ))}
-                                </div>
-                            </>
-                        ) : (
-                            <div className="h-full flex items-center justify-center p-4">
-                                <span className="text-white/50 text-sm">Loading stats...</span>
-                            </div>
-                        )}
-                    </div>
-                </ESPNCard>
             </div>
+
+            {/* Live Stats Bar - Broadcast Style Horizontal Ticker */}
+            {isLive && liveStats && (
+                <div className="relative z-10 animate-fadeIn">
+                    <LiveStatsBar stats={liveStats} />
+                </div>
+            )}
+
+            {/* Content Area: Video + Season Stats */}
+            <div className="relative z-10 flex-1 flex gap-4 md:gap-6 px-8 md:px-12 lg:px-16 pb-4 min-h-0">
+                {/* Video Section - Landscape, 70% width */}
+                <div className="flex-[7] relative rounded-lg overflow-hidden shadow-2xl bg-black">
+                    {highlights.length > 0 && highlights[mediaIndex] ? (
+                        <>
+                            <iframe
+                                className="absolute inset-0 w-full h-full"
+                                src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex].videoId}`}
+                                title={highlights[mediaIndex].title}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+                            {/* Video indicator dots */}
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                {highlights.map((_, idx) => (
+                                    <div 
+                                        key={idx}
+                                        className={`w-2 h-2 rounded-full transition-all
+                                            ${idx === mediaIndex ? 'bg-white w-2.5 h-2.5 shadow-lg' : 'bg-white/50'}`}
+                                    />
+                                ))}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="flex flex-col items-center gap-3">
+                                <div className="w-12 h-12 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                <span className="text-white/50 text-sm">Loading highlights...</span>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Season Stats Panel - Floating, 30% width */}
+                <div className="flex-[3] flex items-start">
+                    <div className="w-full sticky top-4">
+                        <SeasonStatsPanel stats={seasonStats} cycleIndex={statCycleIndex} />
+                    </div>
+                </div>
+            </div>
+            
+            {/* Fade-in animation */}
+            <style>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .animate-fadeIn {
+                    animation: fadeIn 0.5s ease-out;
+                }
+            `}</style>
         </div>
     );
 };
