@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { getRivalryTickerItems } from '../../config/rivalryData';
 
 /**
- * Rivalry Ticker - Scrolls through all BYU vs Utah rivalry facts
- * TV-optimized for sports bar display
+ * Rivalry Ticker - Modern Glassmorphism Design
+ * Scrolls through all BYU vs Utah rivalry facts
  */
 const RivalryTicker = () => {
     const [items] = useState(() => getRivalryTickerItems());
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
-        // Rotate through items every 8 seconds
         const interval = setInterval(() => {
             setCurrentIndex(prev => (prev + 1) % items.length);
         }, 8000);
@@ -19,33 +18,42 @@ const RivalryTicker = () => {
 
     if (!items.length) return null;
 
-    const currentItem = items[currentIndex];
-
     return (
-        <div className="h-16 md:h-20 lg:h-[100px] bg-[#002E5D] border-t-2 border-[#0047BA] z-50 flex items-center overflow-hidden w-full relative">
-            {/* Mode Label */}
-            <div className="bg-[#0047BA] h-full px-4 md:px-8 lg:px-12 flex flex-col justify-center items-center z-20 shadow-[20px_0_40px_rgba(0,0,0,0.3)] relative min-w-[200px] md:min-w-[300px] lg:min-w-[380px]">
-                <span className="text-[8px] md:text-[9px] lg:text-[10px] text-white/80 font-black uppercase tracking-[0.4em] mb-0.5 md:mb-1">
+        <div className="h-16 md:h-20 lg:h-24 
+            bg-white/[0.08] backdrop-blur-2xl border border-white/[0.15] rounded-2xl
+            shadow-2xl overflow-hidden relative flex items-center">
+            
+            {/* Animated gradient shine */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent 
+                animate-shimmer pointer-events-none" style={{ backgroundSize: '200% 100%' }} />
+            
+            {/* Category Badge */}
+            <div className="h-full px-6 md:px-8 lg:px-10 flex flex-col justify-center items-center 
+                bg-[#0047BA]/40 backdrop-blur-xl border-r border-white/[0.1]
+                min-w-[160px] md:min-w-[200px] lg:min-w-[240px] relative z-20">
+                <span className="text-[9px] md:text-[10px] lg:text-xs text-white/60 font-semibold uppercase tracking-[0.4em]">
                     RIVALRY
                 </span>
-                <span className="text-lg md:text-2xl lg:text-3xl font-black text-white uppercase tracking-tighter leading-none whitespace-nowrap italic">HOLY WAR</span>
-                <div className="absolute top-0 right-0 w-1 h-full bg-white/40" />
+                <span className="text-lg md:text-xl lg:text-2xl font-black text-white uppercase tracking-tight leading-none mt-1">
+                    HOLY WAR
+                </span>
             </div>
 
-            {/* Scrolling Content */}
-            <div className="flex-1 flex items-center h-full overflow-hidden bg-white">
-                <div className="flex animate-scroll whitespace-nowrap items-center h-full min-w-max px-4 md:px-6 lg:px-8">
-                    {/* Duplicate items for seamless loop */}
+            {/* Scrolling Content Area */}
+            <div className="flex-1 flex items-center h-full overflow-hidden relative">
+                {/* Fade edges */}
+                <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#002E5D]/80 to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#002E5D]/80 to-transparent z-10 pointer-events-none" />
+                
+                <div className="flex animate-scroll whitespace-nowrap items-center h-full min-w-max">
                     {[...items, ...items].map((item, idx) => (
-                        <div key={idx} className="flex-shrink-0 flex items-center h-full">
-                            <div className="flex flex-col justify-center px-4 md:px-6 lg:px-8 border-l border-[#0047BA]/20">
-                                <span className="font-black text-[#002E5D] text-base md:text-2xl lg:text-3xl leading-none uppercase tracking-tight">
+                        <div key={idx} className="flex-shrink-0 flex items-center h-full px-6 md:px-8 lg:px-10">
+                            <div className="flex items-center gap-4">
+                                {/* Decorative dot */}
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#0047BA] shadow-[0_0_10px_rgba(0,71,186,0.8)]" />
+                                <span className="font-semibold text-white/90 text-sm md:text-lg lg:text-xl tracking-wide">
                                     {item}
                                 </span>
-                            </div>
-                            {/* Separator */}
-                            <div className="w-[60px] md:w-[80px] lg:w-[100px] flex-shrink-0 flex items-center justify-center">
-                                <div className="w-1 h-4 md:h-6 lg:h-8 bg-[#0047BA]/20" />
                             </div>
                         </div>
                     ))}
@@ -57,8 +65,15 @@ const RivalryTicker = () => {
                     0% { transform: translateX(0); } 
                     100% { transform: translateX(-50%); } 
                 }
+                @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
                 .animate-scroll { 
-                    animation: scroll ${Math.max(60, items.length * 8)}s linear infinite; 
+                    animation: scroll ${Math.max(80, items.length * 10)}s linear infinite; 
+                }
+                .animate-shimmer {
+                    animation: shimmer 8s ease-in-out infinite;
                 }
             `}</style>
         </div>

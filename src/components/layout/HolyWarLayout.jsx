@@ -3,51 +3,75 @@ import RivalryTicker from '../display/RivalryTicker';
 import logo from '/logo.png';
 
 /**
- * Holy War Layout - BYU Brand Colors
- * Navy: #002E5D, Royal: #0047BA, White: #FFFFFF
+ * Holy War Layout - Modern Apple Glassmorphism
+ * BYU Brand Colors: Navy #002E5D, Royal #0047BA, White #FFFFFF
  * NO RED COLORS
  */
 const HolyWarLayout = ({ children }) => {
     return (
-        <div className="h-screen w-screen relative overflow-hidden bg-white">
-            {/* BYU Royal accent lines - No gradients */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#0047BA]" />
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#0047BA]" />
+        <div className="h-screen w-screen relative overflow-hidden">
+            {/* Dynamic gradient background - BYU themed */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#001a35] via-[#002E5D] to-[#003366]" />
+            
+            {/* Animated orbs for depth - subtle BYU blue tones */}
+            <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-[#0047BA]/20 blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+            <div className="absolute bottom-[-30%] right-[-10%] w-[800px] h-[800px] rounded-full bg-[#0047BA]/15 blur-[150px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
+            <div className="absolute top-[40%] right-[20%] w-[400px] h-[400px] rounded-full bg-white/5 blur-[100px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '4s' }} />
+            
+            {/* Noise texture overlay for depth */}
+            <div className="absolute inset-0 opacity-[0.03]" style={{ 
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            }} />
 
-            {/* TV SAFE AREA WRAPPER */}
-            <div className="absolute inset-1 md:inset-2 lg:inset-[12px] flex flex-col z-10 overflow-hidden bg-white">
-                {/* Internal Content Area */}
-                <div className="flex-grow flex flex-col min-h-0 overflow-hidden">
-                    {/* Top Bar - BYU Styled Light Mode */}
-                    <header className="h-16 md:h-20 lg:h-[120px] flex items-center justify-between px-4 md:px-8 lg:px-16 bg-[#002E5D] z-50 flex-none border-b-2 border-[#0047BA]">
-                        <div className="flex items-center gap-3 md:gap-4">
-                            <img src={logo} alt="BYU Logo" className="h-12 md:h-16 lg:h-24 object-contain drop-shadow-2xl" />
-                            <div className="flex flex-col">
-                                <h1 className="text-lg md:text-2xl lg:text-3xl font-black text-[#002E5D] uppercase tracking-tighter" style={{ fontFamily: 'serif' }}>
-                                    THE HOLY WAR
-                                </h1>
-                                <p className="text-[8px] md:text-[10px] lg:text-xs font-bold text-[#0047BA] uppercase tracking-widest">
-                                    BYU vs UTAH
-                                </p>
-                            </div>
+            {/* Main content container with safe area */}
+            <div className="absolute inset-3 md:inset-4 lg:inset-6 flex flex-col z-10 overflow-hidden">
+                {/* Glass Header */}
+                <header className="h-20 md:h-24 lg:h-28 flex items-center justify-between px-6 md:px-10 lg:px-12 
+                    bg-white/[0.08] backdrop-blur-2xl border border-white/[0.15] rounded-2xl shadow-2xl
+                    relative overflow-hidden mb-4 md:mb-5 lg:mb-6 flex-none">
+                    {/* Inner glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/[0.1] to-transparent rounded-2xl pointer-events-none" />
+                    
+                    <div className="flex items-center gap-4 md:gap-5 relative z-10">
+                        <div className="relative">
+                            <div className="absolute inset-0 bg-white/20 blur-xl rounded-full" />
+                            <img src={logo} alt="BYU Logo" className="h-12 md:h-16 lg:h-20 object-contain relative z-10 drop-shadow-2xl" />
                         </div>
-                        <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#0047BA] border border-[#0047BA] rounded">
-                            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                            <span className="text-[10px] font-black text-white uppercase tracking-widest">LIVE</span>
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight leading-none"
+                                style={{ fontFamily: "'Inter', system-ui, sans-serif", textShadow: '0 2px 20px rgba(0,71,186,0.5)' }}>
+                                THE HOLY WAR
+                            </h1>
+                            <p className="text-xs md:text-sm lg:text-base font-semibold text-[#0047BA] uppercase tracking-[0.3em] mt-1">
+                                BYU vs UTAH
+                            </p>
                         </div>
-                    </header>
-
-                    {/* Dashboard Content */}
-                    <section className="flex-grow relative overflow-hidden min-h-0 px-2 md:px-3 lg:px-4 bg-white">
-                        <div className="absolute inset-0 overflow-hidden">
-                            {children}
-                        </div>
-                    </section>
-
-                    {/* Rivalry Ticker anchored at bottom */}
-                    <div className="flex-none">
-                        <RivalryTicker />
                     </div>
+
+                    {/* Live indicator with glow */}
+                    <div className="hidden md:flex items-center gap-3 px-5 py-2.5 
+                        bg-[#0047BA]/30 backdrop-blur-xl border border-[#0047BA]/50 rounded-full
+                        shadow-[0_0_30px_rgba(0,71,186,0.4)] relative z-10">
+                        <div className="relative">
+                            <div className="w-2.5 h-2.5 bg-white rounded-full animate-ping absolute" />
+                            <div className="w-2.5 h-2.5 bg-white rounded-full relative" />
+                        </div>
+                        <span className="text-sm font-bold text-white uppercase tracking-widest">LIVE</span>
+                    </div>
+                </header>
+
+                {/* Dashboard Content - Glass container */}
+                <section className="flex-grow relative overflow-hidden min-h-0 
+                    bg-white/[0.05] backdrop-blur-xl border border-white/[0.1] rounded-2xl
+                    shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                    <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                        {children}
+                    </div>
+                </section>
+
+                {/* Rivalry Ticker */}
+                <div className="flex-none mt-4 md:mt-5 lg:mt-6">
+                    <RivalryTicker />
                 </div>
             </div>
         </div>
