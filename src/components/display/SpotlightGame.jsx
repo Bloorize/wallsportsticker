@@ -33,10 +33,10 @@ const SpotlightGame = ({ game, isHolyWar = false }) => {
                         alt={away.team.displayName}
                     />
                     <div className="flex flex-col items-center gap-1 w-full overflow-hidden">
-                        <span className="text-sm md:text-xl lg:text-3xl font-black text-white uppercase tracking-tighter leading-tight truncate w-full">
+                        <span className={`text-sm md:text-xl lg:text-3xl font-black ${isHolyWar ? 'text-[#002E5D]' : 'text-white'} uppercase tracking-tighter leading-tight truncate w-full`}>
                             {away.team.displayName}
                         </span>
-                        <span className="text-[10px] md:text-xs lg:text-sm font-black text-white/40 uppercase tracking-[0.3em]">
+                        <span className={`text-[10px] md:text-xs lg:text-sm font-black ${isHolyWar ? 'text-[#002E5D]/60' : 'text-white/40'} uppercase tracking-[0.3em]`}>
                             {away.team.abbreviation}
                         </span>
                     </div>
