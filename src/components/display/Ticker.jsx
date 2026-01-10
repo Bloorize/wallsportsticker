@@ -108,7 +108,7 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
     const activeMode = MODES[modeIndex];
 
     return (
-        <div className="h-16 md:h-20 lg:h-[100px] bg-black border-t-4 border-red-700 z-50 flex items-center overflow-hidden w-full relative">
+        <div className={`h-16 md:h-20 lg:h-[100px] ${isHolyWar ? 'bg-white border-t-4 border-[#0047BA]' : 'bg-black border-t-4 border-red-700'} z-50 flex items-center overflow-hidden w-full relative`}>
             {/* Mode Label - SOLID Background for ESPN Style */}
             <div className={`${activeMode.color} h-full px-4 md:px-8 lg:px-12 flex flex-col justify-center items-center z-20 shadow-[20px_0_40px_rgba(0,0,0,0.9)] relative min-w-[200px] md:min-w-[300px] lg:min-w-[380px]`}>
                 <span className="text-[8px] md:text-[9px] lg:text-[10px] text-white/60 font-black uppercase tracking-[0.4em] mb-0.5 md:mb-1">
