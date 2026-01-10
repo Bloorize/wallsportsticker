@@ -20,11 +20,11 @@ const HolyWarLayout = ({ children }) => {
             </div>
 
             {/* Floating Holy War Logo - BIG, top right, z-50 */}
-            <div className="absolute top-4 right-4 md:top-6 md:right-6 z-50">
+            <div className="absolute top-4 right-8 md:top-6 md:right-12 lg:right-16 z-50">
                 <img 
                     src={holyWarLogo} 
                     alt="Holy War Logo" 
-                    className="h-20 md:h-24 lg:h-28 object-contain drop-shadow-2xl"
+                    className="h-30 md:h-36 lg:h-42 object-contain drop-shadow-2xl"
                 />
             </div>
 
