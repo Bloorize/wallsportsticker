@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import GlassLayout from './components/layout/GlassLayout'
 import Dashboard from './components/display/Dashboard'
 import HolyWar from './pages/HolyWar'
@@ -215,25 +215,11 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle GitHub Pages 404 redirect
-  useEffect(() => {
-    const path = window.location.pathname;
-    const search = window.location.search;
-    
-    // Check if this is a GitHub Pages redirect (format: /?/path)
-    if (search.includes('?/')) {
-      const pathMatch = search.match(/\?\/?(.+?)(?:&|$)/);
-      if (pathMatch) {
-        const newPath = '/' + pathMatch[1].replace(/~and~/g, '&');
-        window.history.replaceState({}, '', newPath);
-      }
-    }
-  }, []);
-
   return (
-    <Router basename="/wallsportsticker">
+    <Router>
       <Routes>
         <Route path="/holywar" element={<HolyWar />} />
+        <Route path="/#/holywar" element={<HolyWar />} />
         <Route path="/" element={
           <GlassLayout filter={filter} games={allGames} tickerData={tickerData}>
             <Dashboard
