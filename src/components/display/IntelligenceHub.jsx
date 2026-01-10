@@ -321,7 +321,7 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
     );
 };
 
-const WeatherSection = ({ game }) => {
+const WeatherSection = ({ game, isHolyWar = false }) => {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -788,7 +788,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
 
                 {/* 2. WEATHER - Show for outdoor sports in pre-game */}
                 {gameState === 'pre' && isOutdoorSport(game._category) && (
-                    <WeatherSection game={game} />
+                    <WeatherSection game={game} isHolyWar={isHolyWar} />
                 )}
 
                 {/* 3. STATS SECTION */}
