@@ -11,12 +11,12 @@ const RivalryTicker = () => {
     if (!items.length) return null;
 
     return (
-        <div className="h-10 md:h-12 bg-[#001a3d] border-t border-white/10 overflow-hidden relative flex items-center">
+        <div className="h-20 md:h-24 bg-[#001a3d] border-t border-white/10 overflow-hidden relative flex items-center">
             {/* Category Badge */}
-            <div className="h-full px-4 flex items-center justify-center 
+            <div className="h-full px-6 md:px-8 flex items-center justify-center 
                 bg-white/10 border-r border-white/10
-                min-w-[120px] md:min-w-[150px]">
-                <span className="text-xs font-bold text-white uppercase tracking-wide">
+                min-w-[160px] md:min-w-[200px]">
+                <span className="text-sm md:text-base font-bold text-white uppercase tracking-wide">
                     RIVALRY
                 </span>
             </div>
@@ -25,10 +25,10 @@ const RivalryTicker = () => {
             <div className="flex-1 flex items-center h-full overflow-hidden relative">
                 <div className="flex animate-scroll whitespace-nowrap items-center h-full">
                     {[...items, ...items].map((item, idx) => (
-                        <div key={idx} className="flex-shrink-0 flex items-center h-full px-6 md:px-8">
-                            <div className="flex items-center gap-3">
-                                <div className="w-1 h-1 rounded-full bg-white/40" />
-                                <span className="font-medium text-white text-xs md:text-sm">
+                        <div key={idx} className="flex-shrink-0 flex items-center h-full px-8 md:px-10">
+                            <div className="flex items-center gap-4">
+                                <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                                <span className="font-medium text-white text-sm md:text-base">
                                     {item}
                                 </span>
                             </div>
