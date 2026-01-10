@@ -341,7 +341,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                         <h3 className="text-white uppercase text-center"
                             style={{ 
                                 fontFamily: "'IBM Plex Sans', sans-serif",
-                                fontSize: '11px',
+                                fontSize: '18px',
                                 fontWeight: 700,
                                 letterSpacing: '0.12em'
                             }}>
@@ -378,7 +378,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                         <h3 className="text-white uppercase text-center"
                             style={{ 
                                 fontFamily: "'IBM Plex Sans', sans-serif",
-                                fontSize: '11px',
+                                fontSize: '18px',
                                 fontWeight: 700,
                                 letterSpacing: '0.12em'
                             }}>
@@ -436,7 +436,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             <h3 className="text-white uppercase text-center"
                                 style={{ 
                                     fontFamily: "'IBM Plex Sans', sans-serif",
-                                    fontSize: '11px',
+                                    fontSize: '18px',
                                     fontWeight: 700,
                                     letterSpacing: '0.12em'
                                 }}>
