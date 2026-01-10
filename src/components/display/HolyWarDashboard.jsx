@@ -10,22 +10,19 @@ import { RIVALRY_DATA } from '../../config/rivalryData';
  * BYU Colors: Navy #002E5D, Royal #0047BA
  */
 
-// Glass Card Component
-const GlassCard = ({ children, className = '', glow = false, accentTop = false, noPadding = false }) => (
+// Card Component - Solid colors, no gradients
+const GlassCard = ({ children, className = '', accentTop = false, noPadding = false }) => (
     <div className={`
         relative overflow-hidden rounded-2xl
-        bg-white/[0.06] backdrop-blur-xl 
-        border border-white/[0.12]
-        shadow-[0_8px_32px_rgba(0,0,0,0.3)]
-        ${glow ? 'shadow-[0_0_60px_rgba(0,71,186,0.15)]' : ''}
+        bg-[#002E5D] 
+        border-2 border-white
+        shadow-lg
         ${className}
     `}>
-        {/* Top accent line */}
+        {/* Top accent line - solid Royal Blue */}
         {accentTop && (
-            <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-[#0047BA]/50 to-transparent z-5" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#0047BA] z-5" />
         )}
-        {/* Inner highlight */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.08] via-transparent to-transparent rounded-2xl pointer-events-none z-0" />
         {noPadding ? (
             <div className="relative z-10 h-full">
                 {children}
@@ -38,21 +35,21 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false, 
     </div>
 );
 
-// Stat Row Component - with explicit padding to prevent edge touching
+// Stat Row Component - Solid colors
 const StatRow = ({ label, awayValue, homeValue, highlight = false }) => (
     <div className={`
         flex items-center justify-between py-4 md:py-5 px-6 md:px-8 lg:px-10
-        ${highlight ? 'bg-[#0047BA]/20 rounded-xl' : 'border-b border-white/[0.08] last:border-0'}
-        transition-all duration-300 hover:bg-white/[0.05] rounded-lg
+        ${highlight ? 'bg-[#0047BA] rounded-xl' : 'border-b border-white/20 last:border-0'}
+        transition-all duration-300 hover:bg-white/10 rounded-lg
     `}>
-        <span className="text-white/60 text-sm md:text-base lg:text-lg font-medium uppercase tracking-wider">
+        <span className="text-white text-sm md:text-base lg:text-lg font-medium uppercase tracking-wider">
             {label}
         </span>
         <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
             <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold tabular-nums min-w-[70px] text-center">
                 {awayValue}
             </span>
-            <div className="w-[2px] h-6 bg-white/20 rounded-full" />
+            <div className="w-[2px] h-6 bg-white/30 rounded-full" />
             <span className="text-white text-xl md:text-2xl lg:text-3xl font-bold tabular-nums min-w-[70px] text-center">
                 {homeValue}
             </span>
@@ -211,21 +208,18 @@ const HolyWarDashboard = ({ game, loading }) => {
     const currentSeasonStats = statCycleIndex === 0 ? statsSet1 : statsSet2;
 
     return (
-        <div className="w-full h-full flex flex-col p-3 md:p-4 lg:p-6 gap-3 md:gap-4 lg:gap-6">
+        <div className="w-full h-full flex flex-col p-3 md:p-4 lg:p-6 gap-3 md:gap-4 lg:gap-6 bg-white">
             {/* Top Score Section */}
-            <GlassCard className="flex-none" glow accentTop noPadding>
+            <GlassCard className="flex-none" accentTop noPadding>
                 <div className="flex items-center justify-center py-8 md:py-10 lg:py-12 px-8 md:px-12 lg:px-16">
                     {/* Away Team */}
                     <div className="flex flex-col items-center gap-2 md:gap-3 flex-1">
-                        <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 blur-2xl rounded-full scale-150" />
-                            <img 
-                                src={awayTeam.team.logo} 
-                                alt={awayTeam.team.displayName}
-                                className="w-16 h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 object-contain relative z-10 drop-shadow-2xl"
-                            />
-                        </div>
-                        <span className="text-white/70 text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wide">
+                        <img 
+                            src={awayTeam.team.logo} 
+                            alt={awayTeam.team.displayName}
+                            className="w-16 h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 object-contain drop-shadow-2xl"
+                        />
+                        <span className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wide">
                             {awayTeam.team.abbreviation}
                         </span>
                     </div>
@@ -235,23 +229,23 @@ const HolyWarDashboard = ({ game, loading }) => {
                         <div className={`text-5xl md:text-7xl lg:text-8xl font-black tabular-nums leading-none
                             ${parseInt(awayTeam.score || 0) > parseInt(homeTeam.score || 0) 
                                 ? 'text-white' 
-                                : 'text-white/40'}`}
+                                : 'text-white/50'}`}
                             style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
                             {awayTeam.score || '0'}
                         </div>
                         
                         <div className="flex flex-col items-center gap-1 md:gap-2">
-                            <div className="w-1 h-8 md:h-12 bg-gradient-to-b from-[#0047BA] to-transparent rounded-full" />
-                            <span className="text-[#0047BA] text-xs md:text-sm font-bold uppercase tracking-widest">
+                            <div className="w-1 h-8 md:h-12 bg-white rounded-full" />
+                            <span className="text-white text-xs md:text-sm font-bold uppercase tracking-widest">
                                 {isLive ? 'LIVE' : 'VS'}
                             </span>
-                            <div className="w-1 h-8 md:h-12 bg-gradient-to-t from-[#0047BA] to-transparent rounded-full" />
+                            <div className="w-1 h-8 md:h-12 bg-white rounded-full" />
                         </div>
                         
                         <div className={`text-5xl md:text-7xl lg:text-8xl font-black tabular-nums leading-none
                             ${parseInt(homeTeam.score || 0) > parseInt(awayTeam.score || 0) 
                                 ? 'text-white' 
-                                : 'text-white/40'}`}
+                                : 'text-white/50'}`}
                             style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
                             {homeTeam.score || '0'}
                         </div>
@@ -259,23 +253,20 @@ const HolyWarDashboard = ({ game, loading }) => {
 
                     {/* Home Team */}
                     <div className="flex flex-col items-center gap-2 md:gap-3 flex-1">
-                        <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 blur-2xl rounded-full scale-150" />
-                            <img 
-                                src={homeTeam.team.logo} 
-                                alt={homeTeam.team.displayName}
-                                className="w-16 h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 object-contain relative z-10 drop-shadow-2xl"
-                            />
-                        </div>
-                        <span className="text-white/70 text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wide">
+                        <img 
+                            src={homeTeam.team.logo} 
+                            alt={homeTeam.team.displayName}
+                            className="w-16 h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 object-contain drop-shadow-2xl"
+                        />
+                        <span className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wide">
                             {homeTeam.team.abbreviation}
                         </span>
                     </div>
                 </div>
 
                 {/* Game Status Bar */}
-                <div className="border-t border-white/[0.08] px-8 md:px-12 py-5 md:py-6 flex items-center justify-center">
-                    <span className="text-[#0047BA] text-sm md:text-base lg:text-lg font-semibold uppercase tracking-[0.2em]">
+                <div className="border-t-2 border-white px-8 md:px-12 py-5 md:py-6 flex items-center justify-center">
+                    <span className="text-white text-sm md:text-base lg:text-lg font-semibold uppercase tracking-[0.2em]">
                         {isLive ? game.status.type.detail : (game.status.type.shortDetail || formatMountainTime(game.date))}
                     </span>
                 </div>
@@ -285,10 +276,10 @@ const HolyWarDashboard = ({ game, loading }) => {
             <div className="flex-grow flex gap-3 md:gap-4 lg:gap-6 min-h-0">
                 {/* Left Column: Live/Game Stats */}
                 <GlassCard className="flex-1 flex flex-col" accentTop noPadding>
-                    <div className="px-8 md:px-10 lg:px-12 pt-6 md:pt-8 pb-4 border-b border-white/[0.08]">
+                    <div className="px-8 md:px-10 lg:px-12 pt-6 md:pt-8 pb-4 border-b-2 border-white">
                         <div className="flex items-center justify-center gap-3">
                             {isLive && (
-                                <div className="w-2.5 h-2.5 bg-[#0047BA] rounded-full animate-pulse shadow-[0_0_10px_rgba(0,71,186,0.8)]" />
+                                <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
                             )}
                             <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider text-center">
                                 {isLive ? 'Live Stats' : 'Game Stats'}
@@ -305,7 +296,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             </div>
                         ) : (
                             <div className="h-full flex items-center justify-center px-8 md:px-10 lg:px-12">
-                                <span className="text-white/40 text-base md:text-lg font-medium">
+                                <span className="text-white text-base md:text-lg font-medium">
                                     {gameState === 'pre' ? 'Stats at game time' : 'Final stats'}
                                 </span>
                             </div>
@@ -314,8 +305,8 @@ const HolyWarDashboard = ({ game, loading }) => {
                 </GlassCard>
 
                 {/* Center Column: Media/Highlights */}
-                <div className="flex-1 flex flex-col overflow-hidden rounded-2xl border border-white/[0.12] shadow-[0_8px_32px_rgba(0,0,0,0.3)] shadow-[0_0_60px_rgba(0,71,186,0.15)]">
-                    <div className="px-6 md:px-8 lg:px-10 py-5 md:py-6 border-b border-white/[0.08] bg-white/[0.06] backdrop-blur-xl">
+                <div className="flex-1 flex flex-col overflow-hidden rounded-2xl border-2 border-white shadow-lg bg-[#002E5D]">
+                    <div className="px-6 md:px-8 lg:px-10 py-5 md:py-6 border-b-2 border-white">
                         <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider text-center">
                             Highlights
                         </h3>
@@ -338,16 +329,16 @@ const HolyWarDashboard = ({ game, loading }) => {
                                             className={`w-2 h-2 rounded-full transition-all duration-300
                                                 ${idx === mediaIndex 
                                                     ? 'bg-white scale-125' 
-                                                    : 'bg-white/30 hover:bg-white/50'}`}
+                                                    : 'bg-white/50'}`}
                                         />
                                     ))}
                                 </div>
                             </>
                         ) : (
-                            <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-[#002E5D] to-[#001a35]">
+                            <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#002E5D]">
                                 <div className="flex flex-col items-center gap-3">
-                                    <div className="w-12 h-12 border-2 border-[#0047BA]/40 border-t-[#0047BA] rounded-full animate-spin" />
-                                    <span className="text-white/40 text-sm font-medium">Loading media...</span>
+                                    <div className="w-12 h-12 border-2 border-white border-t-[#0047BA] rounded-full animate-spin" />
+                                    <span className="text-white text-sm font-medium">Loading media...</span>
                                 </div>
                             </div>
                         )}
@@ -356,7 +347,7 @@ const HolyWarDashboard = ({ game, loading }) => {
 
                 {/* Right Column: Season Comparison */}
                 <GlassCard className="flex-1 flex flex-col" accentTop noPadding>
-                    <div className="px-8 md:px-10 lg:px-12 pt-6 md:pt-8 pb-4 border-b border-white/[0.08]">
+                    <div className="px-8 md:px-10 lg:px-12 pt-6 md:pt-8 pb-4 border-b-2 border-white">
                         <div className="flex flex-col items-center">
                             <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider text-center">
                                 Season Stats
@@ -364,9 +355,9 @@ const HolyWarDashboard = ({ game, loading }) => {
                             {/* Stats cycle indicator */}
                             <div className="flex gap-2 mt-2">
                                 <div className={`w-2 h-2 rounded-full transition-all duration-300
-                                    ${statCycleIndex === 0 ? 'bg-[#0047BA]' : 'bg-white/20'}`} />
+                                    ${statCycleIndex === 0 ? 'bg-white' : 'bg-white/40'}`} />
                                 <div className={`w-2 h-2 rounded-full transition-all duration-300
-                                    ${statCycleIndex === 1 ? 'bg-[#0047BA]' : 'bg-white/20'}`} />
+                                    ${statCycleIndex === 1 ? 'bg-white' : 'bg-white/40'}`} />
                             </div>
                         </div>
                     </div>
@@ -374,16 +365,16 @@ const HolyWarDashboard = ({ game, loading }) => {
                         {currentSeasonStats.length > 0 ? (
                             <>
                                 {/* Team Labels Header */}
-                                <div className="flex items-center justify-between py-3 px-6 md:px-8 lg:px-10 border-b border-white/[0.15] mb-2">
-                                    <span className="text-white/40 text-xs md:text-sm font-semibold uppercase tracking-widest">
+                                <div className="flex items-center justify-between py-3 px-6 md:px-8 lg:px-10 border-b-2 border-white mb-2">
+                                    <span className="text-white text-xs md:text-sm font-semibold uppercase tracking-widest">
                                         Stat
                                     </span>
                                     <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
-                                        <span className="text-[#0047BA] text-sm md:text-base lg:text-lg font-bold uppercase tracking-wider min-w-[70px] text-center">
+                                        <span className="text-white text-sm md:text-base lg:text-lg font-bold uppercase tracking-wider min-w-[70px] text-center">
                                             BYU
                                         </span>
-                                        <div className="w-[2px] h-4 bg-white/20 rounded-full" />
-                                        <span className="text-white/60 text-sm md:text-base lg:text-lg font-bold uppercase tracking-wider min-w-[70px] text-center">
+                                        <div className="w-[2px] h-4 bg-white rounded-full" />
+                                        <span className="text-white text-sm md:text-base lg:text-lg font-bold uppercase tracking-wider min-w-[70px] text-center">
                                             UTAH
                                         </span>
                                     </div>
@@ -401,7 +392,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             </>
                         ) : (
                             <div className="h-full flex items-center justify-center px-8 md:px-10 lg:px-12">
-                                <span className="text-white/40 text-base md:text-lg font-medium">
+                                <span className="text-white text-base md:text-lg font-medium">
                                     Season data loading...
                                 </span>
                             </div>

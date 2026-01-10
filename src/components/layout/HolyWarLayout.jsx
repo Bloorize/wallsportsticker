@@ -3,67 +3,47 @@ import RivalryTicker from '../display/RivalryTicker';
 import logo from '/logo.png';
 
 /**
- * Holy War Layout - Modern Apple Glassmorphism
- * BYU Brand Colors: Navy #002E5D, Royal #0047BA, White #FFFFFF
- * NO RED COLORS
+ * Holy War Layout - Solid BYU Brand Colors
+ * Navy: #002E5D, Royal: #0047BA, White: #FFFFFF
+ * NO GRADIENTS - Solid colors only
  */
 const HolyWarLayout = ({ children }) => {
     return (
-        <div className="h-screen w-screen relative overflow-hidden">
-            {/* Dynamic gradient background - BYU themed */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#001a35] via-[#002E5D] to-[#003366]" />
-            
-            {/* Animated orbs for depth - subtle BYU blue tones */}
-            <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-[#0047BA]/20 blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
-            <div className="absolute bottom-[-30%] right-[-10%] w-[800px] h-[800px] rounded-full bg-[#0047BA]/15 blur-[150px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
-            <div className="absolute top-[40%] right-[20%] w-[400px] h-[400px] rounded-full bg-white/5 blur-[100px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '4s' }} />
-            
-            {/* Noise texture overlay for depth */}
-            <div className="absolute inset-0 opacity-[0.03]" style={{ 
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            }} />
-
+        <div className="h-screen w-screen relative overflow-hidden bg-[#002E5D]">
             {/* Main content container with safe area */}
             <div className="absolute inset-3 md:inset-4 lg:inset-6 flex flex-col z-10 overflow-hidden">
-                {/* Glass Header */}
+                {/* Header - Navy background with white text */}
                 <header className="h-20 md:h-24 lg:h-28 flex items-center justify-between px-10 md:px-14 lg:px-20 
-                    bg-white/[0.08] backdrop-blur-2xl border border-white/[0.15] rounded-2xl shadow-2xl
+                    bg-[#002E5D] border-2 border-white rounded-2xl
                     relative overflow-hidden mb-4 md:mb-5 lg:mb-6 flex-none">
-                    {/* Inner glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/[0.1] to-transparent rounded-2xl pointer-events-none" />
                     
                     <div className="flex items-center gap-6 md:gap-8 relative z-10">
-                        <div className="relative">
-                            <div className="absolute inset-0 bg-white/20 blur-xl rounded-full" />
-                            <img src={logo} alt="BYU Logo" className="h-12 md:h-16 lg:h-20 object-contain relative z-10 drop-shadow-2xl" />
-                        </div>
+                        <img src={logo} alt="BYU Logo" className="h-12 md:h-16 lg:h-20 object-contain drop-shadow-2xl" />
                         <div className="flex flex-col">
                             <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight leading-none"
-                                style={{ fontFamily: "'Inter', system-ui, sans-serif", textShadow: '0 2px 20px rgba(0,71,186,0.5)' }}>
+                                style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
                                 THE HOLY WAR
                             </h1>
-                            <p className="text-xs md:text-sm lg:text-base font-semibold text-[#0047BA] uppercase tracking-[0.3em] mt-1">
+                            <p className="text-xs md:text-sm lg:text-base font-semibold text-white uppercase tracking-[0.3em] mt-1 opacity-80">
                                 BYU vs UTAH
                             </p>
                         </div>
                     </div>
 
-                    {/* Live indicator with glow */}
+                    {/* Live indicator */}
                     <div className="hidden md:flex items-center gap-3 px-6 py-3
-                        bg-[#0047BA]/30 backdrop-blur-xl border border-[#0047BA]/50 rounded-full
-                        shadow-[0_0_30px_rgba(0,71,186,0.4)] relative z-10">
+                        bg-white border-2 border-white rounded-full relative z-10">
                         <div className="relative">
-                            <div className="w-2.5 h-2.5 bg-white rounded-full animate-ping absolute" />
-                            <div className="w-2.5 h-2.5 bg-white rounded-full relative" />
+                            <div className="w-2.5 h-2.5 bg-[#002E5D] rounded-full animate-ping absolute" />
+                            <div className="w-2.5 h-2.5 bg-[#002E5D] rounded-full relative" />
                         </div>
-                        <span className="text-sm font-bold text-white uppercase tracking-widest">LIVE</span>
+                        <span className="text-sm font-bold text-[#002E5D] uppercase tracking-widest">LIVE</span>
                     </div>
                 </header>
 
-                {/* Dashboard Content - Glass container */}
+                {/* Dashboard Content - White background */}
                 <section className="flex-grow relative overflow-hidden min-h-0 
-                    bg-white/[0.05] backdrop-blur-xl border border-white/[0.1] rounded-2xl
-                    shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                    bg-white border-2 border-white rounded-2xl">
                     <div className="absolute inset-0 overflow-hidden rounded-2xl">
                         {children}
                     </div>
