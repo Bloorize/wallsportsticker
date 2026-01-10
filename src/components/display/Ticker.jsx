@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { getLeagueLogo } from '../../utils/timeUtils';
 
 const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [], injuries: [] }, isHolyWar = false }) => {
@@ -6,7 +6,7 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
     const [displayItems, setDisplayItems] = useState([]);
 
     // MODES must be defined inside component to access isHolyWar prop
-    const MODES = React.useMemo(() => [
+    const MODES = useMemo(() => [
         { id: 'NEWS', label: 'NEWS WIRE', color: isHolyWar ? 'bg-[#002E5D]' : 'bg-slate-800' },
         { id: 'TRANS', label: 'TRANSACTIONS', color: isHolyWar ? 'bg-[#003a9e]' : 'bg-red-700' },
         { id: 'INJURY', label: 'INJURY REPORT', color: isHolyWar ? 'bg-[#002E5D]' : 'bg-red-800' },
