@@ -1,6 +1,7 @@
 import React from 'react';
 import RivalryTicker from '../display/RivalryTicker';
 import logo from '/logo.png';
+import holyWarLogo from '/holywar.png';
 
 /**
  * Holy War Layout - Floating logo, minimal header
@@ -14,6 +15,15 @@ const HolyWarLayout = ({ children }) => {
                 <img 
                     src={logo} 
                     alt="Wall Sports Logo" 
+                    className="h-20 md:h-24 lg:h-28 object-contain drop-shadow-2xl"
+                />
+            </div>
+
+            {/* Floating Holy War Logo - BIG, top right, z-50 */}
+            <div className="absolute top-4 right-4 md:top-6 md:right-6 z-50">
+                <img 
+                    src={holyWarLogo} 
+                    alt="Holy War Logo" 
                     className="h-20 md:h-24 lg:h-28 object-contain drop-shadow-2xl"
                 />
             </div>
