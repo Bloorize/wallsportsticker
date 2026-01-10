@@ -32,10 +32,10 @@ const GlassCard = ({ children, className = '', glow = false, accentTop = false, 
     </div>
 );
 
-// Stat Row Component
+// Stat Row Component - with explicit padding to prevent edge touching
 const StatRow = ({ label, awayValue, homeValue, highlight = false }) => (
     <div className={`
-        flex items-center justify-between py-4 md:py-5
+        flex items-center justify-between py-4 md:py-5 px-6 md:px-8 lg:px-10
         ${highlight ? 'bg-[#0047BA]/20 rounded-xl' : 'border-b border-white/[0.08] last:border-0'}
         transition-all duration-300 hover:bg-white/[0.05] rounded-lg
     `}>
@@ -289,7 +289,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             </h3>
                         </div>
                     </div>
-                    <div className="flex-grow px-8 md:px-10 lg:px-12 py-4 md:py-6">
+                    <div className="flex-grow py-4 md:py-6">
                         {isLive && liveStats ? (
                             <div className="space-y-2">
                                 <StatRow label="FG %" awayValue={`${liveStats.away.fgPct}%`} homeValue={`${liveStats.home.fgPct}%`} />
@@ -298,7 +298,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 <StatRow label="AST" awayValue={liveStats.away.ast} homeValue={liveStats.home.ast} />
                             </div>
                         ) : (
-                            <div className="h-full flex items-center justify-center">
+                            <div className="h-full flex items-center justify-center px-8 md:px-10 lg:px-12">
                                 <span className="text-white/40 text-base md:text-lg font-medium">
                                     {gameState === 'pre' ? 'Stats at game time' : 'Final stats'}
                                 </span>
@@ -367,7 +367,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-grow px-8 md:px-10 lg:px-12 py-4 md:py-6">
+                    <div className="flex-grow py-4 md:py-6">
                         {currentSeasonStats.length > 0 ? (
                             <div className="space-y-2">
                                 {currentSeasonStats.map((row, i) => (
@@ -380,7 +380,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="h-full flex items-center justify-center">
+                            <div className="h-full flex items-center justify-center px-8 md:px-10 lg:px-12">
                                 <span className="text-white/40 text-base md:text-lg font-medium">
                                     Season data loading...
                                 </span>
