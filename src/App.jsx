@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import GlassLayout from './components/layout/GlassLayout'
 import Dashboard from './components/display/Dashboard'
 import HolyWar from './pages/HolyWar'
@@ -216,7 +216,7 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <Router basename="/wallsportsticker">
       <Routes>
         <Route path="/holywar" element={<HolyWar />} />
         <Route path="/" element={
