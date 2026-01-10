@@ -3,56 +3,43 @@ import RivalryTicker from '../display/RivalryTicker';
 import logo from '/logo.png';
 
 /**
- * Holy War Layout - Solid BYU Brand Colors
- * Navy: #002E5D, Royal: #0047BA, White: #FFFFFF
- * NO GRADIENTS - Solid colors only
+ * Holy War Layout - ESPN-inspired clean design
+ * BYU Colors: Navy #002E5D
  */
 const HolyWarLayout = ({ children }) => {
     return (
-        <div className="h-screen w-screen relative overflow-hidden bg-[#002E5D]">
-            {/* Main content container with safe area */}
-            <div className="absolute inset-3 md:inset-4 lg:inset-6 flex flex-col z-10 overflow-hidden">
-                {/* Header - Refined borders */}
-                <header className="h-20 md:h-24 lg:h-28 flex items-center justify-between px-10 md:px-14 lg:px-20 
-                    bg-[#002E5D] border border-white/30 rounded-3xl shadow-xl
-                    relative overflow-hidden mb-4 md:mb-5 lg:mb-6 flex-none">
-                    
-                    <div className="flex items-center gap-6 md:gap-8 relative z-10">
-                        <img src={logo} alt="BYU Logo" className="h-12 md:h-16 lg:h-20 object-contain drop-shadow-2xl" />
-                        <div className="flex flex-col">
-                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight leading-none"
-                                style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-                                THE HOLY WAR
-                            </h1>
-                            <p className="text-xs md:text-sm lg:text-base font-semibold text-white uppercase tracking-[0.3em] mt-1 opacity-70">
-                                BYU vs UTAH
-                            </p>
-                        </div>
+        <div className="h-screen w-screen flex flex-col bg-[#002E5D] overflow-hidden">
+            {/* Header - ESPN style thin bar */}
+            <header className="flex-none h-14 md:h-16 flex items-center justify-between px-4 md:px-6 
+                bg-[#001a3d] border-b border-white/10">
+                
+                <div className="flex items-center gap-4">
+                    <img src={logo} alt="BYU Logo" className="h-8 md:h-10 object-contain" />
+                    <div className="flex flex-col">
+                        <h1 className="text-base md:text-lg font-black text-white uppercase tracking-tight leading-none">
+                            THE HOLY WAR
+                        </h1>
+                        <p className="text-[10px] md:text-xs font-medium text-white/60 uppercase tracking-wider">
+                            BYU vs UTAH
+                        </p>
                     </div>
-
-                    {/* Live indicator */}
-                    <div className="hidden md:flex items-center gap-3 px-6 py-3
-                        bg-white border border-white/30 rounded-full relative z-10 shadow-lg">
-                        <div className="relative">
-                            <div className="w-2.5 h-2.5 bg-[#002E5D] rounded-full animate-ping absolute" />
-                            <div className="w-2.5 h-2.5 bg-[#002E5D] rounded-full relative" />
-                        </div>
-                        <span className="text-sm font-bold text-[#002E5D] uppercase tracking-widest">LIVE</span>
-                    </div>
-                </header>
-
-                {/* Dashboard Content - Navy background, consistent */}
-                <section className="flex-grow relative overflow-hidden min-h-0 
-                    bg-[#002E5D] border-2 border-white/30 rounded-2xl shadow-2xl">
-                    <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                        {children}
-                    </div>
-                </section>
-
-                {/* Rivalry Ticker */}
-                <div className="flex-none mt-6 md:mt-8 lg:mt-10">
-                    <RivalryTicker />
                 </div>
+
+                {/* Live indicator - ESPN style */}
+                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                    <span className="text-xs font-bold text-white uppercase tracking-wide">LIVE</span>
+                </div>
+            </header>
+
+            {/* Dashboard Content - Full width, no borders */}
+            <section className="flex-grow overflow-hidden bg-[#002E5D]">
+                {children}
+            </section>
+
+            {/* Rivalry Ticker - ESPN style thin bar */}
+            <div className="flex-none">
+                <RivalryTicker />
             </div>
         </div>
     );
