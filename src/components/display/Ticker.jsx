@@ -86,14 +86,14 @@ const Ticker = ({ filter, games = [], tickerData = { news: [], transactions: [],
             setDisplayItems(items.slice(0, 20));
         };
         updateDisplay();
-    }, [modeIndex, filter, tickerData, games]);
+    }, [modeIndex, filter, tickerData, games, MODES]);
 
     useEffect(() => {
         const interval = setInterval(() => {
             setModeIndex(prev => (prev + 1) % MODES.length);
         }, 30000);
         return () => clearInterval(interval);
-    }, []);
+    }, [MODES.length]);
 
     useEffect(() => {
         if (!displayItems.length) {
