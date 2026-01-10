@@ -1,12 +1,13 @@
 import React from 'react';
-import Ticker from '../display/Ticker';
+import RivalryTicker from '../display/RivalryTicker';
 import logo from '/logo.png';
 
 /**
  * Holy War Layout - BYU Brand Colors
  * Navy: #002E5D, Royal: #0047BA, White: #FFFFFF
+ * NO RED COLORS
  */
-const HolyWarLayout = ({ children, filter, games, tickerData }) => {
+const HolyWarLayout = ({ children }) => {
     return (
         <div className="h-screen w-screen relative overflow-hidden bg-white">
             {/* BYU Royal accent lines - No gradients */}
@@ -43,9 +44,9 @@ const HolyWarLayout = ({ children, filter, games, tickerData }) => {
                         </div>
                     </section>
 
-                    {/* Ticker anchored at bottom - BYU styled light */}
-                    <div className="flex-none p-2 md:p-3 lg:p-4 border-t-2 border-[#0047BA] bg-white">
-                        <Ticker filter={filter} games={games} tickerData={tickerData} isHolyWar={true} />
+                    {/* Rivalry Ticker anchored at bottom */}
+                    <div className="flex-none">
+                        <RivalryTicker />
                     </div>
                 </div>
             </div>
