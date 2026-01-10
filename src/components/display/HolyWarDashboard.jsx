@@ -226,8 +226,10 @@ const HolyWarDashboard = ({ game, loading }) => {
                 if (configuredVideoIds.length > 0) {
                     // Use configured video IDs
                     const configuredVids = await getVideosByIds(configuredVideoIds);
-                    const embeddableVids = configuredVids.filter(v => v.embeddable);
-                    setHighlights(embeddableVids);
+                    console.log('Fetched configured videos:', configuredVids);
+                    // Don't filter by embeddable - use all videos (they should all be embeddable)
+                    setHighlights(configuredVids.length > 0 ? configuredVids : []);
+                    console.log('Set highlights:', configuredVids.length > 0 ? configuredVids : []);
                     return;
                 }
                 
@@ -556,20 +558,20 @@ const HolyWarDashboard = ({ game, loading }) => {
                                         id="holy-war-video-player" 
                                         className="w-full h-full absolute inset-0"
                                         style={{ 
-                                            display: (typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady) ? 'block' : 'none',
+                                            display: (typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady && playerRef.current) ? 'block' : 'none',
                                             zIndex: 10
                                         }}
                                     ></div>
                                     {/* Fallback iframe - show when API not available or not ready */}
                                     <iframe
-                                        key={`fallback-${highlights[mediaIndex].videoId}`}
+                                        key={`fallback-${highlights[mediaIndex].videoId}-${mediaIndex}`}
                                         className="w-full h-full absolute inset-0"
                                         style={{
-                                            display: (typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady) ? 'none' : 'block',
+                                            display: (typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' && playerReady && playerRef.current) ? 'none' : 'block',
                                             zIndex: 5
                                         }}
                                         src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0`}
-                                        title={highlights[mediaIndex].title}
+                                        title={highlights[mediaIndex].title || 'Video'}
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
                                     />
