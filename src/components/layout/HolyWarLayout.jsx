@@ -38,11 +38,23 @@ const HolyWarLayout = ({ children }) => {
                             <img src={logo} alt="BYU Logo" className="h-12 md:h-16 lg:h-20 object-contain relative z-10 drop-shadow-2xl" />
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight leading-none"
-                                style={{ fontFamily: "'Inter', system-ui, sans-serif", textShadow: '0 2px 20px rgba(0,71,186,0.5)' }}>
+                            <h1 className="text-white uppercase leading-none"
+                                style={{ 
+                                    fontFamily: "'IBM Plex Sans', sans-serif",
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    letterSpacing: '0.08em',
+                                    textShadow: '0 2px 20px rgba(0,71,186,0.5)'
+                                }}>
                                 THE HOLY WAR
                             </h1>
-                            <p className="text-xs md:text-sm lg:text-base font-semibold text-[#0047BA] uppercase tracking-[0.3em] mt-1">
+                            <p className="text-[#0047BA] uppercase mt-1"
+                                style={{ 
+                                    fontFamily: "'IBM Plex Sans', sans-serif",
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    letterSpacing: '0.08em'
+                                }}>
                                 BYU vs UTAH
                             </p>
                         </div>
@@ -56,7 +68,15 @@ const HolyWarLayout = ({ children }) => {
                             <div className="w-2.5 h-2.5 bg-white rounded-full animate-ping absolute" />
                             <div className="w-2.5 h-2.5 bg-white rounded-full relative" />
                         </div>
-                        <span className="text-sm font-bold text-white uppercase tracking-widest">LIVE</span>
+                        <span className="text-white uppercase"
+                            style={{ 
+                                fontFamily: "'IBM Plex Sans', sans-serif",
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                letterSpacing: '0.05em'
+                            }}>
+                            LIVE
+                        </span>
                     </div>
                 </header>
 

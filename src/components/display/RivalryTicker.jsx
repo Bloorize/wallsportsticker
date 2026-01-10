@@ -31,10 +31,22 @@ const RivalryTicker = () => {
             <div className="h-full px-10 md:px-12 lg:px-14 flex flex-col justify-center items-center 
                 bg-[#0047BA]/40 backdrop-blur-xl border-r border-white/[0.1]
                 min-w-[200px] md:min-w-[240px] lg:min-w-[280px] relative z-20">
-                <span className="text-[9px] md:text-[10px] lg:text-xs text-white/60 font-semibold uppercase tracking-[0.4em]">
+                <span className="text-white/60 uppercase"
+                    style={{ 
+                        fontFamily: "'IBM Plex Sans', sans-serif",
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        letterSpacing: '0.12em'
+                    }}>
                     RIVALRY
                 </span>
-                <span className="text-lg md:text-xl lg:text-2xl font-black text-white uppercase tracking-tight leading-none mt-1">
+                <span className="text-white uppercase leading-none mt-1"
+                    style={{ 
+                        fontFamily: "'IBM Plex Sans', sans-serif",
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        letterSpacing: '0.12em'
+                    }}>
                     HOLY WAR
                 </span>
             </div>
@@ -51,7 +63,12 @@ const RivalryTicker = () => {
                             <div className="flex items-center gap-6">
                                 {/* Decorative dot */}
                                 <div className="w-2 h-2 rounded-full bg-[#0047BA] shadow-[0_0_10px_rgba(0,71,186,0.8)]" />
-                                <span className="font-semibold text-white/90 text-sm md:text-lg lg:text-xl tracking-wide">
+                                <span className="text-white/90"
+                                    style={{ 
+                                        fontFamily: "'IBM Plex Sans', sans-serif",
+                                        fontSize: '13px',
+                                        fontWeight: 400
+                                    }}>
                                     {item}
                                 </span>
                             </div>
