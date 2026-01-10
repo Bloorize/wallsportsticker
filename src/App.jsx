@@ -219,7 +219,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/holywar" element={<HolyWar />} />
-        <Route path="/#/holywar" element={<HolyWar />} />
         <Route path="/" element={
           <GlassLayout filter={filter} games={allGames} tickerData={tickerData}>
             <Dashboard
