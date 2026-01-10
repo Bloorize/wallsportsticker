@@ -50,6 +50,13 @@ export const RIVALRY_DATA = {
     mensBasketball: {
         title: "Men's Basketball Rivalry Stats",
         intro: "BYU leads all-time 135-131, with a 10-4 edge since 2006. In 2025-26, BYU is 14-1 (No. 9 ranked) vs Utah's 8-7, on an 11-game win streak entering January 10, 2026 rivalry game (BYU favored by 14 points, 89% win probability). BYU has more modern top rankings and Elite Eight runs.",
+        // Optional: Specify specific YouTube video IDs to play (in order)
+        // Leave empty array [] to use automatic search instead
+        videoIds: [
+            // Example format - add your video IDs here:
+            // 'dQw4w9WgXcQ',  // Replace with actual BYU vs Utah highlight video IDs
+            // 'jNQXAC9IVRw',  // Add more video IDs as needed
+        ],
         seriesBreakdown: {
             title: "Series Breakdown (Favoring BYU)",
             headers: ["Category", "BYU Wins", "Utah Wins", "Notes"],

@@ -107,6 +107,61 @@ export const getVideoDetails = async (videoId) => {
 };
 
 /**
+ * Get video details for multiple video IDs (batch)
+ * @param {string[]} videoIds - Array of YouTube video IDs
+ * @returns {Promise<Object[]>} Array of video details
+ */
+export const getVideosByIds = async (videoIds) => {
+    if (!YOUTUBE_API_KEY || !videoIds || videoIds.length === 0) {
+        return [];
+    }
+
+    try {
+        // YouTube API allows up to 50 IDs per request
+        const batchSize = 50;
+        const allVideos = [];
+
+        for (let i = 0; i < videoIds.length; i += batchSize) {
+            const batch = videoIds.slice(i, i + batchSize);
+            const params = new URLSearchParams({
+                part: 'snippet,status',
+                id: batch.join(','),
+                key: YOUTUBE_API_KEY,
+            });
+
+            const response = await fetch(`${YOUTUBE_API_BASE}/videos?${params.toString()}`);
+            
+            if (!response.ok) {
+                throw new Error(`YouTube API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.error || !data.items?.length) {
+                continue;
+            }
+
+            const videos = data.items.map(item => ({
+                videoId: item.id,
+                title: item.snippet.title,
+                description: item.snippet.description,
+                thumbnail: item.snippet.thumbnails.high?.url || item.snippet.thumbnails.default?.url,
+                channelTitle: item.snippet.channelTitle,
+                publishedAt: item.snippet.publishedAt,
+                embeddable: item.status.embeddable, // Check if we can play it
+            }));
+
+            allVideos.push(...videos);
+        }
+
+        return allVideos;
+    } catch (error) {
+        console.error('Error fetching YouTube videos by IDs:', error);
+        return [];
+    }
+};
+
+/**
  * Search for game highlights with caching
  * @param {string} team1 - First team name
  * @param {string} team2 - Second team name

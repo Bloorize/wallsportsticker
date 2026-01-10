@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { formatMountainTime } from '../../utils/timeUtils';
-import { searchGameHighlights, searchHighlights } from '../../services/youtube';
+import { searchGameHighlights, searchHighlights, getVideosByIds } from '../../services/youtube';
 import { getGameSummary } from '../../services/espn';
 import { RIVALRY_DATA } from '../../config/rivalryData';
 
@@ -218,6 +218,18 @@ const HolyWarDashboard = ({ game, loading }) => {
 
         const fetchMedia = async () => {
             try {
+                // Check if specific video IDs are configured
+                const configuredVideoIds = RIVALRY_DATA.mensBasketball?.videoIds || [];
+                
+                if (configuredVideoIds.length > 0) {
+                    // Use configured video IDs
+                    const configuredVids = await getVideosByIds(configuredVideoIds);
+                    const embeddableVids = configuredVids.filter(v => v.embeddable);
+                    setHighlights(embeddableVids);
+                    return;
+                }
+                
+                // Otherwise, use automatic search
                 const rivalryQueries = [
                     'BYU Utah Holy War basketball highlights',
                     'BYU vs Utah basketball rivalry',
@@ -438,13 +450,16 @@ const HolyWarDashboard = ({ game, loading }) => {
                                         allowFullScreen
                                     />
                                 </div>
-                                {/* Video indicator dots */}
+                                {/* Video indicator dots - Clickable for manual selection */}
                                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                                     {highlights.map((_, idx) => (
-                                        <div 
+                                        <button
                                             key={idx}
-                                            className={`w-2 h-2 rounded-full transition-all
-                                                ${idx === mediaIndex ? 'bg-white w-2.5 h-2.5 shadow-lg' : 'bg-white/50'}`}
+                                            onClick={() => setMediaIndex(idx)}
+                                            className={`w-2 h-2 rounded-full transition-all cursor-pointer hover:scale-125
+                                                ${idx === mediaIndex ? 'bg-white w-2.5 h-2.5 shadow-lg' : 'bg-white/50 hover:bg-white/70'}`}
+                                            title={highlights[idx]?.title || `Video ${idx + 1}`}
+                                            aria-label={`Select video ${idx + 1}`}
                                         />
                                     ))}
                                 </div>
