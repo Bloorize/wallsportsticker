@@ -35,8 +35,11 @@ const Dashboard = ({ filter, onFilterChange, allGames, loading }) => {
         } else {
             setFilteredGames(allGames.filter(g => g._category === filter));
         }
-        setSpotlightIndex(0);
-    }, [filter, allGames]);
+        // Only reset spotlight index if not paused and games actually changed
+        if (!isPaused) {
+            setSpotlightIndex(0);
+        }
+    }, [filter, allGames, isPaused]);
 
     // Update rotation timing to 10 seconds (10000ms)
     useEffect(() => {

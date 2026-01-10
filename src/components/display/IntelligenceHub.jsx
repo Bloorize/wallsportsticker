@@ -5,6 +5,7 @@ import { getChannelId } from '../../config/youtubeChannels';
 import OddsComparison from './OddsComparison';
 import { getWeather, getWeatherIconUrl, formatWindDirection } from '../../services/weather';
 import { getVenueCoordinates, isOutdoorSport } from '../../utils/venueCoordinates';
+import { getRivalryData } from '../../config/rivalryData';
 
 const FieldVisualization = ({ game, gameState }) => {
     // Only show field visualization for live games
@@ -130,11 +131,9 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
                 const team1Abbr = competitors[0].team?.abbreviation || '';
                 const team2Abbr = competitors[1].team?.abbreviation || '';
                 
-                // Special handling for BYU vs Utah rivalry
-                const isBYUUtahRivalry = (
-                    (team1Abbr === 'BYU' && team2Abbr === 'UTAH') ||
-                    (team1Abbr === 'UTAH' && team2Abbr === 'BYU')
-                );
+                // Check for special rivalry matchup
+                const rivalryData = getRivalryData(team1Abbr, team2Abbr);
+                const isBYUUtahRivalry = rivalryData !== null;
 
                 // 1. Fetch Highlights (Smart Check)
                 let youtubeResults = [];
@@ -165,16 +164,10 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
                 // 2. Fetch Media Gallery (Photos)
                 const mediaItems = [];
 
-                // Special BYU vs Utah rivalry content
-                if (isBYUUtahRivalry) {
-                    // Add hardcoded rivalry-specific YouTube searches
-                    const rivalrySearches = [
-                        'BYU Utah basketball rivalry moments',
-                        'BYU Utah Holy War basketball',
-                        'BYU vs Utah highlights'
-                    ];
-                    
-                    for (const searchQuery of rivalrySearches) {
+                // Special rivalry content
+                if (isBYUUtahRivalry && rivalryData) {
+                    // Use rivalry-specific YouTube queries
+                    for (const searchQuery of rivalryData.youtubeQueries) {
                         const results = await searchHighlights(searchQuery, null);
                         if (results && results.length > 0) {
                             results.forEach(vid => {
@@ -525,6 +518,12 @@ const IntelligenceHub = ({ game }) => {
     const situation = competition.situation;
     const gameState = game.status?.type?.state; // 'pre', 'in', 'post'
     
+    // Check for rivalry matchup
+    const competitors = competition.competitors || [];
+    const team1Abbr = competitors[0]?.team?.abbreviation || '';
+    const team2Abbr = competitors[1]?.team?.abbreviation || '';
+    const rivalryData = getRivalryData(team1Abbr, team2Abbr);
+    
     // Get stats based on game state
     const getStats = () => {
         const stats = [];
@@ -560,33 +559,54 @@ const IntelligenceHub = ({ game }) => {
                 };
                 stats.push(processedCat);
             });
-        } else if (gameState === 'pre') {
-            // Fallback: Show team records/rankings for upcoming games without leaders
-            // Only show once per team, avoid duplicates
-            const seenTeams = new Set();
-            competition.competitors?.forEach(competitor => {
-                const team = competitor.team;
-                if (seenTeams.has(team.id)) return; // Skip duplicates
-                seenTeams.add(team.id);
-                
-                const record = competitor.records?.[0]?.summary || 'N/A';
-                const rank = team.rank || null;
-                
-                stats.push({
-                    name: 'teamRecord',
-                    displayName: rank ? `#${rank} ${team.displayName}` : team.displayName,
-                    isTeamRecord: true,
-                    leaders: [{
-                        athlete: {
-                            displayName: team.displayName,
-                            headshot: null
-                        },
-                        team: team,
-                        displayValue: record,
-                        value: record
-                    }]
+        } else if (gameState === 'pre' && stats.length === 0) {
+            // Special rivalry historic stats
+            if (rivalryData && rivalryData.historicStats) {
+                rivalryData.historicStats.forEach((stat, idx) => {
+                    stats.push({
+                        name: `rivalry_${idx}`,
+                        displayName: stat.label,
+                        isRivalryStat: true,
+                        leaders: [{
+                            athlete: {
+                                displayName: stat.value,
+                                headshot: null
+                            },
+                            team: { abbreviation: 'HISTORY' },
+                            displayValue: stat.value,
+                            value: stat.value,
+                            description: stat.description
+                        }]
+                    });
                 });
-            });
+            } else {
+                // Fallback: Show team records/rankings for upcoming games without leaders
+                // Only show once per team, avoid duplicates
+                const seenTeams = new Set();
+                competition.competitors?.forEach(competitor => {
+                    const team = competitor.team;
+                    if (!team || seenTeams.has(team.id)) return; // Skip duplicates and null teams
+                    seenTeams.add(team.id);
+                    
+                    const record = competitor.records?.[0]?.summary || 'N/A';
+                    const rank = team.rank || null;
+                    
+                    stats.push({
+                        name: `teamRecord_${team.id}`,
+                        displayName: rank ? `#${rank} ${team.displayName}` : team.displayName,
+                        isTeamRecord: true,
+                        leaders: [{
+                            athlete: {
+                                displayName: team.displayName,
+                                headshot: null
+                            },
+                            team: team,
+                            displayValue: record,
+                            value: record
+                        }]
+                    });
+                });
+            }
         }
 
         // 2. Add Box Score Stats if available (from fullSummary)
@@ -767,8 +787,17 @@ const IntelligenceHub = ({ game }) => {
                 <section className="space-y-4 md:space-y-5">
                     <div className="flex items-center gap-2 md:gap-3 border-l-4 border-white/40 pl-3 md:pl-4 lg:pl-5 mb-2">
                         <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">
-                            {gameState === 'in' ? 'Live Game Stats' : gameState === 'pre' ? (displayStats.some(s => s.isTeamRecord) ? 'Team Records' : 'Season Leaders') : 'Final Stats'}
+                            {rivalryData && rivalryData.specialContent?.header ? (
+                                <span className="text-red-600">{rivalryData.specialContent.header}</span>
+                            ) : (
+                                gameState === 'in' ? 'Live Game Stats' : gameState === 'pre' ? (displayStats.some(s => s.isTeamRecord) ? 'Team Records' : (displayStats.some(s => s.isRivalryStat) ? 'Rivalry History' : 'Season Leaders')) : 'Final Stats'
+                            )}
                         </h3>
+                        {rivalryData && rivalryData.specialContent?.subtitle && (
+                            <span className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest ml-2">
+                                {rivalryData.specialContent.subtitle}
+                            </span>
+                        )}
                     </div>
 
                     {displayStats.length > 0 ? (
@@ -789,13 +818,18 @@ const IntelligenceHub = ({ game }) => {
                                             <div className="text-sm md:text-base font-black text-white uppercase tracking-tighter truncate">
                                                 {cat.isTeamStat ? (cat.leaders?.[0]?.team?.displayName || 'TEAM') : (cat.leaders?.[0]?.athlete?.displayName || 'N/A')}
                                             </div>
+                                            {cat.leaders?.[0]?.description && (
+                                                <div className="text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-tight mt-1 line-clamp-1">
+                                                    {cat.leaders[0].description}
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="flex flex-col items-end gap-1 md:gap-2 flex-shrink-0">
                                             <div className="text-xl md:text-2xl font-mono font-black text-white tabular-nums">
                                                 {cat.leaders?.[0]?.displayValue || '0'}
                                             </div>
                                             <div className="text-[7px] md:text-[8px] font-bold text-white/20 uppercase tracking-widest">
-                                                {gameState === 'in' ? 'Game' : 'Season'}
+                                                {cat.isRivalryStat ? 'HISTORY' : (gameState === 'in' ? 'Game' : 'Season')}
                                             </div>
                                         </div>
                                     </div>
