@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { formatMountainDateTime, formatMountainTime } from '../../utils/timeUtils';
-import { searchGameHighlights } from '../../services/youtube';
+import { searchGameHighlights, searchHighlights } from '../../services/youtube';
 import { getChannelId } from '../../config/youtubeChannels';
 import OddsComparison from './OddsComparison';
 import { getWeather, getWeatherIconUrl, formatWindDirection } from '../../services/weather';
@@ -125,19 +125,71 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
 
             setLoading(true);
             try {
-                // 1. Fetch Highlights (Smart Check)
                 const team1 = competitors[0].team?.displayName || '';
                 const team2 = competitors[1].team?.displayName || '';
-                const gameDate = gameState === 'post' ? (game.date ? new Date(game.date).toISOString().split('T')[0] : '') : '';
-                const channelId = getChannelId(category);
+                const team1Abbr = competitors[0].team?.abbreviation || '';
+                const team2Abbr = competitors[1].team?.abbreviation || '';
+                
+                // Special handling for BYU vs Utah rivalry
+                const isBYUUtahRivalry = (
+                    (team1Abbr === 'BYU' && team2Abbr === 'UTAH') ||
+                    (team1Abbr === 'UTAH' && team2Abbr === 'BYU')
+                );
 
-                const youtubeResults = await searchGameHighlights(team1, team2, gameDate, channelId);
+                // 1. Fetch Highlights (Smart Check)
+                let youtubeResults = [];
+                if (isBYUUtahRivalry) {
+                    // Special rivalry search - look for "BYU Utah rivalry" or "Holy War"
+                    const rivalryQueries = [
+                        `${team1} vs ${team2} rivalry highlights`,
+                        `${team1} ${team2} Holy War`,
+                        `BYU Utah basketball rivalry`
+                    ];
+                    for (const query of rivalryQueries) {
+                        const results = await searchHighlights(query, null);
+                        if (results && results.length > 0) {
+                            youtubeResults = results;
+                            break;
+                        }
+                    }
+                } else {
+                    const gameDate = gameState === 'post' ? (game.date ? new Date(game.date).toISOString().split('T')[0] : '') : '';
+                    const channelId = getChannelId(category);
+                    youtubeResults = await searchGameHighlights(team1, team2, gameDate, channelId);
+                }
+                
                 // Only keep highlights that are explicitly embeddable
                 const playable = youtubeResults?.filter(vid => vid.embeddable) || [];
                 setHighlights(playable.slice(0, 1)); // Only show the top 1 highlight
 
                 // 2. Fetch Media Gallery (Photos)
                 const mediaItems = [];
+
+                // Special BYU vs Utah rivalry content
+                if (isBYUUtahRivalry) {
+                    // Add hardcoded rivalry-specific YouTube searches
+                    const rivalrySearches = [
+                        'BYU Utah basketball rivalry moments',
+                        'BYU Utah Holy War basketball',
+                        'BYU vs Utah highlights'
+                    ];
+                    
+                    for (const searchQuery of rivalrySearches) {
+                        const results = await searchHighlights(searchQuery, null);
+                        if (results && results.length > 0) {
+                            results.forEach(vid => {
+                                if (vid.thumbnail) {
+                                    mediaItems.push({
+                                        url: vid.thumbnail,
+                                        title: vid.title,
+                                        type: 'RIVALRY',
+                                        videoId: vid.videoId
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
 
                 // Venue Photos
                 const summary = await getGameSummary(path.s, path.l, game.id);
@@ -234,21 +286,40 @@ const IntelligenceMedia = ({ game, gameState, cycleIndex = 0 }) => {
                             </span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {displayedMedia.map((item, index) => (
-                                <div key={index} className="relative aspect-video bg-white/5 border border-white/8 rounded-xl overflow-hidden group">
-                                    <img 
-                                        src={item.url} 
-                                        alt={item.title}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2.5 md:p-3">
-                                        <span className="text-[7px] md:text-[8px] font-black text-red-500 uppercase tracking-[0.2em] mb-1">{item.type}</span>
-                                        <p className="text-[9px] md:text-[10px] font-black text-white line-clamp-2 uppercase leading-tight tracking-tighter">
-                                            {item.title}
-                                        </p>
+                            {displayedMedia.map((item, index) => {
+                                const content = (
+                                    <div className="relative aspect-video bg-white/5 border border-white/8 rounded-xl overflow-hidden group">
+                                        <img 
+                                            src={item.url} 
+                                            alt={item.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2.5 md:p-3">
+                                            <span className="text-[7px] md:text-[8px] font-black text-red-500 uppercase tracking-[0.2em] mb-1">{item.type}</span>
+                                            <p className="text-[9px] md:text-[10px] font-black text-white line-clamp-2 uppercase leading-tight tracking-tighter">
+                                                {item.title}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                                
+                                // If it's a rivalry video thumbnail, make it clickable
+                                if (item.videoId) {
+                                    return (
+                                        <a
+                                            key={index}
+                                            href={`https://www.youtube.com/watch?v=${item.videoId}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block"
+                                        >
+                                            {content}
+                                        </a>
+                                    );
+                                }
+                                
+                                return <div key={index}>{content}</div>;
+                            })}
                         </div>
                     </section>
                 )
@@ -435,10 +506,10 @@ const IntelligenceHub = ({ game }) => {
         };
         fetchSummary();
         
-        // If game is live, refetch every 30 seconds for updated stats
+        // If game is live, refetch every 2 minutes for updated stats (reduced from 30s to prevent flicker)
         const gameState = game.status?.type?.state;
         if (gameState === 'in') {
-            const interval = setInterval(fetchSummary, 30000);
+            const interval = setInterval(fetchSummary, 120000);
             return () => clearInterval(interval);
         }
     }, [game, game?.status?.type?.state]);
@@ -492,14 +563,20 @@ const IntelligenceHub = ({ game }) => {
             });
         } else if (gameState === 'pre') {
             // Fallback: Show team records/rankings for upcoming games without leaders
+            // Only show once per team, avoid duplicates
+            const seenTeams = new Set();
             competition.competitors?.forEach(competitor => {
                 const team = competitor.team;
+                if (seenTeams.has(team.id)) return; // Skip duplicates
+                seenTeams.add(team.id);
+                
                 const record = competitor.records?.[0]?.summary || 'N/A';
                 const rank = team.rank || null;
                 
                 stats.push({
                     name: 'teamRecord',
                     displayName: rank ? `#${rank} ${team.displayName}` : team.displayName,
+                    isTeamRecord: true,
                     leaders: [{
                         athlete: {
                             displayName: team.displayName,
@@ -691,7 +768,7 @@ const IntelligenceHub = ({ game }) => {
                 <section className="space-y-4 md:space-y-5">
                     <div className="flex items-center gap-2 md:gap-3 border-l-4 border-white/40 pl-3 md:pl-4 lg:pl-5 mb-2">
                         <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">
-                            {gameState === 'in' ? 'Live Game Stats' : gameState === 'pre' ? 'Season Leaders' : 'Final Stats'}
+                            {gameState === 'in' ? 'Live Game Stats' : gameState === 'pre' ? (displayStats.some(s => s.isTeamRecord) ? 'Team Records' : 'Season Leaders') : 'Final Stats'}
                         </h3>
                     </div>
 

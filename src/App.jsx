@@ -208,7 +208,8 @@ function App() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 60000);
+    // Refresh every 5 minutes instead of 60 seconds to reduce flicker
+    const interval = setInterval(fetchData, 300000);
     return () => clearInterval(interval);
   }, []);
 
