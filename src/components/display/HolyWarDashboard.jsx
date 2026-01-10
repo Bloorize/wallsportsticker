@@ -324,6 +324,14 @@ const HolyWarDashboard = ({ game, loading }) => {
     useEffect(() => {
         if (highlights.length === 0) return;
 
+        // Check if YouTube API is available (may not be on some smart TVs)
+        if (typeof window === 'undefined' || typeof window.YT === 'undefined' || typeof window.YT.Player === 'undefined') {
+            // Use fallback iframe - videos won't auto-advance but will play
+            console.warn('YouTube IFrame API not available, using fallback iframe');
+            setPlayerReady(true);
+            return;
+        }
+
         let retryCount = 0;
         const maxRetries = 50; // 5 seconds max wait
 
@@ -336,7 +344,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                     setTimeout(initPlayer, 100);
                 } else {
                     // Fallback: YouTube API not available, use simple iframe
-                    console.warn('YouTube IFrame API not available, using fallback iframe');
+                    console.warn('YouTube IFrame API not available after retries, using fallback iframe');
                     setPlayerReady(true); // Allow fallback to render
                 }
                 return;
@@ -524,9 +532,20 @@ const HolyWarDashboard = ({ game, loading }) => {
                     <div className="flex-1 bg-[#001428] rounded-lg overflow-hidden shadow-2xl relative">
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
-                                {/* 16:9 aspect ratio container - YouTube IFrame API Player */}
+                                {/* 16:9 aspect ratio container - YouTube IFrame API Player or Fallback */}
                                 <div className="aspect-video w-full">
-                                    <div id="holy-war-video-player" className="w-full h-full"></div>
+                                    {typeof window !== 'undefined' && typeof window.YT !== 'undefined' && typeof window.YT.Player !== 'undefined' ? (
+                                        <div id="holy-war-video-player" className="w-full h-full"></div>
+                                    ) : (
+                                        // Fallback iframe for browsers without YouTube API support (like some smart TVs)
+                                        <iframe
+                                            className="w-full h-full"
+                                            src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0`}
+                                            title={highlights[mediaIndex].title}
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        />
+                                    )}
                                 </div>
                                 {/* Video indicator dots - Clickable for manual selection */}
                                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
