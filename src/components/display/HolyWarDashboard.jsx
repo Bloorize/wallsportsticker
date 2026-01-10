@@ -314,26 +314,24 @@ const HolyWarDashboard = ({ game, loading }) => {
                 </GlassCard>
 
                 {/* Center Column: Media/Highlights */}
-                <GlassCard className="flex-1 flex flex-col overflow-hidden" glow noPadding>
-                    <div className="px-6 md:px-8 lg:px-10 py-5 md:py-6 border-b border-white/[0.08]">
+                <div className="flex-1 flex flex-col overflow-hidden rounded-2xl border border-white/[0.12] shadow-[0_8px_32px_rgba(0,0,0,0.3)] shadow-[0_0_60px_rgba(0,71,186,0.15)]">
+                    <div className="px-6 md:px-8 lg:px-10 py-5 md:py-6 border-b border-white/[0.08] bg-white/[0.06] backdrop-blur-xl">
                         <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold uppercase tracking-wider text-center">
                             Highlights
                         </h3>
                     </div>
-                    <div className="flex-grow relative min-h-0" style={{ zIndex: 15 }}>
+                    <div className="flex-grow relative min-h-0 bg-[#002E5D]">
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
                                 <iframe
-                                    className="absolute inset-0 w-full h-full"
+                                    className="absolute inset-0 w-full h-full border-0"
                                     src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&loop=1&playlist=${highlights[mediaIndex].videoId}`}
                                     title={highlights[mediaIndex].title}
-                                    frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
-                                    style={{ zIndex: 1 }}
                                 />
                                 {/* Video indicator dots */}
-                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" style={{ zIndex: 2 }}>
+                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                                     {highlights.map((_, idx) => (
                                         <div 
                                             key={idx}
@@ -354,7 +352,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                             </div>
                         )}
                     </div>
-                </GlassCard>
+                </div>
 
                 {/* Right Column: Season Comparison */}
                 <GlassCard className="flex-1 flex flex-col" accentTop noPadding>
