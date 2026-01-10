@@ -435,7 +435,7 @@ const WeatherSection = ({ game }) => {
     );
 };
 
-const StatAvatar = ({ leader }) => {
+const StatAvatar = ({ leader, isHolyWar = false }) => {
     const [isError, setIsError] = useState(false);
     const athlete = leader?.athlete;
     const team = leader?.team;
@@ -814,7 +814,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                                 <div key={i} className="bg-white/5 border border-white/8 rounded-xl p-4 md:p-5 lg:p-6">
                                     <div className="flex items-center gap-3 md:gap-4 lg:gap-5">
                                         <div className="relative flex-shrink-0">
-                                            <StatAvatar leader={cat.leaders?.[0]} />
+                                            <StatAvatar leader={cat.leaders?.[0]} isHolyWar={isHolyWar} />
                                             <div className={`absolute -top-1 -right-1 ${accentBg} text-white px-1.5 md:px-2 py-0.5 text-[7px] md:text-[8px] font-black uppercase rounded`}>
                                             {cat.leaders?.[0]?.team?.abbreviation || '---'}
                                         </div>
