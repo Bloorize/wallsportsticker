@@ -24,11 +24,11 @@ const HolyWarLayout = ({ children }) => {
             }} />
 
             {/* Main content container with safe area */}
-            <div className="absolute inset-3 md:inset-4 lg:inset-6 flex flex-col z-10 overflow-hidden">
+            <div className="absolute inset-3 md:inset-4 lg:inset-6 flex flex-col z-10 overflow-hidden gap-4 md:gap-5 lg:gap-6">
                 {/* Glass Header */}
                 <header className="h-20 md:h-24 lg:h-28 flex items-center justify-between px-10 md:px-14 lg:px-20 
                     bg-white/[0.08] backdrop-blur-2xl border border-white/[0.15] rounded-2xl shadow-2xl
-                    relative overflow-hidden mb-4 md:mb-5 lg:mb-6 flex-none">
+                    relative overflow-hidden flex-none">
                     {/* Inner glow effect */}
                     <div className="absolute inset-0 bg-gradient-to-b from-white/[0.1] to-transparent rounded-2xl pointer-events-none" />
                     
@@ -83,7 +83,7 @@ const HolyWarLayout = ({ children }) => {
                 {/* Dashboard Content - Glass container */}
                 <section className="flex-grow relative overflow-hidden min-h-0 
                     bg-white/[0.05] backdrop-blur-xl border border-white/[0.1] rounded-2xl
-                    shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] my-4 md:my-5 lg:my-6">
+                    shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
                     <div className="absolute inset-0 overflow-hidden rounded-2xl">
                         {children}
                     </div>
