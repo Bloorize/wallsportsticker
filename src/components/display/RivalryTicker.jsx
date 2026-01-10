@@ -34,7 +34,7 @@ const RivalryTicker = () => {
                 <span className="text-white/60 uppercase"
                     style={{ 
                         fontFamily: "'IBM Plex Sans', sans-serif",
-                        fontSize: '10px',
+                        fontSize: '14px',
                         fontWeight: 700,
                         letterSpacing: '0.12em'
                     }}>
@@ -43,7 +43,7 @@ const RivalryTicker = () => {
                 <span className="text-white uppercase leading-none mt-1"
                     style={{ 
                         fontFamily: "'IBM Plex Sans', sans-serif",
-                        fontSize: '10px',
+                        fontSize: '20px',
                         fontWeight: 700,
                         letterSpacing: '0.12em'
                     }}>
@@ -66,7 +66,7 @@ const RivalryTicker = () => {
                                 <span className="text-white/90"
                                     style={{ 
                                         fontFamily: "'IBM Plex Sans', sans-serif",
-                                        fontSize: '18px',
+                                        fontSize: '22px',
                                         fontWeight: 400
                                     }}>
                                     {item}
