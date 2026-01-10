@@ -372,16 +372,33 @@ const HolyWarDashboard = ({ game, loading }) => {
                     </div>
                     <div className="flex-grow py-4 md:py-6">
                         {currentSeasonStats.length > 0 ? (
-                            <div className="space-y-2">
-                                {currentSeasonStats.map((row, i) => (
-                                    <StatRow 
-                                        key={i}
-                                        label={row[0]} 
-                                        awayValue={row[1]} 
-                                        homeValue={row[2]}
-                                    />
-                                ))}
-                            </div>
+                            <>
+                                {/* Team Labels Header */}
+                                <div className="flex items-center justify-between py-3 px-6 md:px-8 lg:px-10 border-b border-white/[0.15] mb-2">
+                                    <span className="text-white/40 text-xs md:text-sm font-semibold uppercase tracking-widest">
+                                        Stat
+                                    </span>
+                                    <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
+                                        <span className="text-[#0047BA] text-sm md:text-base lg:text-lg font-bold uppercase tracking-wider min-w-[70px] text-center">
+                                            BYU
+                                        </span>
+                                        <div className="w-[2px] h-4 bg-white/20 rounded-full" />
+                                        <span className="text-white/60 text-sm md:text-base lg:text-lg font-bold uppercase tracking-wider min-w-[70px] text-center">
+                                            UTAH
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    {currentSeasonStats.map((row, i) => (
+                                        <StatRow 
+                                            key={i}
+                                            label={row[0]} 
+                                            awayValue={row[1]} 
+                                            homeValue={row[2]}
+                                        />
+                                    ))}
+                                </div>
+                            </>
                         ) : (
                             <div className="h-full flex items-center justify-center px-8 md:px-10 lg:px-12">
                                 <span className="text-white/40 text-base md:text-lg font-medium">
