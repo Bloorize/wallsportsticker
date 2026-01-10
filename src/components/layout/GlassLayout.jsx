@@ -33,7 +33,7 @@ const GlassLayout = ({ children, filter, games, tickerData }) => {
 
                     {/* Ticker anchored at bottom of safe area */}
                     <div className="flex-none p-2 md:p-3 lg:p-4">
-                        <Ticker filter={filter} games={games} tickerData={tickerData} />
+                        <Ticker filter={filter} games={games} tickerData={tickerData} isHolyWar={false} />
                     </div>
                 </div>
             </div>
