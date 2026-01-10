@@ -306,12 +306,12 @@ const HolyWarDashboard = ({ game, loading }) => {
         return () => clearInterval(interval);
     }, [game]);
 
-    // Rotate media every 15 seconds
+    // Rotate media every 1 minute
     useEffect(() => {
         if (highlights.length === 0) return;
         const interval = setInterval(() => {
             setMediaIndex(prev => (prev + 1) % highlights.length);
-        }, 15000);
+        }, 60000);
         return () => clearInterval(interval);
     }, [highlights.length]);
 
@@ -425,7 +425,7 @@ const HolyWarDashboard = ({ game, loading }) => {
             <div className="flex-1 flex gap-4 md:gap-5 lg:gap-6 min-h-0">
                 {/* Video Section - 16:9 Landscape Container */}
                 <div className="flex-[7] flex flex-col min-w-0">
-                    <div className="flex-1 bg-black rounded-lg overflow-hidden shadow-2xl relative">
+                    <div className="flex-1 bg-[#001428] rounded-lg overflow-hidden shadow-2xl relative">
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
                                 {/* 16:9 aspect ratio container */}
@@ -450,7 +450,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                                 </div>
                             </>
                         ) : (
-                            <div className="aspect-video w-full flex items-center justify-center">
+                            <div className="aspect-video w-full flex items-center justify-center bg-[#001428]">
                                 <div className="flex flex-col items-center gap-3 p-4">
                                     <div className="w-12 h-12 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                                     <span className="text-white/50 text-sm">Loading highlights...</span>
