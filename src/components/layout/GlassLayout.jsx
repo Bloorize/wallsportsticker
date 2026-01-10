@@ -6,8 +6,8 @@ const GlassLayout = ({ children, filter, games, tickerData }) => {
     return (
         <div className="h-screen w-screen relative overflow-hidden bg-black">
             {/* Background Ambience - Always fills entire screen */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[var(--byu-navy)] via-black to-[#001020] animate-pulse-slow" />
-            <div className="absolute top-0 right-0 w-[60vw] h-[60vw] bg-[var(--byu-royal)] opacity-10 blur-[150px] rounded-full pointer-events-none translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-[#001020]" />
+            <div className="absolute top-0 right-0 w-[60vw] h-[60vw] bg-red-600 opacity-10 blur-[150px] rounded-full pointer-events-none translate-x-1/2 -translate-y-1/2" />
 
             {/* 
                 TV SAFE AREA WRAPPER 
