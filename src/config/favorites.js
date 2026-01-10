@@ -36,10 +36,10 @@ export const SEASON_DATES = {
 };
 
 // ESPN API group IDs for Power Conferences
-// Power 5 conferences for college football and basketball
+// Power conferences for college football and basketball
 export const POWER_CONFERENCE_GROUPS = {
-    'college-football': [1, 2, 4, 5, 9], // SEC, Big Ten, Big 12, ACC, Pac-12
-    'mens-college-basketball': [1, 2, 4, 5, 9] // Same conferences
+    'college-football': [80, 8, 7, 2, 23, 9, 4], // FBS, Big 12, Big Ten, ACC, SEC, Pac-12, Big East
+    'mens-college-basketball': [50, 8, 7, 2, 23, 9, 4] // D1, Big 12, Big Ten, ACC, SEC, Pac-12, Big East
 };
 
 /**

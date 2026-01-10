@@ -63,17 +63,17 @@ function App() {
         const futureLimit = getFutureLimit(l.id);
         const apiDateRange = `${formatDate(todayStart)}-${formatDate(futureLimit)}`;
         
-        const params = { limit: 50, dates: apiDateRange };
+        // Increase limit for college sports which often have 100+ games on Saturdays
+        const fetchLimit = (l.id === 'NCAAM' || l.id === 'NCAAF') ? 250 : 50;
+        const params = { limit: fetchLimit, dates: apiDateRange };
         
         // Use power conference groups for NCAA sports
-        // ESPN API accepts groups as comma-separated string or individual group numbers
         if (l.league === 'mens-college-basketball' && POWER_CONFERENCE_GROUPS['mens-college-basketball']) {
-          // Try using the first group ID first, then we can expand if needed
-          // Group 50 typically means "all D1" - let's use that for now to ensure we get games
-          params.groups = 50;
+            // Use Group 50 (All D1) as primary, others will be deduped
+            params.groups = 50;
         } else if (l.league === 'college-football' && POWER_CONFERENCE_GROUPS['college-football']) {
-          // For football, use group 80 which is typically "FBS" (all D1 football)
-          params.groups = 80;
+            // Use Group 80 (FBS) as primary
+            params.groups = 80;
         }
         
         return getScores(l.sport, l.league, params).then(data => {
