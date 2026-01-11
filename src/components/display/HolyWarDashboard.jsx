@@ -279,15 +279,45 @@ const HolyWarDashboard = ({ game, loading }) => {
                 if (summary) {
                     setGameSummary(summary);
                     const boxscore = summary.boxscore;
-                    if (boxscore?.players) {
-                        const awayStats = { fg: 0, fga: 0, fg3: 0, fg3a: 0, reb: 0, ast: 0 };
-                        const homeStats = { fg: 0, fga: 0, fg3: 0, fg3a: 0, reb: 0, ast: 0 };
-                        
+                    
+                    // Try to get team stats directly from boxscore.teams first
+                    let awayStats = { fg: 0, fga: 0, fg3: 0, fg3a: 0, reb: 0, ast: 0 };
+                    let homeStats = { fg: 0, fga: 0, fg3: 0, fg3a: 0, reb: 0, ast: 0 };
+                    
+                    const competition = game.competitions?.[0];
+                    const awayTeamId = competition?.competitors?.find(c => c.homeAway === 'away')?.team?.id;
+                    const homeTeamId = competition?.competitors?.find(c => c.homeAway === 'home')?.team?.id;
+                    
+                    // Try boxscore.teams first (team-level stats)
+                    if (boxscore?.teams) {
+                        boxscore.teams.forEach(team => {
+                            const stats = team.statistics?.[0];
+                            if (!stats) return;
+                            
+                            const teamStats = {
+                                fg: stats.fieldGoalsMade || 0,
+                                fga: stats.fieldGoalsAttempted || 0,
+                                fg3: stats.threePointFieldGoalsMade || 0,
+                                fg3a: stats.threePointFieldGoalsAttempted || 0,
+                                reb: stats.rebounds || 0,
+                                ast: stats.assists || 0
+                            };
+                            
+                            if (team.id === awayTeamId) {
+                                awayStats = teamStats;
+                            } else if (team.id === homeTeamId) {
+                                homeStats = teamStats;
+                            }
+                        });
+                    }
+                    
+                    // Fallback: aggregate from players if team stats not available
+                    if ((awayStats.fg === 0 && homeStats.fg === 0) && boxscore?.players) {
                         boxscore.players.forEach(player => {
                             const stats = player.statistics?.[0];
                             if (!stats) return;
                             
-                            const isHome = player.team?.id === game.competitions[0].competitors.find(c => c.homeAway === 'home')?.team?.id;
+                            const isHome = player.team?.id === homeTeamId;
                             const target = isHome ? homeStats : awayStats;
                             
                             target.fg += stats.fieldGoalsMade || 0;
@@ -297,22 +327,33 @@ const HolyWarDashboard = ({ game, loading }) => {
                             target.reb += stats.rebounds || 0;
                             target.ast += stats.assists || 0;
                         });
-                        
-                        setLiveStats({
-                            away: {
-                                fgPct: awayStats.fga > 0 ? ((awayStats.fg / awayStats.fga) * 100).toFixed(1) : '0.0',
-                                fg3: awayStats.fg3,
-                                reb: awayStats.reb,
-                                ast: awayStats.ast
-                            },
-                            home: {
-                                fgPct: homeStats.fga > 0 ? ((homeStats.fg / homeStats.fga) * 100).toFixed(1) : '0.0',
-                                fg3: homeStats.fg3,
-                                reb: homeStats.reb,
-                                ast: homeStats.ast
-                            }
-                        });
                     }
+                    
+                    // Set live stats
+                    const liveStatsData = {
+                        away: {
+                            fgPct: awayStats.fga > 0 ? ((awayStats.fg / awayStats.fga) * 100).toFixed(1) : '0.0',
+                            fg3: awayStats.fg3,
+                            reb: awayStats.reb,
+                            ast: awayStats.ast
+                        },
+                        home: {
+                            fgPct: homeStats.fga > 0 ? ((homeStats.fg / homeStats.fga) * 100).toFixed(1) : '0.0',
+                            fg3: homeStats.fg3,
+                            reb: homeStats.reb,
+                            ast: homeStats.ast
+                        }
+                    };
+                    
+                    console.log('Live stats extracted:', liveStatsData);
+                    console.log('Boxscore structure:', { 
+                        hasTeams: !!boxscore?.teams, 
+                        hasPlayers: !!boxscore?.players,
+                        teamsCount: boxscore?.teams?.length,
+                        playersCount: boxscore?.players?.length
+                    });
+                    
+                    setLiveStats(liveStatsData);
                 }
             } catch (e) {
                 console.error('Error fetching game summary:', e);
