@@ -7,7 +7,7 @@ import { getWeather, getWeatherIconUrl, formatWindDirection } from '../../servic
 import { getVenueCoordinates, isOutdoorSport } from '../../utils/venueCoordinates';
 import { getRivalryData } from '../../config/rivalryData';
 
-const FieldVisualization = ({ game, gameState }) => {
+const FieldVisualization = ({ game, gameState, isHolyWar = false }) => {
     // Only show field visualization for live games
     if (gameState !== 'in') return null;
     
@@ -863,7 +863,7 @@ const IntelligenceHub = ({ game, isHolyWar = false }) => {
                         <div className={`flex items-center gap-2 md:gap-3 border-l-4 ${borderColor} pl-3 md:pl-4 lg:pl-5 mb-2`}>
                             <h3 className="text-xs md:text-sm font-black text-white/60 uppercase tracking-[0.3em]">Live Field View</h3>
                         </div>
-                        <FieldVisualization game={game} gameState={gameState} />
+                        <FieldVisualization game={game} gameState={gameState} isHolyWar={isHolyWar} />
                     </section>
                 )}
 
