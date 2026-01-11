@@ -222,18 +222,16 @@ const HolyWarDashboard = ({ game, loading }) => {
                 const configuredVideoIds = RIVALRY_DATA.mensBasketball?.videoIds || [];
                 
                 if (configuredVideoIds.length > 0) {
-                    // Use configured video IDs
-                    const configuredVids = await getVideosByIds(configuredVideoIds);
-                    console.log('Fetched configured videos:', configuredVids);
-                    // Use all videos returned (they should all be valid)
-                    if (configuredVids.length > 0) {
-                        setHighlights(configuredVids);
-                        console.log('Set highlights count:', configuredVids.length);
-                        console.log('First video:', configuredVids[0]);
-                    } else {
-                        console.warn('No videos returned from getVideosByIds');
-                        setHighlights([]);
-                    }
+                    // Create video objects directly from configured IDs (no API call needed)
+                    // This avoids API quota/403 errors since we already have the IDs
+                    const configuredVids = configuredVideoIds.map(videoId => ({
+                        videoId: videoId,
+                        title: 'BYU vs Utah Highlights',
+                        embeddable: true
+                    }));
+                    console.log('Using configured videos:', configuredVids.length);
+                    console.log('First video ID:', configuredVids[0]?.videoId);
+                    setHighlights(configuredVids);
                     return;
                 }
                 
