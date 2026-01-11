@@ -271,12 +271,15 @@ const HolyWarDashboard = ({ game, loading }) => {
 
     // Fetch game summary for live stats
     useEffect(() => {
-        if (!game || game.status?.type?.state !== 'in') return;
+        if (!game || game.status?.type?.state !== 'in') {
+            // Don't clear stats if game is not live - keep showing last known stats
+            return;
+        }
 
         const fetchSummary = async () => {
             try {
                 const summary = await getGameSummary('basketball', 'mens-college-basketball', game.id);
-                if (summary) {
+                if (summary && summary.boxscore) {
                     setGameSummary(summary);
                     const boxscore = summary.boxscore;
                     
@@ -329,31 +332,38 @@ const HolyWarDashboard = ({ game, loading }) => {
                         });
                     }
                     
-                    // Set live stats
-                    const liveStatsData = {
-                        away: {
-                            fgPct: awayStats.fga > 0 ? ((awayStats.fg / awayStats.fga) * 100).toFixed(1) : '0.0',
-                            fg3: awayStats.fg3,
-                            reb: awayStats.reb,
-                            ast: awayStats.ast
-                        },
-                        home: {
-                            fgPct: homeStats.fga > 0 ? ((homeStats.fg / homeStats.fga) * 100).toFixed(1) : '0.0',
-                            fg3: homeStats.fg3,
-                            reb: homeStats.reb,
-                            ast: homeStats.ast
-                        }
-                    };
+                    // Only update stats if we have valid data (not all zeros)
+                    const hasValidStats = (awayStats.fg > 0 || awayStats.fga > 0 || awayStats.reb > 0 || awayStats.ast > 0) ||
+                                         (homeStats.fg > 0 || homeStats.fga > 0 || homeStats.reb > 0 || homeStats.ast > 0);
                     
-                    console.log('Live stats extracted:', liveStatsData);
-                    console.log('Boxscore structure:', { 
-                        hasTeams: !!boxscore?.teams, 
-                        hasPlayers: !!boxscore?.players,
-                        teamsCount: boxscore?.teams?.length,
-                        playersCount: boxscore?.players?.length
-                    });
-                    
-                    setLiveStats(liveStatsData);
+                    if (hasValidStats) {
+                        const liveStatsData = {
+                            away: {
+                                fgPct: awayStats.fga > 0 ? ((awayStats.fg / awayStats.fga) * 100).toFixed(1) : '0.0',
+                                fg3: awayStats.fg3,
+                                reb: awayStats.reb,
+                                ast: awayStats.ast
+                            },
+                            home: {
+                                fgPct: homeStats.fga > 0 ? ((homeStats.fg / homeStats.fga) * 100).toFixed(1) : '0.0',
+                                fg3: homeStats.fg3,
+                                reb: homeStats.reb,
+                                ast: homeStats.ast
+                            }
+                        };
+                        
+                        console.log('Live stats extracted:', liveStatsData);
+                        console.log('Boxscore structure:', { 
+                            hasTeams: !!boxscore?.teams, 
+                            hasPlayers: !!boxscore?.players,
+                            teamsCount: boxscore?.teams?.length,
+                            playersCount: boxscore?.players?.length
+                        });
+                        
+                        setLiveStats(liveStatsData);
+                    } else {
+                        console.warn('No valid stats found in boxscore, keeping existing stats');
+                    }
                 }
             } catch (e) {
                 console.error('Error fetching game summary:', e);
