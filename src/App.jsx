@@ -210,8 +210,8 @@ function App() {
     };
 
     fetchData();
-    // Refresh every 5 minutes instead of 60 seconds to reduce flicker
-    const interval = setInterval(fetchData, 300000);
+    // Refresh every 15 seconds for near real-time updates on live games
+    const interval = setInterval(fetchData, 15000);
     return () => clearInterval(interval);
   }, []);
 
