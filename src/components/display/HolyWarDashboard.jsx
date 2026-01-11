@@ -205,8 +205,6 @@ const HolyWarDashboard = ({ game, loading }) => {
     const [gameSummary, setGameSummary] = useState(null);
     const [liveStats, setLiveStats] = useState(null);
     const [statCycleIndex, setStatCycleIndex] = useState(0);
-    const [playerReady, setPlayerReady] = useState(false);
-    const playerRef = React.useRef(null);
 
     // Fetch highlights and media
     useEffect(() => {
@@ -327,121 +325,16 @@ const HolyWarDashboard = ({ game, loading }) => {
         return () => clearInterval(interval);
     }, [game]);
 
-    // Initialize YouTube IFrame API and handle video end events
+    // Auto-advance videos every 2 minutes (120 seconds) - approximate video length
     useEffect(() => {
         if (highlights.length === 0) return;
-
-        let retryCount = 0;
-        const maxRetries = 100; // 10 seconds max wait
-
-        // Wait for YouTube IFrame API to be ready
-        const initPlayer = () => {
-            // Check if we're in a browser environment
-            if (typeof window === 'undefined') {
-                setPlayerReady(true);
-                return;
-            }
-
-            // Check if YouTube API is loaded
-            if (typeof window.YT === 'undefined' || typeof window.YT.Player === 'undefined') {
-                retryCount++;
-                if (retryCount < maxRetries) {
-                    // Retry after a short delay if API isn't loaded yet
-                    setTimeout(initPlayer, 100);
-                } else {
-                    // Fallback: YouTube API not available, use simple iframe
-                    console.warn('YouTube IFrame API not available after retries, using fallback iframe');
-                    setPlayerReady(true); // Allow fallback to render
-                }
-                return;
-            }
-
-            // Create player instance
-            const playerId = 'holy-war-video-player';
-            const container = document.getElementById(playerId);
-            if (!container) {
-                // Container not ready yet, retry
-                if (retryCount < maxRetries) {
-                    setTimeout(initPlayer, 100);
-                } else {
-                    setPlayerReady(true);
-                }
-                return;
-            }
-
-            // Remove existing player if any
-            if (playerRef.current) {
-                try {
-                    playerRef.current.destroy();
-                } catch (e) {
-                    // Ignore errors
-                }
-            }
-
-            try {
-                playerRef.current = new window.YT.Player(playerId, {
-                    videoId: highlights[mediaIndex]?.videoId,
-                    playerVars: {
-                        autoplay: 1,
-                        mute: 1,
-                        modestbranding: 1,
-                        rel: 0,
-                        controls: 0,
-                        loop: 0, // Don't loop - let video end naturally
-                    },
-                    events: {
-                        onReady: (event) => {
-                            setPlayerReady(true);
-                            try {
-                                event.target.playVideo();
-                            } catch (e) {
-                                console.warn('Error playing video:', e);
-                            }
-                        },
-                        onStateChange: (event) => {
-                            // When video ends (state 0 = ended), advance to next video
-                            if (event.data === window.YT.PlayerState.ENDED) {
-                                setMediaIndex(prev => (prev + 1) % highlights.length);
-                            }
-                        },
-                        onError: (event) => {
-                            console.error('YouTube player error:', event.data);
-                            // Skip to next video on error
-                            setMediaIndex(prev => (prev + 1) % highlights.length);
-                        }
-                    }
-                });
-            } catch (e) {
-                console.error('Error creating YouTube player:', e);
-                setPlayerReady(true); // Fall back to iframe
-            }
-        };
-
-        // Wait a bit for DOM to be ready
-        setTimeout(initPlayer, 100);
-
-        return () => {
-            if (playerRef.current) {
-                try {
-                    playerRef.current.destroy();
-                } catch (e) {
-                    // Ignore errors
-                }
-                playerRef.current = null;
-            }
-        };
-    }, [highlights, mediaIndex]);
-
-    // Update player when mediaIndex changes (manual selection or auto-advance)
-    useEffect(() => {
-        if (playerRef.current && highlights[mediaIndex]?.videoId && playerReady) {
-            try {
-                playerRef.current.loadVideoById(highlights[mediaIndex].videoId);
-            } catch (e) {
-                console.error('Error loading video:', e);
-            }
-        }
-    }, [mediaIndex, highlights, playerReady]);
+        
+        const interval = setInterval(() => {
+            setMediaIndex(prev => (prev + 1) % highlights.length);
+        }, 120000); // 2 minutes per video
+        
+        return () => clearInterval(interval);
+    }, [highlights.length]);
 
     // Cycle through season stats every 10 seconds
     useEffect(() => {
@@ -557,33 +450,31 @@ const HolyWarDashboard = ({ game, loading }) => {
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
                                 {/* 16:9 aspect ratio container - Simple YouTube iframe */}
-                                <div className="aspect-video w-full">
+                                <div className="aspect-video w-full relative z-0">
                                     <iframe
                                         key={`video-${highlights[mediaIndex].videoId}-${mediaIndex}`}
-                                        className="w-full h-full"
-                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0`}
+                                        className="w-full h-full absolute inset-0"
+                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0&enablejsapi=1`}
                                         title={highlights[mediaIndex].title || 'Video'}
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
+                                        style={{ zIndex: 1 }}
                                     />
-                                    {/* Hidden container for YouTube API player (for future use) */}
-                                    <div 
-                                        id="holy-war-video-player" 
-                                        className="hidden"
-                                    ></div>
                                 </div>
                                 {/* Video indicator dots - Clickable for manual selection */}
-                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                                    {highlights.map((_, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => setMediaIndex(idx)}
-                                            className={`w-2 h-2 rounded-full transition-all cursor-pointer hover:scale-125
-                                                ${idx === mediaIndex ? 'bg-white w-2.5 h-2.5 shadow-lg' : 'bg-white/50 hover:bg-white/70'}`}
-                                            title={highlights[idx]?.title || `Video ${idx + 1}`}
-                                            aria-label={`Select video ${idx + 1}`}
-                                        />
-                                    ))}
+                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20 pointer-events-none">
+                                    <div className="flex gap-2 pointer-events-auto">
+                                        {highlights.map((_, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setMediaIndex(idx)}
+                                                className={`w-2 h-2 rounded-full transition-all cursor-pointer hover:scale-125
+                                                    ${idx === mediaIndex ? 'bg-white w-2.5 h-2.5 shadow-lg' : 'bg-white/50 hover:bg-white/70'}`}
+                                                title={highlights[idx]?.title || `Video ${idx + 1}`}
+                                                aria-label={`Select video ${idx + 1}`}
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
                             </>
                         ) : (
