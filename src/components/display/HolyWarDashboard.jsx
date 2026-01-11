@@ -229,6 +229,7 @@ const HolyWarDashboard = ({ game, loading }) => {
                     if (configuredVids.length > 0) {
                         setHighlights(configuredVids);
                         console.log('Set highlights count:', configuredVids.length);
+                        console.log('First video:', configuredVids[0]);
                     } else {
                         console.warn('No videos returned from getVideosByIds');
                         setHighlights([]);
@@ -446,42 +447,42 @@ const HolyWarDashboard = ({ game, loading }) => {
             <div className="flex-1 flex gap-4 md:gap-5 lg:gap-6 min-h-0">
                 {/* Video Section - 16:9 Landscape Container */}
                 <div className="flex-[7] flex flex-col min-w-0">
-                    <div className="flex-1 bg-[#002E5D] rounded-lg overflow-hidden shadow-2xl relative">
+                    <div className="w-full bg-[#002E5D] rounded-lg overflow-hidden shadow-2xl relative">
                         {highlights.length > 0 && highlights[mediaIndex] ? (
                             <>
                                 {/* 16:9 aspect ratio container - Simple YouTube iframe */}
-                                <div className="aspect-video w-full relative z-0">
+                                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                                     <iframe
                                         key={`video-${highlights[mediaIndex].videoId}-${mediaIndex}`}
-                                        className="w-full h-full absolute inset-0"
-                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0&enablejsapi=1`}
+                                        className="absolute top-0 left-0 w-full h-full"
+                                        src={`https://www.youtube.com/embed/${highlights[mediaIndex].videoId}?modestbranding=1&rel=0&autoplay=1&mute=1&controls=0`}
                                         title={highlights[mediaIndex].title || 'Video'}
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
-                                        style={{ zIndex: 1 }}
+                                        frameBorder="0"
                                     />
                                 </div>
                                 {/* Video indicator dots - Clickable for manual selection */}
-                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20 pointer-events-none">
-                                    <div className="flex gap-2 pointer-events-auto">
-                                        {highlights.map((_, idx) => (
-                                            <button
-                                                key={idx}
-                                                onClick={() => setMediaIndex(idx)}
-                                                className={`w-2 h-2 rounded-full transition-all cursor-pointer hover:scale-125
-                                                    ${idx === mediaIndex ? 'bg-white w-2.5 h-2.5 shadow-lg' : 'bg-white/50 hover:bg-white/70'}`}
-                                                title={highlights[idx]?.title || `Video ${idx + 1}`}
-                                                aria-label={`Select video ${idx + 1}`}
-                                            />
-                                        ))}
-                                    </div>
+                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                    {highlights.map((_, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => setMediaIndex(idx)}
+                                            className={`w-2 h-2 rounded-full transition-all cursor-pointer hover:scale-125
+                                                ${idx === mediaIndex ? 'bg-white w-2.5 h-2.5 shadow-lg' : 'bg-white/50 hover:bg-white/70'}`}
+                                            title={highlights[idx]?.title || `Video ${idx + 1}`}
+                                            aria-label={`Select video ${idx + 1}`}
+                                        />
+                                    ))}
                                 </div>
                             </>
                         ) : (
-                            <div className="aspect-video w-full flex items-center justify-center bg-[#001428]">
-                                <div className="flex flex-col items-center gap-3 p-4">
-                                    <div className="w-12 h-12 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                    <span className="text-white/50 text-sm">Loading highlights...</span>
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                                <div className="absolute inset-0 flex items-center justify-center bg-[#001428]">
+                                    <div className="flex flex-col items-center gap-3 p-4">
+                                        <div className="w-12 h-12 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                        <span className="text-white/50 text-sm">Loading highlights...</span>
+                                    </div>
                                 </div>
                             </div>
                         )}
